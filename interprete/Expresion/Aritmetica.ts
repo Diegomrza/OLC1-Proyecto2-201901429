@@ -26,31 +26,31 @@ export class Aritmetica extends Expresion {
 
         let dominante = this.tipoDominante(leftValue.type, rightValue.type); //Devuelve el tipo dominante de la matriz de tipos
         if (dominante == null) throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
-        
+
         if (this.tipo == TipoAritmetica.SUMA) {//SUMA
 
             if (dominante == Type.CADENA) { //Si el tipo dominante es string
-                return {value: (leftValue.value.toString() + rightValue.value.toString()),type: Type.CADENA}
+                return { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.CADENA }
             } else if (dominante == Type.ENTERO) { //Si el tipo dominante es int
                 if (asciiLeft != null) {
                     let resultado = asciiLeft + Number(rightValue.value);
-                    return {value: resultado, type: Type.ENTERO}
+                    return { value: resultado, type: Type.ENTERO }
                 } else if (asciiRight != null) {
                     let resultado = Number(leftValue.value) + asciiRight;
-                    return {value: resultado, type: Type.ENTERO}
+                    return { value: resultado, type: Type.ENTERO }
                 } else {
-                    return {value: (Number(leftValue.value) + Number(rightValue.value)),type: Type.ENTERO}
+                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Type.ENTERO }
                 }
             } else if (dominante == Type.DOBLE) { //Si el tipo dominante es double
-                
+
                 if (asciiLeft != null) {
                     let resultado = asciiLeft + Number(rightValue.value);
-                    return {value: resultado, type: Type.DOBLE}
+                    return { value: resultado, type: Type.DOBLE }
                 } else if (asciiRight != null) {
                     let resultado = Number(leftValue.value) + asciiRight;
-                    return {value: resultado, type: Type.DOBLE}
+                    return { value: resultado, type: Type.DOBLE }
                 } else {
-                    return {value: (Number(leftValue.value) + Number(rightValue.value)),type: Type.DOBLE}
+                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Type.DOBLE }
                 }
             } else {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
@@ -60,19 +60,19 @@ export class Aritmetica extends Expresion {
 
             if (dominante == Type.ENTERO) {
                 if (asciiLeft != null) {
-                    return {value: (asciiLeft - rightValue.value),type: Type.ENTERO}
+                    return { value: (asciiLeft - rightValue.value), type: Type.ENTERO }
                 } else if (asciiRight != null) {
-                    return {value: (leftValue.value - asciiRight),type: Type.ENTERO}
+                    return { value: (leftValue.value - asciiRight), type: Type.ENTERO }
                 } else {
-                    return {value: (leftValue.value - rightValue.value),type: Type.ENTERO}
+                    return { value: (leftValue.value - rightValue.value), type: Type.ENTERO }
                 }
             } else if (dominante == Type.DOBLE) {
                 if (asciiLeft != null) {
-                    return {value: (asciiLeft - rightValue.value),type: Type.DOBLE}
+                    return { value: (asciiLeft - rightValue.value), type: Type.DOBLE }
                 } else if (asciiRight != null) {
-                    return {value: (leftValue.value - asciiRight),type: Type.DOBLE}
+                    return { value: (leftValue.value - asciiRight), type: Type.DOBLE }
                 } else {
-                    return {value: (leftValue.value - rightValue.value),type: Type.DOBLE}
+                    return { value: (leftValue.value - rightValue.value), type: Type.DOBLE }
                 }
             } else {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
@@ -81,26 +81,26 @@ export class Aritmetica extends Expresion {
         } else if (this.tipo == TipoAritmetica.MULTIPLICACION) {//MULTIPLICACION
 
             if (dominante == Type.ENTERO) {
-                if (leftValue.type != Type.BOOLEAN || rightValue.type != Type.BOOLEAN) {
+                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return {value: (asciiLeft * rightValue.value),type: Type.ENTERO}
+                        return { value: (asciiLeft * rightValue.value), type: Type.ENTERO }
                     } else if (asciiRight != null) {
-                        return {value: (leftValue.value * asciiRight),type: Type.ENTERO}
+                        return { value: (leftValue.value * asciiRight), type: Type.ENTERO }
                     } else {
-                        return {value: (leftValue.value * rightValue.value),type: Type.ENTERO}
+                        return { value: (leftValue.value * rightValue.value), type: Type.ENTERO }
                     }
                 } else {
                     throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
                 }
 
             } else if (dominante == Type.DOBLE) {
-                if (leftValue.type != Type.BOOLEAN || rightValue.type != Type.BOOLEAN) {
+                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return {value: (asciiLeft * rightValue.value),type: Type.DOBLE}
+                        return { value: (asciiLeft * rightValue.value), type: Type.DOBLE }
                     } else if (asciiRight != null) {
-                        return {value: (leftValue.value * asciiRight),type: Type.DOBLE}
+                        return { value: (leftValue.value * asciiRight), type: Type.DOBLE }
                     } else {
-                        return {value: (leftValue.value * rightValue.value),type: Type.DOBLE}
+                        return { value: (leftValue.value * rightValue.value), type: Type.DOBLE }
                     }
                 } else {
                     throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
@@ -110,32 +110,41 @@ export class Aritmetica extends Expresion {
             }
 
         } else if (this.tipo == TipoAritmetica.DIVISION) {//DIVISION
-
             if (dominante == Type.ENTERO) {
-                if (rightValue.value == 0) {
-                    throw new Error_(this.line, this.column, "Semantico", "No se puede dividir entre 0");
-                } else {
-                    if (asciiLeft != null) {
-                        return {value: (asciiLeft / rightValue.value),type: Type.ENTERO}
-                    } else if (asciiRight != null) {
-                        return {value: (leftValue.value / asciiRight),type: Type.ENTERO}
+                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
+                    if (rightValue.value == 0) {
+                        throw new Error_(this.line, this.column, "Semantico", "No se puede dividir entre 0");
                     } else {
-                        return {value: (leftValue.value / rightValue.value),type: Type.ENTERO}
+                        if (asciiLeft != null) {
+                            return { value: (asciiLeft / rightValue.value), type: Type.DOBLE }
+                        } else if (asciiRight != null) {
+                            return { value: (leftValue.value / asciiRight), type: Type.DOBLE }
+                        } else {
+                            return { value: (leftValue.value / rightValue.value), type: Type.DOBLE }
+                        }
                     }
+                } else {
+                    throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
                 }
             } else if (dominante == Type.DOBLE) {
-                if (rightValue.value == 0) {
-                    throw new Error_(this.line, this.column, "Semantico", "No se puede dividir entre 0");
-                } else {
-                    if (asciiLeft != null) {
-                        return {value: (asciiLeft / rightValue.value),type: Type.DOBLE}
-                    } else if (asciiRight != null) {
-                        return {value: (leftValue.value / asciiRight),type: Type.DOBLE 
-                        }
+                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
+                    if (rightValue.value == 0) {
+                        throw new Error_(this.line, this.column, "Semantico", "No se puede dividir entre 0");
                     } else {
-                        return {value: (leftValue.value / rightValue.value),type: Type.DOBLE 
+                        if (asciiLeft != null) {
+                            return { value: (asciiLeft / rightValue.value), type: Type.DOBLE }
+                        } else if (asciiRight != null) {
+                            return {
+                                value: (leftValue.value / asciiRight), type: Type.DOBLE
+                            }
+                        } else {
+                            return {
+                                value: (leftValue.value / rightValue.value), type: Type.DOBLE
+                            }
                         }
                     }
+                } else {
+                    throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
                 }
             } else {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
@@ -145,13 +154,22 @@ export class Aritmetica extends Expresion {
 
             if (dominante == Type.ENTERO) {
                 if (leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) {
-                    return {value: Math.pow(leftValue.value, rightValue.value),type: Type.ENTERO}
+                    return { value: Math.pow(leftValue.value, rightValue.value), type: Type.ENTERO }
                 } else {
                     throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
                 }
                 //return {value: Math.pow(leftValue.value, rightValue.value),type: Type.ENTERO}
             } else if (dominante == Type.DOBLE) {
-                return {value: Math.pow(leftValue.value, rightValue.value),type: Type.DOBLE}
+                if (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO) {
+                    return { value: Math.pow(leftValue.value, rightValue.value) , type: Type.DOBLE}
+                } else if (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) {
+                    return { value: Math.pow(leftValue.value, rightValue.value) , type: Type.DOBLE}
+                } else if (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) {
+                    return { value: Math.pow(leftValue.value, rightValue.value) , type: Type.DOBLE}
+                } else {
+                    throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
+                }
+                //return { value: Math.pow(leftValue.value, rightValue.value), type: Type.DOBLE }
             } else {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
             }
@@ -159,9 +177,23 @@ export class Aritmetica extends Expresion {
         } else if (this.tipo == TipoAritmetica.MODULO) {//MODULO
 
             if (dominante == Type.ENTERO) {
-                return {value: (leftValue.value % rightValue.value),type: Type.ENTERO}
+                if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO)|| 
+                    (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE)  || 
+                    (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) || 
+                    (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) 
+                    { return { value: (leftValue.value % rightValue.value), type: Type.ENTERO }
+                } else {
+                    throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
+                }
             } else if (dominante == Type.DOBLE) {
-                return {value: (leftValue.value % rightValue.value),type: Type.DOBLE}
+                if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO)|| 
+                    (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE)  || 
+                    (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) || 
+                    (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) 
+                    { return { value: (leftValue.value % rightValue.value), type: Type.DOBLE } 
+                } else {
+                    throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
+                }
             } else {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se puede operar: ' + leftValue.type + ' _ ' + rightValue.type);
             }

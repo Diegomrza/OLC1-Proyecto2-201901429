@@ -257,7 +257,13 @@ statement
 // ;
 
 expresion 
-    : MENOS expresion %prec UMENOS      { $$ = new Aritmetica($2, new Literal("-1", TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) }
+    : MENOS expresion %prec UMENOS      { //falta corregir negaciones de variables ya creadas
+        if ($2.tipo == TipoLiteral.ENTERO || $2.tipo == TipoLiteral.DOBLE) {
+            $$ = new Aritmetica($2, new Literal("-1", TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) 
+        } else {
+            throw new Error_(@1.first_line, @1.first_column, 'Semantico', 'No se puede operar: ' + TipoLiteral.ENTERO + ' _ ' + $2.tipo);
+        }
+    }
     | expresion MAS expresion           { $$ = new Aritmetica($1, $3, TipoAritmetica.SUMA, @1.first_line, @1.first_column) }
     | expresion MENOS expresion         { $$ = new Aritmetica($1, $3, TipoAritmetica.RESTA, @1.first_line, @1.first_column) }
     | expresion POR expresion           { $$ = new Aritmetica($1, $3, TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) }
