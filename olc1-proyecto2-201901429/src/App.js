@@ -35,6 +35,7 @@ function App() {
             texto += i +"\n";
           }
           consol.innerHTML = texto;
+          console.log(response.result);
           //console.log(response.result)
         } else {
           let consol = document.getElementById('consola');

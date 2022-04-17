@@ -8,15 +8,18 @@ export class Statement extends Instruccion {
 
     public execute(ambito: Ambito) {
         const newAmb = new Ambito(ambito)
+        let lista = [];
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb)
 
-                if (element != null && element != undefined) return element
+                if (element != null && element != undefined) lista.push(element)
 
             } catch (error) {
                 console.log(error)
             }
         }
+
+        return lista;
     }
 }

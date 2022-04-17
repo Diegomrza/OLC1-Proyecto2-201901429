@@ -149,6 +149,7 @@ inicio
 
 
 declaracion
+    //Variables con un valor
     : INT IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
         { 
             if ($4.tipo == TipoLiteral.ENTERO) {
@@ -189,8 +190,66 @@ declaracion
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un string`);
             } 
         }
+    //Variables sin inicializar
+    | INT declaracion_multiple PUNTO_Y_COMA
+        {   
+            let lista0 = [];
+            for (let i = 0; i < $2.length; i++) {
+                console.log(typeof $2[i]);
+                lista0.push(new Declaracion($2[i], new Literal(null, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
+            }
+            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+            $$ = lista0; 
+        }
+    | DOUBLE declaracion_multiple PUNTO_Y_COMA     
+        { 
+            let lista1 = [];
+            for (let i = 0; i < $2.length; i++) {
+                console.log(typeof $2[i]);
+                lista1.push(new Declaracion($2[i], new Literal(null, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
+            }
+            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+            $$ = lista1;
+        }
+    | CHAR declaracion_multiple PUNTO_Y_COMA       
+        { 
+            let lista2 = [];
+            for (let i = 0; i < $2.length; i++) {
+                console.log(typeof $2[i]);
+                lista2.push(new Declaracion($2[i], new Literal(null, TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
+            }
+            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+            $$ = lista2;
+        }
+    | BOOLEAN declaracion_multiple PUNTO_Y_COMA   
+        { 
+            let lista3 = [];
+            for (let i = 0; i < $2.length; i++) {
+                console.log(typeof $2[i]);
+                lista3.push(new Declaracion($2[i], new Literal(null, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
+            }
+            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+            $$ = lista3;
+        }
+    | STRING declaracion_multiple PUNTO_Y_COMA     
+        { 
+            let lista4 = [];
+            for (let i = 0; i < $2.length; i++) {
+                console.log(typeof $2[i]);
+                lista4.push(new Declaracion($2[i], new Literal(null, TipoLiteral.CADENA ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
+            }
+            $$ = lista4;
+        }
 ;
 
+//int a,b,c;
+
+declaracion_multiple
+    : declaracion_multiple COMA IDENTIFICADOR
+        {$1.push($3); $$ = $1;}
+    | IDENTIFICADOR 
+        {$$ = [$1]}
+;
 
 asignacion 
     : IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA

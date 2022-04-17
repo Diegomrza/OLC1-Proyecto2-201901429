@@ -14,6 +14,12 @@ export class Aritmetica extends Expresion {
         const leftValue = this.left.execute(ambito);    //va traer un retorno que contiene: value, type
         const rightValue = this.right.execute(ambito);  //va traer un retorno que contiene: value, type
 
+        if (leftValue.value == null){
+            leftValue.value = "null";
+        } if (rightValue.value == null) {
+            rightValue.value = "null"
+        }     
+
         let asciiLeft = null;
         if (leftValue.type == Type.CARACTER && rightValue.type != Type.CARACTER) {   //Si left = char y right != char
             asciiLeft = leftValue.value.charCodeAt(0); //Obteniendo el codigo ascii

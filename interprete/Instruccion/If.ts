@@ -15,12 +15,15 @@ export class If extends Instruccion {
         // true - false
 
         if (value.value) {
-            return this.cuerpo.execute(ambito)
-
+            let res = this.cuerpo.execute(ambito);
+            for (const i of res) {
+                console.log(i)
+            }
+            return res;
         } else if (this.elsE != null) {
-            return this.elsE.execute(ambito)
+            let res = this.elsE.execute(ambito);
+            return res;
         }
-
     }
 
 }

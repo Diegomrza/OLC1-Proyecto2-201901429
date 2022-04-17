@@ -1,6 +1,7 @@
 import { Expresion } from "../Expresion/Expresion";
 import { Instruccion } from "./Instruccion";
 import { Ambito } from '../Extra/Ambito';
+import { Error_ } from "../Error/Error";
 
 export class Declaracion extends Instruccion {
 
@@ -9,8 +10,12 @@ export class Declaracion extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        console.log(this.value)
-        let val = this.value.execute(ambito);
-        ambito.setVal(this.id, val.value, val.type, this.line, this.column, this.tipoAsignacion);
+        if (this.value != null) {
+            let val = this.value.execute(ambito);
+            ambito.setVal(this.id, val.value, val.type, this.line, this.column, this.tipoAsignacion);
+        } else {
+            throw new Error_(this.line, this.column, "SEMANTICO", "variable no inicializada");
+        }
+        
     }
 }
