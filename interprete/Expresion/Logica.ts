@@ -9,13 +9,16 @@ export class Relacional extends Expresion {
     }
     public execute(ambito: Ambito): Retorno {
         const leftValue = this.left.execute(ambito);
+        
         let rightValue
         if (this.right != null) {
 
         }
 
         if (this.tipo == TipoLogica.NOT) {
+            
             return { value: !(leftValue.value), type: Type.BOOLEAN }
+
         } else if (this.tipo == TipoLogica.AND) {
             if (leftValue.value == Type.BOOLEAN) {
                 const rightValue = this.right.execute(ambito);
@@ -25,6 +28,7 @@ export class Relacional extends Expresion {
                 throw new Error_(this.line, this.column, 'Semantico', 'No se pueden operar estos tipos')
             }
             throw new Error_(this.line, this.column, 'Semantico', 'No se pueden operar estos tipos')
+
         } else if (this.tipo == TipoLogica.OR) {
             return { value: (leftValue.value || rightValue.value), type: Type.BOOLEAN }
         }

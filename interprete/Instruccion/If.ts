@@ -16,9 +16,6 @@ export class If extends Instruccion {
 
         if (value.value) {
             let res = this.cuerpo.execute(ambito);
-            for (const i of res) {
-                console.log(i)
-            }
             return res;
         } else if (this.elsE != null) {
             let res = this.elsE.execute(ambito);

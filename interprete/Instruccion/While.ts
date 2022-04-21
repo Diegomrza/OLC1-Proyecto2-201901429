@@ -13,7 +13,7 @@ export class While extends Instruccion {
         let value = this.condicion.execute(ambito)
 
         if (value.type != Type.BOOLEAN) throw new Error_(this.line, this.column, 'Semantico', "La condicion a evaluar no es de tipo boolean")
-
+        
         while (value.value) {
             const retorno = this.cuerpo.execute(ambito)
             if (retorno != null && retorno != undefined) {
@@ -23,9 +23,8 @@ export class While extends Instruccion {
                     continue
                 }
             }
-
-
             value = this.condicion.execute(ambito)
         }
+        
     }
 }

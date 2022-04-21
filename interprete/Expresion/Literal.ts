@@ -25,11 +25,11 @@ export class Literal extends Expresion {
             }
         } else if (this.tipo == TipoLiteral.DOBLE) {                //Si es double
             //console.log(typeof this.value)
-            return {value: this.value, type:Type.DOBLE}
+            return { value: this.value, type: Type.DOBLE }
 
         } else if (this.tipo == TipoLiteral.CARACTER) {             //Si es char
             //console.log(typeof this.value)
-            return {value: this.value, type:Type.CARACTER}
+            return { value: this.value, type: Type.CARACTER }
         }
     }
 
@@ -41,4 +41,19 @@ export enum TipoLiteral {
     BOOLEAN = 2,//BOOLEAN
     CARACTER = 3,//CARACTER
     CADENA = 4 //CADENA
+}
+
+export function nombreTipos(num: number): string {
+    switch (num) {
+        case 0:
+            return "int";
+        case 1:
+            return "double";
+        case 2:
+            return "boolean";
+        case 3:
+            return "char";
+        case 4:
+            return "string";
+    }
 }

@@ -1,5 +1,3 @@
-
-
 import { Instruccion } from '../Instruccion/Instruccion';
 import { Ambito } from '../Extra/Ambito';
 import { Expresion } from '../Expresion/Expresion';
@@ -12,6 +10,7 @@ export class LlamadaFuncion extends Instruccion {
     }
     public execute(ambito: Ambito) {
         const func = ambito.getFuncion(this.id);
+
         if (func == undefined) throw new Error_(this.line, this.column, 'Semantico', `Funcion ${this.id} no encontrada`)
         if (this.expresiones.length != func.parametros.length) throw new Error_(this.line, this.column, 'Semantico', "Cantidad de parametros incorrecta")
 
@@ -20,6 +19,8 @@ export class LlamadaFuncion extends Instruccion {
             const value = this.expresiones[i].execute(ambito);
             newEnv.setVal(func.parametros[i], value.value, value.type, this.line, this.column, 1);
         }
-        func.statment.execute(newEnv);
+
+        return func.statement.execute(newEnv);
+
     }
 }

@@ -5,17 +5,17 @@ import { Error_ } from "../Error/Error";
 
 export class Declaracion extends Instruccion {
 
-    constructor(private id:string, private value:Expresion, line:number, column:number, private tipoAsignacion:number) {
+    constructor(private id:[], private value: Expresion, line: number, column: number, private tipoAsignacion: number) {
         super(line, column);
     }
 
     public execute(ambito: Ambito) {
-        if (this.value != null) {
-            let val = this.value.execute(ambito);
-            ambito.setVal(this.id, val.value, val.type, this.line, this.column, this.tipoAsignacion);
-        } else {
-            throw new Error_(this.line, this.column, "SEMANTICO", "variable no inicializada");
-        }
+
+        let val = this.value.execute(ambito);
         
+        for (const ids of this.id) {
+            ambito.setVal(ids, val.value, val.type, this.line, this.column, this.tipoAsignacion);
+        }
+
     }
 }

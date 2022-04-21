@@ -8,12 +8,11 @@
     const { Error_ } = require('../Error/Error')
     const { Statement } = require('../Instruccion/Statement')
     const { If } = require('../Instruccion/If')
-    // const {While} = require('../Instruccion/While')
-    // const {Break} = require('../Instruccion/Break')
-    // const {Funcion} = require('../Instruccion/Funcion')
-    // //const {Asignacion} = require('../Instruccion/Asignacion')
-    // const {LlamadaFuncion} = require('../Instruccion/LlamadaFuncion')
-    // const {Return} = require('../Instruccion/Return')
+    const {While} = require('../Instruccion/While')
+    const {Break} = require('../Instruccion/Break')
+    const {Funcion} = require('../Instruccion/Funcion')
+    const {LlamadaFuncion} = require('../Instruccion/LlamadaFuncion')
+    const {Return} = require('../Instruccion/Return')
 %}
 
 %lex
@@ -23,8 +22,8 @@
 %%
 
 \s+                       {}
-//[ \r\f]+                {}                  //Se ignoran estos espacios
-"//".*                    {}                  //Comentarios de una linea
+//[ \r\f]+                          {}      //Se ignoran estos espacios
+"//".*                              {}      //Comentarios de una linea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {}      //Comentarios multilinea
 
 
@@ -32,6 +31,7 @@
 "true"                  return 'TRUE';
 "false"                 return 'FALSE';
 "print"                 return 'PRINT';
+"println"               return 'PRINTLN';
 
 //Sentencias de control
 "if"                    return 'IF';
@@ -54,10 +54,17 @@
 \d+\.\d+\b              return 'DECIMAL';
 \d+\b                   return 'ENTERO';
 
-("true"|"false")        return 'BOOLEANO';
+//
 \'.\'                   { yytext = yytext.substr(1,yyleng-2); return 'CARACTER'; }
 (\"[^\"]*\")            { yytext = yytext.substr(1,yyleng-2); return 'CADENA'; }
 ([a-zA-Z])[a-zA-Z0-9_]* return 'IDENTIFICADOR';
+
+//Especiales
+// "\n"                    return 'SALTO_DE_LINEA';
+// "\\"                    return 'BARRA_INVERTIDA';
+// "\""                    return 'COMILLA_DOBLE';
+// "\t"                    return 'TABULACION';
+// "\'"                    return 'COMILLA_SIMPLE';
 
 //Paréntesis
 "("                     return 'PAR_ABRE';
@@ -75,6 +82,7 @@
 ">"                     return 'MAYOR';
 "!="                    return 'DIFERENTE';
 "="                     return 'IGUAL';
+"?"                     return 'QUESTION';
 
 //Lógicos
 "||"                    return 'OR';
@@ -93,14 +101,6 @@
 "%"                     return 'MODULO';
 //"."                     return 'PUNTO';
 
-
-//Especiales
-"\n"                    return 'SALTO_DE_LINEA';
-"\\"                    return 'BARRA_INVERTIDA';
-"\""                    return 'COMILLA_DOBLE';
-"\t"                    return 'TABULACION';
-"\'"                    return 'COMILLA_SIMPLE';
-
 <<EOF>>     return 'EOF';
 .                       {console.log(yylloc.first_line, yylloc.first_column,'Lexico',yytext)}
 /lex
@@ -110,10 +110,10 @@
 %left 'AND'                                                                     //6
 %right 'NOT'                                                                    //5
 %left 'IGUAL_IGUAL' 'DIFERENTE'
-%left 'MENOR_IGUAL' 'MAYOR_IGUAL' 'MENOR' 'MAYOR'      //4
+%left 'MENOR_IGUAL' 'MAYOR_IGUAL' 'MENOR' 'MAYOR'                               //4
 %left 'MAS' 'MENOS'                                                             //3
 %left 'DIVIDIR' 'POR'                                                           //2
-%left 'POTENCIA', 'MODULO', NUMERO                                                      //1
+%left 'POTENCIA', 'MODULO', NUMERO                                              //1
 %right UMENOS                                                                   //0
                              
 
@@ -136,129 +136,102 @@ instrucciones
 
 inicio
     : asignacion
-    | print
-    | expresion PUNTO_Y_COMA
     | declaracion
+    | print
     | if
-    // | while
+    | while
     // | switch
-    // | funcion
-    // | llamadaFuncion PUNTO_Y_COMA
+    | funcion
+    | llamadaFuncion PUNTO_Y_COMA
     // | BREAK PUNTO_Y_COMA
 ;
 
 
 declaracion
-    //Variables con un valor
-    : INT IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
+    //Varias variables/una sin inicializar
+    : INT declaracion_multiple PUNTO_Y_COMA
+        {   
+            $$ = new Declaracion($2, new Literal(0, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+        }
+    | DOUBLE declaracion_multiple PUNTO_Y_COMA     
         { 
+            $$ = new Declaracion($2, new Literal(0.0, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0);
+        }
+    | CHAR declaracion_multiple PUNTO_Y_COMA       
+        { 
+            $$ = new Declaracion($2, new Literal("\u0000", TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+        }
+    | BOOLEAN declaracion_multiple PUNTO_Y_COMA   
+        { 
+            $$ = new Declaracion($2, new Literal(true, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
+        }
+    | STRING declaracion_multiple PUNTO_Y_COMA     
+        { 
+            $$ = new Declaracion($2, new Literal("", TipoLiteral.CADENA ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0);
+        }
+    //Varias variables/una con un valor
+    | INT declaracion_multiple IGUAL expresion PUNTO_Y_COMA
+        {
             if ($4.tipo == TipoLiteral.ENTERO) {
-                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0)
+                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0);
             } else {
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un int`);
             }
         }
-    | DOUBLE IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
-        { 
+    | DOUBLE declaracion_multiple IGUAL expresion PUNTO_Y_COMA
+        {
             if ($4.tipo == TipoLiteral.DOBLE) {
-                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0)
+                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0);
             } else {
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un double`);
             }
         }
-    | CHAR IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
-        { 
+    | CHAR declaracion_multiple IGUAL expresion PUNTO_Y_COMA
+        {
             if ($4.tipo == TipoLiteral.CARACTER) {
-                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0)
+                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0);
             } else {
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un char`);
             }
         }
-    | BOOLEAN IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
-        { 
+    | BOOLEAN declaracion_multiple IGUAL expresion PUNTO_Y_COMA
+        {
             if ($4.tipo == TipoLiteral.BOOLEAN) {
-                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0)
+                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0);
             } else {
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un boolean`);
-            } 
+            }
         }
-    | STRING IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
-        { 
+    | STRING declaracion_multiple IGUAL expresion PUNTO_Y_COMA 
+        {
             if ($4.tipo == TipoLiteral.CADENA) {
-                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0)
+                $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0);
             } else {
                 throw new Error_(@1.first_line, @1.first_column, 'Semantico', `no se puede asignar un tipo ${$4.tipo} a un string`);
-            } 
-        }
-    //Variables sin inicializar
-    | INT declaracion_multiple PUNTO_Y_COMA
-        {   
-            let lista0 = [];
-            for (let i = 0; i < $2.length; i++) {
-                console.log(typeof $2[i]);
-                lista0.push(new Declaracion($2[i], new Literal(null, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
             }
-            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
-            $$ = lista0; 
-        }
-    | DOUBLE declaracion_multiple PUNTO_Y_COMA     
-        { 
-            let lista1 = [];
-            for (let i = 0; i < $2.length; i++) {
-                console.log(typeof $2[i]);
-                lista1.push(new Declaracion($2[i], new Literal(null, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
-            }
-            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
-            $$ = lista1;
-        }
-    | CHAR declaracion_multiple PUNTO_Y_COMA       
-        { 
-            let lista2 = [];
-            for (let i = 0; i < $2.length; i++) {
-                console.log(typeof $2[i]);
-                lista2.push(new Declaracion($2[i], new Literal(null, TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
-            }
-            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
-            $$ = lista2;
-        }
-    | BOOLEAN declaracion_multiple PUNTO_Y_COMA   
-        { 
-            let lista3 = [];
-            for (let i = 0; i < $2.length; i++) {
-                console.log(typeof $2[i]);
-                lista3.push(new Declaracion($2[i], new Literal(null, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
-            }
-            //$$ = new Declaracion($2, new Literal(null, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0); 
-            $$ = lista3;
-        }
-    | STRING declaracion_multiple PUNTO_Y_COMA     
-        { 
-            let lista4 = [];
-            for (let i = 0; i < $2.length; i++) {
-                console.log(typeof $2[i]);
-                lista4.push(new Declaracion($2[i], new Literal(null, TipoLiteral.CADENA ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0));
-            }
-            $$ = lista4;
         }
 ;
 
-//int a,b,c;
-
+//Declaración de variables
 declaracion_multiple
     : declaracion_multiple COMA IDENTIFICADOR
         {$1.push($3); $$ = $1;}
-    | IDENTIFICADOR 
+    | IDENTIFICADOR
         {$$ = [$1]}
 ;
 
+//Asignación de valores a variables
 asignacion 
     : IDENTIFICADOR IGUAL expresion PUNTO_Y_COMA
         { $$ = new Declaracion($1, $3, @1.first_line, @1.first_column, 1) }
 ;
 
+//Print
 print
     : PRINT PAR_ABRE ListaExpr PAR_CIERRA PUNTO_Y_COMA
-        { $$ = new Print($3,@1.first_line, @1.first_column) }
+        { $$ = new Print($3, 0, @1.first_line, @1.first_column) }
+    | PRINTLN PAR_ABRE ListaExpr PAR_CIERRA PUNTO_Y_COMA
+        { $$ = new Print($3, 1, @1.first_line, @1.first_column) }
 ;
 
 ListaExpr
@@ -282,10 +255,10 @@ elsE
         { $$ = null }
 ;
 
-// while
-//     : WHILE PAR_ABRE expresion PAR_CIERRA statement
-//         { $$ = new While($3, $5,  @1.first_line, @1.first_column) }
-// ;
+while
+    : WHILE PAR_ABRE expresion PAR_CIERRA statement
+        { $$ = new While($3, $5,  @1.first_line, @1.first_column) }
+;
 
 statement
     : LL_ABRE instrucciones LL_CIERRA
@@ -294,53 +267,57 @@ statement
         { $$ = new Statement([], @1.first_line, @1.first_column) }
 ;
 
-// funcion
-//     : FUNCTION IDENTIFICADOR PAR_ABRE PAR_CIERRA statement
-//         { $$ = new Funcion($2, $5, [], @1.first_line, @1.first_column); }
-//     | FUNCTION IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA statement
-//         { $$ = new Funcion($2, $6, $4, @1.first_line, @1.first_column); }
-// ;
+funcion
+    : FUNCTION IDENTIFICADOR PAR_ABRE PAR_CIERRA statement
+        { $$ = new Funcion($2, $5, [], @1.first_line, @1.first_column); }
+    | FUNCTION IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA statement
+        { $$ = new Funcion($2, $6, $4, @1.first_line, @1.first_column); }
+;
 
-// parametros
-//     : parametros COMA IDENTIFICADOR
-//         { $1.push($3); $$ =$1 }
-//     | IDENTIFICADOR
-//         { $$ = [$1] }
-// ;
+parametros
+    : parametros COMA IDENTIFICADOR
+        { $1.push($3); $$ =$1 }
+    | IDENTIFICADOR
+        { $$ = [$1] }
+;
 
-// llamadaFuncion
-//     : IDENTIFICADOR PAR_ABRE PAR_CIERRA
-//         { $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column); }
-//     | IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA
-//         { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column); }
-// ;
+llamadaFuncion
+    : IDENTIFICADOR PAR_ABRE PAR_CIERRA
+        { $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column); }
+    | IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA
+        { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column); }
+;
 
 expresion 
-    : MENOS expresion %prec UMENOS      { //falta corregir negaciones de variables ya creadas
-        if ($2.tipo == TipoLiteral.ENTERO || $2.tipo == TipoLiteral.DOBLE) {
-            $$ = new Aritmetica($2, new Literal("-1", TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) 
-        } else {
-            throw new Error_(@1.first_line, @1.first_column, 'Semantico', 'No se puede operar: ' + TipoLiteral.ENTERO + ' _ ' + $2.tipo);
-        }
-    }
+    //Aritméticas
+    : MENOS expresion %prec UMENOS      { $$ = new Aritmetica($2, new Literal("-1", TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) }
     | expresion MAS expresion           { $$ = new Aritmetica($1, $3, TipoAritmetica.SUMA, @1.first_line, @1.first_column) }
     | expresion MENOS expresion         { $$ = new Aritmetica($1, $3, TipoAritmetica.RESTA, @1.first_line, @1.first_column) }
     | expresion POR expresion           { $$ = new Aritmetica($1, $3, TipoAritmetica.MULTIPLICACION, @1.first_line, @1.first_column) }
     | expresion DIVIDIR expresion       { $$ = new Aritmetica($1, $3, TipoAritmetica.DIVISION, @1.first_line, @1.first_column) }
     | expresion POTENCIA expresion      { $$ = new Aritmetica($1, $3, TipoAritmetica.POTENCIA, @1.first_line, @1.first_column) }
     | expresion MODULO expresion        { $$ = new Aritmetica($1, $3, TipoAritmetica.MODULO, @1.first_line, @1.first_column) }
+    //Relacionales
     | expresion IGUAL_IGUAL expresion   { $$ = new Relacional($1, $3, TipoRelacional.IGUALIGUAL, @1.first_line, @1.first_column) }
     | expresion DIFERENTE expresion     { $$ = new Relacional($1, $3, TipoRelacional.DIFERENTE, @1.first_line, @1.first_column) }
     | expresion MAYOR_IGUAL expresion   { $$ = new Relacional($1, $3, TipoRelacional.MAYOR_IGUAL, @1.first_line, @1.first_column) }
     | expresion MENOR_IGUAL expresion   { $$ = new Relacional($1, $3, TipoRelacional.MENOR_IGUAL, @1.first_line, @1.first_column) }
     | expresion MAYOR expresion         { $$ = new Relacional($1, $3, TipoRelacional.MAYOR, @1.first_line, @1.first_column) }
     | expresion MENOR expresion         { $$ = new Relacional($1, $3, TipoRelacional.MENOR, @1.first_line, @1.first_column) }
+    //Paréntesis
     | PAR_ABRE expresion PAR_CIERRA     { $$ = $2 }
+    //Lógicas
+    | expresion AND expresion           {  }
+    | expresion OR expresion            {  }
+    | expresion NOT expresion           {  }
+    //Literales
     | CADENA                            { $$ = new Literal($1, TipoLiteral.CADENA, @1.first_line, @1.first_column) }
     | ENTERO                            { $$ = new Literal($1, TipoLiteral.ENTERO, @1.first_line, @1.first_column) }
     | DECIMAL                           { $$ = new Literal($1, TipoLiteral.DOBLE, @1.first_line, @1.first_column) }
     | TRUE                              { $$ = new Literal($1, TipoLiteral.BOOLEAN, @1.first_line, @1.first_column) }
     | FALSE                             { $$ = new Literal($1, TipoLiteral.BOOLEAN, @1.first_line, @1.first_column) }
     | CARACTER                          { $$ = new Literal($1, TipoLiteral.CARACTER, @1.first_line, @1.first_column) }
+    //Acceso a variables declaradas
     | IDENTIFICADOR                     { $$ = new Acceso($1.toLowerCase(), @1.first_line, @1.first_column) }
+    | expresion QUESTION expresion DOS_PUNTOS expresion PUNTO_Y_COMA { $$ = new IF($1, $3, $5, @1.first_line, @1.first_column) }
 ;

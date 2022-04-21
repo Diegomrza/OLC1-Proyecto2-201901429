@@ -3,9 +3,7 @@
 //     print("No es diez");
 //     print("------");
 // }
-
 // function main(n) {
-
 //     if (n == 10) {
 //         print("------");
 //         print("Diez");
@@ -15,6 +13,5 @@
 //         noEsDiez();
 //         print("------");
 //     }
-
 // }
 // main(10);

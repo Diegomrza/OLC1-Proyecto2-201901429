@@ -4,7 +4,7 @@ import { Ambito } from '../Extra/Ambito';
 
 export class Print extends Instruccion {
 
-    constructor(private value: Expresion[], line: number, column: number) {
+    constructor(private value: Expresion[], private saltoDeLinea:number, line: number, column: number) {
         super(line, column);
     }
 
@@ -13,6 +13,9 @@ export class Print extends Instruccion {
         for (const actual of this.value) {
             const val = actual.execute(ambito);
             aux.push(val.value);
+        }
+        if (this.saltoDeLinea == 1) {   //No hay salto de linea
+            aux.push("\n");
         }
         return aux;
     }
