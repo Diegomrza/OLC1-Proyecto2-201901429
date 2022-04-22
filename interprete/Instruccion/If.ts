@@ -14,12 +14,12 @@ export class If extends Instruccion {
         if (value.type != Type.BOOLEAN) throw new Error_(this.line, this.column, 'Semantico', 'La condicion a evaluar en el if no es de tipo boolean')
         // true - false
 
+        //console.log("Condicion: ",this.condicion,"\nCuerpo: ", this.cuerpo, "\nElse: ",this.elsE);
+
         if (value.value) {
-            let res = this.cuerpo.execute(ambito);
-            return res;
+            return this.cuerpo.execute(ambito);
         } else if (this.elsE != null) {
-            let res = this.elsE.execute(ambito);
-            return res;
+            return this.elsE.execute(ambito);
         }
     }
 

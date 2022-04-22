@@ -1,0 +1,107 @@
+PALABRAS RESERVADAS:
+true = {TRUE}
+false = {FALSE}
+print = {PRINT}
+println = {PRINT}
+if = {IF}
+else = {ELSE}
+while = {WHILE}
+switch = {SWITCH}
+break = {BREAK}
+return = {RETURN}
+function = {FUNCTION}
+
+int = {INT}
+double = {DOUBLE}
+char = {CHAR}
+boolean = {BOOLEAN}
+string = {STRING}
+
+EXPRESIONES REGULARES:
+\d+"."\d+ = {DECIMAL}
+\d+ = {ENTERO}
+\'.\' = {CARACTER}
+(\"[^\"]*\") = {CADENA}
+([a-zA-Z])[a-zA-Z0-9_]* = {IDENTIFICADOR}
+
+SIMBOLOS:
+"(" = {PAR_ABRE}
+")" = {PAR_CIERRA}
+
+"{" = {LL_ABRE}
+"}" = {LL_CIERRA}
+
+"==" = {IGUAL_IGUAL}
+"<=" = {MENOR_IGUAL}
+"<" = {MENOR}
+">=" = {MAYOR_IGUAL}
+">" = {MAYOR}
+"!=" = {DIFERENTE}
+"=" = {IGUAL}
+"?" = {QUESTION}
+
+"||" = {OR}
+"&&" = {AND}
+"!" = {NOT}
+
+"," = {COMA}
+":" = {DOSPUNTOS}
+";" = {PUNTO_Y_COMA}
+"++" = {MAS_MAS}
+"+" = {MAS}
+"--" = {MENOS_MENOS}
+"-" = {MENOS}
+"*" = {POR}
+"/" = {DIVIDIR}
+"^" = {POTENCIA}
+"%" = {MODULO}
+
+PRECEDENCIA
+%izquierda 'QUESTION'
+%izquierda 'OR'                                                                      //7
+%izquierda 'AND'                                                                     //6
+%derecha   'NOT'                                                                    //5
+%izquierda 'IGUAL_IGUAL' 'DIFERENTE'
+%izquierda 'MENOR_IGUAL' 'MAYOR_IGUAL' 'MENOR' 'MAYOR'                               //4
+%izquierda 'MAS' 'MENOS'                                                             //3
+%izquierda 'DIVIDIR' 'POR'                                                           //2
+%izquierda 'POTENCIA', 'MODULO', NUMERO                                              //1
+%derecha   UMENOS                                                                   //0
+%izquierda 'MAS_MAS' 'MENOS_MENOS'
+
+PRODUCCIONES:
+inicio ::= 
+    instrucciones 
+
+instrucciones ::= 
+    instrucciones instruccion
+    | instruccion
+
+instruccion ::=
+    asignacion
+    | declaracion
+    | print
+    
+    | if
+    | switch
+
+    | while
+    | for
+    | do_while
+    
+    | print
+    | println
+
+
+declaracion ::=
+
+
+asignacion ::=
+
+
+print ::=
+
+
+println ::=
+
+

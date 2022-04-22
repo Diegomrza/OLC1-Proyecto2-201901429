@@ -15,13 +15,12 @@ class Statement extends Instruccion_1.Instruccion {
             try {
                 const element = inst.execute(newAmb);
                 if (element != null && element != undefined)
-                    lista.push(element);
+                    return element;
             }
             catch (error) {
                 console.log("Error statement: ", error);
             }
         }
-        return lista;
     }
 }
 exports.Statement = Statement;

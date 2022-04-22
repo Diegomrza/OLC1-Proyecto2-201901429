@@ -12,11 +12,10 @@ export class Statement extends Instruccion {
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb)
-                if (element != null && element != undefined) lista.push(element)
+                if (element != null && element != undefined) return element
             } catch (error) {
                 console.log("Error statement: ",error)
             }
         }
-        return lista;
     }
 }
