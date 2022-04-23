@@ -10,7 +10,6 @@ class Statement extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         const newAmb = new Ambito_1.Ambito(ambito);
-        let lista = [];
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb);

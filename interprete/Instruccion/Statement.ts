@@ -7,8 +7,7 @@ export class Statement extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        const newAmb = new Ambito(ambito)
-        let lista = [];
+        const newAmb = new Ambito(ambito);
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb)

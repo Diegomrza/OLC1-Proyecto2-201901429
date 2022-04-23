@@ -20,7 +20,7 @@ export class Casteo extends Instruccion {
                 } else if (valor.type == Type.DOBLE) {
                     return {value: parseInt(valor.value), type:Type.ENTERO }
                 } else {
-                    throw new Error_(this.line, this.column, "Semantico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
                 }
             case 1:
                 if (valor.type == Type.CARACTER) {
@@ -28,16 +28,16 @@ export class Casteo extends Instruccion {
                 } else if (valor.type == Type.ENTERO) {
                     return {value: parseFloat(valor.value).toFixed(2), type:Type.DOBLE }
                 } else {
-                    throw new Error_(this.line, this.column, "Semantico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
                 }
             case 2:
                 if (valor.type == Type.ENTERO) {
                     return { value: String.fromCharCode(valor.value), type:Type.CARACTER}
                 } else {
-                    throw new Error_(this.line, this.column, "Semantico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
                 }
             case 3:
-                throw new Error_(this.line, this.column, "Semantico", `No se puede realizar el casteo`);
+                throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
             case 4:
                 return { value:valor.value.toString(), type:Type.CADENA }
         }

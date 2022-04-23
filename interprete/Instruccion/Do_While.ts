@@ -4,26 +4,25 @@ import { Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
-export class While extends Instruccion {
+export class Do_While extends Instruccion {
     constructor(private condicion: Expresion, private cuerpo: Instruccion, line: number, column: number) {
-        super(line, column)
+        super(line, column);
     }
 
     public execute(ambito: Ambito) {
-        let value = this.condicion.execute(ambito)
-
-        if (value.type != Type.BOOLEAN) throw new Error_(this.line, this.column, 'Semántico', "La condicion a evaluar no es de tipo boolean")
-
-        while (value.value) {
-            const retorno = this.cuerpo.execute(ambito)
+        let condition = null;
+        do {
+            const retorno = this.cuerpo.execute(ambito);
             if (retorno != null && retorno != undefined) {
                 if (retorno.type == 'Break') {
-                    break
+                    break;
                 } else if (retorno.type == 'Continue') {
-                    continue
+                    continue;
                 }
             }
-            value = this.condicion.execute(ambito)
-        }
+            condition = this.condicion.execute(ambito);
+            if (condition.type != Type.BOOLEAN) throw new Error_(this.line, this.column, "", ``);
+        } while (condition.value)
     }
+
 }

@@ -17,7 +17,7 @@ export class Print extends Instruccion {
         for (const actual of this.value) {
             const val = actual.execute(ambito);
             aux.push(val.value);
-            console.log(val.value);
+            console.log("Print: ",val.value);
         }
         if (this.saltoDeLinea == 1) {   //No hay salto de linea
             aux.push("\n");

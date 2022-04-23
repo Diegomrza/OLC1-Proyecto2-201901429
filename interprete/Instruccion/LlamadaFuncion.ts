@@ -11,8 +11,8 @@ export class LlamadaFuncion extends Instruccion {
     public execute(ambito: Ambito) {
         const func = ambito.getFuncion(this.id);
 
-        if (func == undefined) throw new Error_(this.line, this.column, 'Semantico', `Funcion ${this.id} no encontrada`)
-        if (this.expresiones.length != func.parametros.length) throw new Error_(this.line, this.column, 'Semantico', "Cantidad de parametros incorrecta")
+        if (func == undefined) throw new Error_(this.line, this.column, 'Semántico', `Funcion ${this.id} no encontrada`)
+        if (this.expresiones.length != func.parametros.length) throw new Error_(this.line, this.column, 'Semántico', "Cantidad de parametros incorrecta")
 
         const newEnv = new Ambito(ambito.getGlobal());
         for (let i = 0; i < this.expresiones.length; i++) {

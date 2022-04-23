@@ -19,7 +19,7 @@ export class Acceso extends Expresion {
         } else {
             throw new Error_(this.line, this.column, 'Semántico', `No se encuentra la variable ${this.id}`);
         }
-        
+
     }
 
 }

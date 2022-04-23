@@ -15,7 +15,7 @@ class Relacional extends Expresion_1.Expresion {
         const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {type, value}
         const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {type, value}
         if ((leftValue.type == Retorno_1.Type.CADENA && rightValue.type == Retorno_1.Type.CARACTER) || (leftValue.type == Retorno_1.Type.CARACTER && rightValue.type == Retorno_1.Type.CADENA)) {
-            throw new Error_1.Error_(this.line, this.column, 'Semantico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
         }
         else {
             if ((leftValue.type == Retorno_1.Type.ENTERO && rightValue.type == Retorno_1.Type.ENTERO) ||
@@ -32,7 +32,7 @@ class Relacional extends Expresion_1.Expresion {
                 return this.relaciones(leftValue, rightValue);
             }
             else {
-                throw new Error_1.Error_(this.line, this.column, 'Semantico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
+                throw new Error_1.Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
             }
         }
     }

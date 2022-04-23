@@ -14,7 +14,7 @@ class Ambito {
             this.variables.set(id, new Simbolo_1.Simbolo(value, id, type));
         }
         else {
-            throw new Error_1.Error_(line, column, 'Semantico', 'Ya existe una variable con ese nombre: ' + id);
+            throw new Error_1.Error_(line, column, 'Semántico', 'Ya existe una variable con ese nombre: ' + id);
         }
     }
     setVal(id, value, type, line, column, tipoAsignacion) {
@@ -30,7 +30,7 @@ class Ambito {
                         env.variables.set(id, new Simbolo_1.Simbolo(value, id, type));
                     }
                     else {
-                        throw new Error_1.Error_(line, column, 'Semantico', 'No se puede asignar: ' + value + ' a ' + id);
+                        throw new Error_1.Error_(line, column, 'Semántico', 'No se puede asignar: ' + value + ' a ' + id);
                     }
                 }
                 env = env.anterior;

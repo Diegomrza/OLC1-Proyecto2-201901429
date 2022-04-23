@@ -14,7 +14,7 @@ class Ternario extends Instruccion_1.Instruccion {
     execute(ambito) {
         const valor = this.condicion.execute(ambito);
         if (valor.type != Retorno_1.Type.BOOLEAN)
-            throw new Error_1.Error_(this.line, this.column, 'Semantico', 'La condicion a evaluar no es de tipo boolean');
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar no es de tipo boolean');
         if (valor.value) {
             return this.cuerpo.execute(ambito);
         }

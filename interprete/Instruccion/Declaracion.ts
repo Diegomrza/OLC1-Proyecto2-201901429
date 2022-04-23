@@ -22,7 +22,7 @@ export class Declaracion extends Instruccion {
                 ambito.setVal(ids, val.value, val.type, this.line, this.column, this.tipoAsignacion);
             }
         } else {
-            throw new Error_(this.line, this.column, 'Semantico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
+            throw new Error_(this.line, this.column, 'Semántico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
         }
         
         

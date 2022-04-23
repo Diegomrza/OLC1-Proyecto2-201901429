@@ -21,7 +21,7 @@ class Declaracion extends Instruccion_1.Instruccion {
             }
         }
         else {
-            throw new Error_1.Error_(this.line, this.column, 'Semantico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
         }
     }
 }

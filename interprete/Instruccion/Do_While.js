@@ -1,20 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.While = void 0;
+exports.Do_While = void 0;
 const Error_1 = require("../Error/Error");
 const Retorno_1 = require("../Expresion/Retorno");
 const Instruccion_1 = require("./Instruccion");
-class While extends Instruccion_1.Instruccion {
+class Do_While extends Instruccion_1.Instruccion {
     constructor(condicion, cuerpo, line, column) {
         super(line, column);
         this.condicion = condicion;
         this.cuerpo = cuerpo;
     }
     execute(ambito) {
-        let value = this.condicion.execute(ambito);
-        if (value.type != Retorno_1.Type.BOOLEAN)
-            throw new Error_1.Error_(this.line, this.column, 'Semántico', "La condicion a evaluar no es de tipo boolean");
-        while (value.value) {
+        let condition = null;
+        do {
             const retorno = this.cuerpo.execute(ambito);
             if (retorno != null && retorno != undefined) {
                 if (retorno.type == 'Break') {
@@ -24,8 +22,10 @@ class While extends Instruccion_1.Instruccion {
                     continue;
                 }
             }
-            value = this.condicion.execute(ambito);
-        }
+            condition = this.condicion.execute(ambito);
+            if (condition.type != Retorno_1.Type.BOOLEAN)
+                throw new Error_1.Error_(this.line, this.column, "", ``);
+        } while (condition.value);
     }
 }
-exports.While = While;
+exports.Do_While = Do_While;

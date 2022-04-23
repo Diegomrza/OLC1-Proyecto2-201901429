@@ -12,7 +12,7 @@ export class Relacional extends Expresion {
         const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {type, value}
 
         if ((leftValue.type == Type.CADENA && rightValue.type == Type.CARACTER) || (leftValue.type == Type.CARACTER && rightValue.type == Type.CADENA)) {
-            throw new Error_(this.line, this.column, 'Semantico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
+            throw new Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
         } else {
             if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) ||
                 (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
@@ -27,7 +27,7 @@ export class Relacional extends Expresion {
                 (leftValue.type == Type.CADENA && rightValue.type == Type.CADENA)) {
                     return this.relaciones(leftValue, rightValue);
             } else {
-                throw new Error_(this.line, this.column, 'Semantico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
+                throw new Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
             }
         }
     }
