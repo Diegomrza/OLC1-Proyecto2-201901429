@@ -59,9 +59,9 @@ function App() {
 
     return (
         <div className='min-h-screen min-w-full bg-gray-500 flex justify-center items-center flex-col gap-10'>
-            <div className='text-white text-2xl font-bold'>Mi primer editor de texto</div>
+            <div className='text-white text-2xl font-bold'>Compscript</div>
             <div className='max-w-[60rem] w-full flex flex-col gap-5'>
-                <button onClick={showValue} className="p-2 bg-black text-white rounded-xl hover:scale-110 btn" style={{ transition: 'all 2seg' }}>Show value</button>
+                <button onClick={showValue} className="p-2 bg-black text-white rounded-xl hover:scale-110 btn" style={{ transition: 'all 2seg' }}>Ejecutar</button>
                 <div className='w-full rounded-xl'>
                     <Editor
                         height="50vh"

@@ -13,17 +13,19 @@ export class Declaracion extends Instruccion {
 
     public execute(ambito: Ambito) {
 
-        let val = this.value.execute(ambito);
-        //console.log(this.tipo);
-        //console.log(val);
 
-        if (val.type == this.tipo) {
+        //console.log("Value: ",this.value);
+        let val = this.value.execute(ambito);
+        // console.log("This.tipo: ",this.tipo);
+        // console.log("Valor: ",val);
+
+        // if (val.type == this.tipo) {
             for (const ids of this.id) {
                 ambito.setVal(ids, val.value, val.type, this.line, this.column, this.tipoAsignacion);
             }
-        } else {
-            throw new Error_(this.line, this.column, 'Semántico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
-        }
+        // } else {
+        //     throw new Error_(this.line, this.column, 'Semántico', `no se puede asignar un tipo ${val.type} a un ${this.tipo}`);
+        // }
         
         
 

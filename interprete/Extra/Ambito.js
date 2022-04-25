@@ -9,6 +9,7 @@ class Ambito {
         this.variables = new Map();
         this.funciones = new Map();
     }
+    //____________________________________Variables____________________________________//
     crearVar(id, value, type, line, column) {
         if (!this.variables.has(id)) {
             this.variables.set(id, new Simbolo_1.Simbolo(value, id, type));
@@ -48,8 +49,9 @@ class Ambito {
         }
         return null;
     }
+    //____________________________________Funciones____________________________________//
     guardarFuncion(id, funcion) {
-        //TODO ver si la funcion ya existe, reportar error
+        //Ver si la funcion ya existe, reportar error
         this.funciones.set(id, funcion);
     }
     getFuncion(id) {

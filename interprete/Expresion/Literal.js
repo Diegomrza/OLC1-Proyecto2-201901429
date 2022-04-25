@@ -11,14 +11,15 @@ class Literal extends Expresion_1.Expresion {
     }
     execute(ambito) {
         if (this.tipo == TipoLiteral.ENTERO) { //Si es int
-            return { value: this.value, type: Retorno_1.Type.ENTERO };
+            //console.log(this.value, " - " ,"Entero")
+            return { value: Number(this.value), type: Retorno_1.Type.ENTERO };
         }
         else if (this.tipo == TipoLiteral.CADENA) { //Si es string
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Cadena")
             return { value: this.value.toString(), type: Retorno_1.Type.CADENA };
         }
         else if (this.tipo == TipoLiteral.BOOLEAN) { //Si es boolean
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Booleano")
             if (this.value.toString().toLowerCase() == "true") {
                 return { value: true, type: Retorno_1.Type.BOOLEAN };
             }
@@ -27,11 +28,11 @@ class Literal extends Expresion_1.Expresion {
             }
         }
         else if (this.tipo == TipoLiteral.DOBLE) { //Si es double
-            //console.log(typeof this.value)
-            return { value: this.value, type: Retorno_1.Type.DOBLE };
+            //console.log(this.value, " - " ,"Decimal")
+            return { value: Number(this.value), type: Retorno_1.Type.DOBLE };
         }
         else if (this.tipo == TipoLiteral.CARACTER) { //Si es char
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Caracter")
             return { value: this.value, type: Retorno_1.Type.CARACTER };
         }
     }

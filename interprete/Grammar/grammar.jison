@@ -25,6 +25,8 @@
     const { Increment_Decrement } = require('../Instruccion/Increment_Decrement')
     const { Casteo, TipoCasteo } = require('../Instruccion/Casteo')
     const { For } = require('../Instruccion/For')
+    const { Vector } = require('../Instruccion/Vector')
+    const { Matriz } = require('../Instruccion/Matriz')
 
     //Import error
     const { Error_ } = require('../Error/Error')
@@ -36,7 +38,7 @@
 
 %%
 
-\s+                       {}
+\s+                                 {}
 //[ \r\f]+                          {}      //Se ignoran estos espacios
 "//".*                              {}      //Comentarios de una linea
 [/][*][^*]*[*]+([^/*][^*]*[*]+)*[/] {}      //Comentarios multilinea
@@ -61,6 +63,7 @@
 "continue"              return 'CONTINUE';
 "return"                return 'RETURN';
 "function"              return 'FUNCTION';
+"new"                   return 'NEW';
 
 
 //Palabras reservadas tipos
@@ -94,6 +97,10 @@
 //Llaves
 "{"                     return 'LL_ABRE';
 "}"                     return 'LL_CIERRA';
+
+//Corchetes
+"["                     return 'COR_ABRE';
+"]"                     return 'COR_CIERRA';
 
 //Relacionales
 "=="                    return 'IGUAL_IGUAL';
@@ -167,8 +174,10 @@ inicio
     | llamadaFuncion PUNTO_Y_COMA
     | incremento
     | decremento
-    | BREAK PUNTO_Y_COMA    { $$ = new Break(@1.first_line, @1.first_column)}
-    | CONTINUE PUNTO_Y_COMA     { $$ = new Continue(@1.first_line, @1.first_column)}
+    | BREAK PUNTO_Y_COMA    { $$ = new Break(@1.first_line, @1.first_column) }
+    | CONTINUE PUNTO_Y_COMA     { $$ = new Continue(@1.first_line, @1.first_column) }
+    | declaracion_vectores PUNTO_Y_COMA
+    | modificacion_vectores 
 ;
 
 
@@ -220,25 +229,9 @@ elsE
     |   { $$ = null }
 ;
 
-/*
-switch () {
-    case id:
-        break/continue/return;
-    case id:
-        break/continue/return;
-    ...
-    default:
-        break/continue/return;
-}
-*/
-
 switch
-    : SWITCH PAR_ABRE expresion PAR_CIERRA LL_ABRE lista_case default LL_CIERRA     { 
-        console.log("Lista case: ",$6,"\n"); 
-        for (const i of $6) {
-            console.log("Case: ",i.cuerpo); 
-        }
-        console.log("Default: ", $7,"\n"); $$ = new Switch($3, $6, $7, @1.first_line, @1.first_column) }
+    : SWITCH PAR_ABRE expresion PAR_CIERRA LL_ABRE lista_case default LL_CIERRA     { $$ = new Switch($3, $6, $7, @1.first_line, @1.first_column) }
+    | SWITCH PAR_ABRE expresion PAR_CIERRA LL_ABRE default LL_CIERRA     { $$ = new Switch($3, null, $6, @1.first_line, @1.first_column) }
 ;
 
 lista_case
@@ -329,6 +322,131 @@ casteos
     | PAR_ABRE INT PAR_CIERRA expresion     { $$ = new Casteo(TipoCasteo.ENTERO, $4, @1.first_line, @1.first_column) }
 ;
 
+//_____________________________________________VECTORES_____________________________________________//
+declaracion_vectores
+    : vector_una_dimension
+    | vector_dos_dimensiones
+;
+
+//Tipo(string), id(string), dimension1(lista), tam1(number), dimension2(lista), tam2(number)
+vector_una_dimension
+    : INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA
+        { $$ = new Vector(Type.ENTERO, $2, [], $9, @1.first_line, @1.first_column) }
+    | INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { $$ = new Vector(Type.ENTERO, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+
+    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA
+        { $$ = new Vector(Type.DOBLE, $2, [], $9, @1.first_line, @1.first_column) }
+    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { $$ = new Vector(Type.DOBLE, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA
+        { $$ = new Vector(Type.CARACTER, $2, [], $9, @1.first_line, @1.first_column) }
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { $$ = new Vector(Type.CARACTER, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+
+    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA
+        { $$ = new Vector(Type.BOOLEAN, $2, [], $9, @1.first_line, @1.first_column) }
+    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { $$ = new Vector(Type.BOOLEAN, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+
+    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA
+        { $$ = new Vector(Type.CADENA, $2, [], $9, @1.first_line, @1.first_column) }
+    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { $$ = new Vector(Type.CADENA, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+;
+
+//Tipo(string), id(string), dimension1(lista), tam1(number), dimension2(lista), tam2(number)
+vector_dos_dimensiones
+    : INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.ENTERO, $2, [], $11, $14, @1.first_line, @1.first_column) }
+    | INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+        { 
+            let mi = 0;
+            let auxi = 0;
+            for (const i of $9) {
+                mi++;
+                let ni = 0;
+                for (const j of i) {
+                    ni++;
+                }
+                if (auxi < ni) { auxi = ni; }
+            }
+            $$ = new Matriz(Type.ENTERO, $2, $9, new Literal(mi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+        }
+
+    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.DOBLE, $2, [], $11, $14, @1.first_line, @1.first_column) }
+    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { 
+            let md = 0;
+            let auxd = 0;
+            for (const i of $9) {
+                md++;
+                let nd = 0;
+                for (const j of i) { nd++; }
+                if (auxd < nd) { auxd = nd; }
+            }
+            $$ = new Matriz(Type.DOBLE, $2, $9, new Literal(md, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxd, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+        }
+
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.CARACTER, $2, [], $11, $14, @1.first_line, @1.first_column) }
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { 
+            let mc = 0;
+            let auxc = 0;
+            for (const i of $9) {
+                mc++;
+                let nc = 0;
+                for (const j of i) { nc++; }
+                if (auxc < nc) { auxc = nc; }
+            }
+            $$ = new Matriz(Type.CARACTER, $2, $9, new Literal(mc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column)
+        }
+
+    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.BOOLEAN, $2, [], $11, $14, @1.first_line, @1.first_column) }
+    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { 
+            let mb = 0;
+            let auxb = 0;
+            for (const i of $9) {
+                mb++;
+                let nb = 0;
+                for (const j of i) { nb++; }
+                if (auxb < nb) { auxb = nb; }
+            }
+            $$ = new Matriz(Type.BOOLEAN, $2, $9, new Literal(mb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+        }
+
+    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.CADENA, $2, [], $11, $14, @1.first_line, @1.first_column) }
+    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { 
+            let ms = 0; 
+            let auxs = 0;
+            for (const i of $9) {
+                ms++;
+                let ns = 0;
+                for (const j of i) { ns++; }
+                if (auxs < ns) { auxs = ns; }
+            }
+            $$ = new Matriz(Type.CADENA, $2, $9, new Literal(ms, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxs, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+        }
+;
+
+acceso_vectores
+    : IDENTIFICADOR COR_ABRE expresion COR_CIERRA
+        { $$ = new Acceso($1.toLowerCase(), 1, $3, null, @1.first_line, @1.first_column) }
+    | IDENTIFICADOR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+        { $$ = new Acceso($1.toLowerCase(), 2, $3, $6, @1.first_line, @1.first_column) }
+;
+
+modificacion_vectores
+    : IDENTIFICADOR COR_ABRE expresion COR_CIERRA IGUAL expresion PUNTO_Y_COMA
+;
+
 //_____________________________________________EXPRESION_____________________________________________//
 expresion 
     //Aritméticas
@@ -360,10 +478,13 @@ expresion
     | FALSE                             { $$ = new Literal($1, TipoLiteral.BOOLEAN, @1.first_line, @1.first_column) }
     | CARACTER                          { $$ = new Literal($1, TipoLiteral.CARACTER, @1.first_line, @1.first_column) }
     //Acceso a variables declaradas
-    | IDENTIFICADOR                     { $$ = new Acceso($1.toLowerCase(), @1.first_line, @1.first_column) }
+    | IDENTIFICADOR                     { $$ = new Acceso($1.toLowerCase(), 0, null, null, @1.first_line, @1.first_column) }
     //Ternario
     | ternario                          { $$ = $1 }
     //Incremento y decremento asignado a variables
     | incremento_sin_punto_y_coma       { $$ = $1 }
     | decremento_sin_punto_y_coma       { $$ = $1 }
+    //Vectores
+    | COR_ABRE ListaExpr COR_CIERRA     { $$ = $2 }
+    | acceso_vectores                   { $$ = $1 }
 ;

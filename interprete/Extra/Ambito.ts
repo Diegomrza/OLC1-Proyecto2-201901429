@@ -1,26 +1,29 @@
 import { Error_ } from "../Error/Error";
 import { Type } from "../Expresion/Retorno";
 import { Funcion } from "../Instruccion/Funcion";
+import { Matriz } from "../Instruccion/Matriz";
+import { Vector } from "../Instruccion/Vector";
 import { Simbolo } from "./Simbolo"
 
 export class Ambito {
-    private variables: Map<string, Simbolo>
-    public funciones: Map<string, Funcion>;
+    private variables: Map<string, Simbolo> //Guarda las variables
+    public funciones: Map<string, Funcion>; //Guarda las funciones
 
     constructor(public anterior: Ambito | null) {
         this.variables = new Map();
         this.funciones = new Map();
     }
 
-    public crearVar(id:string, value:any, type:Type, line:number, column:number){
-        if (!this.variables.has(id)){
+    //____________________________________Variables____________________________________//
+    public crearVar(id: string, value: any, type: Type, line: number, column: number) {
+        if (!this.variables.has(id)) {            
             this.variables.set(id, new Simbolo(value, id, type));
         } else {
             throw new Error_(line, column, 'Semántico', 'Ya existe una variable con ese nombre: ' + id);
         }
     }
 
-    public setVal(id:string, value:any, type:Type, line:number, column:number, tipoAsignacion:number) { //Busca una variable y si no existe la crea
+    public setVal(id: string, value: any, type: Type, line: number, column: number, tipoAsignacion: number) { //Busca una variable y si no existe la crea
 
         if (tipoAsignacion == 0) {//Para crear la variable
             this.crearVar(id, value, type, line, column);
@@ -38,9 +41,9 @@ export class Ambito {
                 env = env.anterior;
             }
         }
-        
+
         //this.variables.set(id, new Simbolo(value, id, type));
-        
+
     }
 
     public getVal(id: string): Simbolo {
@@ -55,9 +58,9 @@ export class Ambito {
         return null;
     }
 
-
+    //____________________________________Funciones____________________________________//
     public guardarFuncion(id: string, funcion: Funcion) {
-        //TODO ver si la funcion ya existe, reportar error
+        //Ver si la funcion ya existe, reportar error
         this.funciones.set(id, funcion);
     }
 
@@ -80,4 +83,5 @@ export class Ambito {
         }
         return env;
     }
+
 }

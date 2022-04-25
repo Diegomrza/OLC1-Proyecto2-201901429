@@ -10,25 +10,26 @@ export class Literal extends Expresion {
 
     public execute(ambito: Ambito): Retorno {
         if (this.tipo == TipoLiteral.ENTERO) {                      //Si es int
-            return { value: this.value, type: Type.ENTERO };
+            //console.log(this.value, " - " ,"Entero")
+            return { value: Number(this.value), type: Type.ENTERO };
 
         } else if (this.tipo == TipoLiteral.CADENA) {               //Si es string
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Cadena")
             return { value: this.value.toString(), type: Type.CADENA };
 
         } else if (this.tipo == TipoLiteral.BOOLEAN) {              //Si es boolean
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Booleano")
             if (this.value.toString().toLowerCase() == "true") {
                 return { value: true, type: Type.BOOLEAN }
             } else {
                 return { value: false, type: Type.BOOLEAN };
             }
         } else if (this.tipo == TipoLiteral.DOBLE) {                //Si es double
-            //console.log(typeof this.value)
-            return { value: this.value, type: Type.DOBLE }
+            //console.log(this.value, " - " ,"Decimal")
+            return { value: Number(this.value), type: Type.DOBLE }
 
         } else if (this.tipo == TipoLiteral.CARACTER) {             //Si es char
-            //console.log(typeof this.value)
+            //console.log(this.value, " - " ,"Caracter")
             return { value: this.value, type: Type.CARACTER }
         }
     }

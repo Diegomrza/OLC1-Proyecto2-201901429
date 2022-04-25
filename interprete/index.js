@@ -1,8 +1,8 @@
-const parser = require('./Grammar/grammar')
-const express = require('express')
-const cors = require('cors');
-const { Ambito } = require('./Extra/Ambito');
-const { Print } = require('./Instruccion/Print');
+const parser = require('./Grammar/grammar')         //Importe del parser
+const express = require('express')                  //Importe de express
+const cors = require('cors');                       //Importe de politicas cors
+const { Ambito } = require('./Extra/Ambito');       //Importe para el ambito global
+
 const app = express();
 
 app.use(express.json(), cors());
@@ -38,12 +38,12 @@ app.post('/', (req, res) => {
             "error":e
         });
     }
+
     let objeto = {
         "message":"Success",
         "result": result,
         "lista": lista
     };
-    console.log("Lista: ",lista);
     
     return res.send(objeto);
 });
