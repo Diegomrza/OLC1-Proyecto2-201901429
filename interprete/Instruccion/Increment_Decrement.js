@@ -17,22 +17,22 @@ class Increment_Decrement extends Instruccion_1.Instruccion {
         if (val.type == Retorno_1.Type.DOBLE) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             return { value: val.value, type: Retorno_1.Type.DOBLE };
         }
         else if (val.type == Retorno_1.Type.ENTERO) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             return { value: val.value, type: Retorno_1.Type.ENTERO };
         }

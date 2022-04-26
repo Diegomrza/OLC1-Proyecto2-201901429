@@ -9,18 +9,23 @@ export class LlamadaFuncion extends Instruccion {
         super(line, column);
     }
     public execute(ambito: Ambito) {
-        const func = ambito.getFuncion(this.id);
+        const funcion = ambito.getFuncion(this.id);
 
-        if (func == undefined) throw new Error_(this.line, this.column, 'Semántico', `Funcion ${this.id} no encontrada`)
-        if (this.expresiones.length != func.parametros.length) throw new Error_(this.line, this.column, 'Semántico', "Cantidad de parametros incorrecta")
+        if (funcion == undefined) throw new Error_(this.line, this.column, 'Semántico', `Funcion ${this.id} no encontrada.`);
 
-        const newEnv = new Ambito(ambito.getGlobal());
+        if (this.expresiones.length != funcion.parametros.length) throw new Error_(this.line, this.column, 'Semántico', "Cantidad de parametros incorrecta")
+
+        const newEnv = new Ambito(ambito.getGlobal());  //Obteniendo el ambito global
+
         for (let i = 0; i < this.expresiones.length; i++) {
+
             const value = this.expresiones[i].execute(ambito);
-            newEnv.setVal(func.parametros[i], value.value, value.type, this.line, this.column, 1);
+            //id, valor, tipo, linea, columna, tipoAsignacion, tipoDato
+            newEnv.setVal(funcion.parametros[i], value.value, value.type, this.line, this.column, 0, value.type);
+
         }
 
-        return func.statement.execute(newEnv);
+        return funcion.cuerpo.execute(newEnv);
 
     }
 }

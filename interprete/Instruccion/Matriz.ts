@@ -5,7 +5,7 @@ import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
 export class Matriz extends Instruccion {
-    constructor(private tipo: number, private id: string, private arreglo: [], public tam1: Expresion, public tam2: Expresion, line: number, column: number) {
+    constructor(private tipo: number, private id: string, private arreglo: [], public tam1: Expresion, public tam2: Expresion, private tipoEs:number, line: number, column: number) {
         super(line, column)
     }
 
@@ -23,7 +23,7 @@ export class Matriz extends Instruccion {
                 }
                 filas.push(columnas);
             }
-            ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, filas, this.tipoEs, this.line, this.column, 0, this.tipo);
         } else {
             let auxFilas = [];
             for (let i = 0; i < tamFilas.value; i++) {
@@ -52,7 +52,7 @@ export class Matriz extends Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
-            ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, auxFilas, this.tipoEs, this.line, this.column, 0, this.tipo);
         }
 
     }

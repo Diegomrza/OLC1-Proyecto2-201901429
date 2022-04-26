@@ -19,7 +19,7 @@
     const { Break } = require('../Instruccion/Break')
     const { Continue } = require('../Instruccion/Continue')
     const { Funcion } = require('../Instruccion/Funcion')
-    const { LlamadaFuncion } = require('../Instruccion/LlamadaFuncion')
+    //const { LlamadaFuncion } = require('../Instruccion/LlamadaFuncion')
     const { Return } = require('../Instruccion/Return')
     const { Ternario } = require('../Instruccion/Ternario')
     const { Increment_Decrement } = require('../Instruccion/Increment_Decrement')
@@ -27,6 +27,17 @@
     const { For } = require('../Instruccion/For')
     const { Vector } = require('../Instruccion/Vector')
     const { Matriz } = require('../Instruccion/Matriz')
+    const { TipoFuncion } = require('../Instruccion/Instruccion')
+
+    //Import Funciones nativas
+    const { TypeOf } = require('../Funciones_Nativas/TypeOf')
+    const { ToString } = require('../Funciones_Nativas/ToString')
+    const { ToCharArray } = require('../Funciones_Nativas/ToCharArray')
+
+    const { Length } = require('../Funciones_Nativas/Length')
+    const { Round } = require('../Funciones_Nativas/Round')
+    const { ToLower } = require('../Funciones_Nativas/ToLower')
+    const { ToUpper } = require('../Funciones_Nativas/ToUpper')
 
     //Import error
     const { Error_ } = require('../Error/Error')
@@ -50,6 +61,15 @@
 "print"                 return 'PRINT';
 "println"               return 'PRINTLN';
 
+"typeof"                return 'TYPEOF';
+"toString"              return 'TOSTRING';
+"toCharArray"           return 'TOCHARARRAY';
+"length"                return 'LENGTH';
+
+"toLower"               return 'TOLOWER';
+"toUpper"               return 'TOUPPER';
+"round"                 return 'ROUND';
+
 //Sentencias de control
 "if"                    return 'IF';
 "else"                  return 'ELSE';
@@ -62,8 +82,10 @@
 "break"                 return 'BREAK';
 "continue"              return 'CONTINUE';
 "return"                return 'RETURN';
-"function"              return 'FUNCTION';
+"function"              return 'FUNCTION'; //No aplica
 "new"                   return 'NEW';
+"void"                  return 'VOID';
+"run"                   return 'RUN';
 
 
 //Palabras reservadas tipos
@@ -135,7 +157,6 @@
 .                       {console.log(yylloc.first_line, yylloc.first_column,'Lexico',yytext)}
 /lex
 
-// %left 'INTERROGACION' 'DOS_PUNTOS'
 %left 'QUESTION' 'DOSPUNTOS'
 %left 'OR'                                                                      //7
 %left 'AND'                                                                     //6
@@ -177,24 +198,24 @@ inicio
     | BREAK PUNTO_Y_COMA    { $$ = new Break(@1.first_line, @1.first_column) }
     | CONTINUE PUNTO_Y_COMA     { $$ = new Continue(@1.first_line, @1.first_column) }
     | declaracion_vectores PUNTO_Y_COMA
-    | modificacion_vectores 
+    | modificacion_vectores PUNTO_Y_COMA
 ;
 
 
 //_____________________________________________DECLARACIÓN Y ASIGNACIÓN DE VARIABLES_____________________________________________//
 declaracion
     //Varias variables/una sin inicializar
-    : INT declaracion_multiple                      { $$ = new Declaracion($2, new Literal(0, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, Type.ENTERO) }
-    | DOUBLE declaracion_multiple                   { $$ = new Declaracion($2, new Literal(0.0, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, Type.DOBLE) }
-    | CHAR declaracion_multiple                     { $$ = new Declaracion($2, new Literal("\u0000", TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, Type.CARACTER) }
-    | BOOLEAN declaracion_multiple                  { $$ = new Declaracion($2, new Literal(true, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, Type.BOOLEAN) }
-    | STRING declaracion_multiple                   { $$ = new Declaracion($2, new Literal("", TipoLiteral.CADENA ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, Type.CADENA) }
+    : INT declaracion_multiple                      { $$ = new Declaracion($2, new Literal(0, TipoLiteral.ENTERO ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, null, null, TipoLiteral.ENTERO) }
+    | DOUBLE declaracion_multiple                   { $$ = new Declaracion($2, new Literal(0.0, TipoLiteral.DOBLE ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, null, null, TipoLiteral.DOBLE) }
+    | CHAR declaracion_multiple                     { $$ = new Declaracion($2, new Literal("\u0000", TipoLiteral.CARACTER ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, null, null, TipoLiteral.CARACTER) }
+    | BOOLEAN declaracion_multiple                  { $$ = new Declaracion($2, new Literal(true, TipoLiteral.BOOLEAN ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, null, null, TipoLiteral.BOOLEAN) }
+    | STRING declaracion_multiple                   { $$ = new Declaracion($2, new Literal("", TipoLiteral.CADENA ,@1.first_line, @1.first_column), @1.first_line, @1.first_column, 0, null, null, TipoLiteral.CADENA) }
     //Varias variables/una con un valor
-    | INT declaracion_multiple IGUAL expresion      { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, Type.ENTERO) }
-    | DOUBLE declaracion_multiple IGUAL expresion   { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, Type.DOBLE) }
-    | CHAR declaracion_multiple IGUAL expresion     { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, Type.CARACTER) }
-    | BOOLEAN declaracion_multiple IGUAL expresion  { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, Type.BOOLEAN) }
-    | STRING declaracion_multiple IGUAL expresion   { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, Type.CADENA) }
+    | INT declaracion_multiple IGUAL expresion      { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, null, null, TipoLiteral.ENTERO) }
+    | DOUBLE declaracion_multiple IGUAL expresion   { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, null, null, TipoLiteral.DOBLE) }
+    | CHAR declaracion_multiple IGUAL expresion     { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, null, null, TipoLiteral.CARACTER) }
+    | BOOLEAN declaracion_multiple IGUAL expresion  { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, null, null, TipoLiteral.BOOLEAN) }
+    | STRING declaracion_multiple IGUAL expresion   { $$ = new Declaracion($2, $4, @1.first_line, @1.first_column, 0, null, null, TipoLiteral.CADENA) }
 ;
 
 declaracion_multiple
@@ -203,8 +224,8 @@ declaracion_multiple
 ;
 
 asignacion 
-    : IDENTIFICADOR IGUAL expresion     { $$ = new Declaracion([$1.toLowerCase()], $3, @1.first_line, @1.first_column, 1, $3.tipo) }
-    | IDENTIFICADOR IGUAL casteos       { $$ = new Declaracion([$1.toLowerCase()], $3, @1.first_line, @1.first_column, 1, $3.tipo) }
+    : IDENTIFICADOR IGUAL expresion     { $$ = new Declaracion([$1.toLowerCase()], $3, @1.first_line, @1.first_column, 1, null, null, $3.tipo) }
+    | IDENTIFICADOR IGUAL casteos       { $$ = new Declaracion([$1.toLowerCase()], $3, @1.first_line, @1.first_column, 1, null, null, $3.tipo) }
 ;
 
 //_____________________________________________FUNCIÓN PRINT Y PRINTLN_____________________________________________//
@@ -279,8 +300,9 @@ statement
 
 //_____________________________________________FUNCIONES Y MÉTODOS_____________________________________________//
 funcion
-    : FUNCTION IDENTIFICADOR PAR_ABRE PAR_CIERRA statement      { $$ = new Funcion($2, $5, [], @1.first_line, @1.first_column); }
-    | FUNCTION IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA statement   { $$ = new Funcion($2, $6, $4, @1.first_line, @1.first_column); }
+    //id (): tipo {  } 
+    : IDENTIFICADOR PAR_ABRE PAR_CIERRA DOSPUNTOS tipo_dato statement               { $$ = new Funcion($1, $6, [], $5, @1.first_line, @1.first_column); }
+    | IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA DOSPUNTOS tipo_dato statement    { $$ = new Funcion($1, $7, $3, $6, @1.first_line, @1.first_column); }
 ;
 
 parametros
@@ -291,23 +313,33 @@ parametros
 llamadaFuncion
     : IDENTIFICADOR PAR_ABRE PAR_CIERRA     { $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column); }
     | IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA   { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column); }
+    | RUN 
+;
+
+tipo_dato
+    : INT       { $$ = TipoFuncion.INT }
+    | DOUBLE    { $$ = TipoFuncion.DOUBLE }
+    | CHAR      { $$ = TipoFuncion.CHAR }
+    | BOOLEAN   { $$ = TipoFuncion.BOOLEAN }
+    | STRING    { $$ = TipoFuncion.STRING }
+    | VOID      { $$ = TipoFuncion.VOID }
 ;
 
 //_____________________________________________INCREMENTO Y DECREMENTO_____________________________________________//
 incremento
-    : IDENTIFICADOR MAS_MAS PUNTO_Y_COMA    { $$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), @1.first_line, @1.first_column), true, @1.first_line, @1.first_column) }
+    : IDENTIFICADOR MAS_MAS PUNTO_Y_COMA    { $$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), 0, null, null, @1.first_line, @1.first_column), true, @1.first_line, @1.first_column) }
 ;
 
 decremento
-    : IDENTIFICADOR MENOS_MENOS PUNTO_Y_COMA    {$$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), @1.first_line, @1.first_column), false, @1.first_line, @1.first_column) }
+    : IDENTIFICADOR MENOS_MENOS PUNTO_Y_COMA    {$$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), 0, null, null, @1.first_line, @1.first_column), false, @1.first_line, @1.first_column) }
 ;
 
 incremento_sin_punto_y_coma
-    : IDENTIFICADOR MAS_MAS     { $$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), @1.first_line, @1.first_column), true, @1.first_line, @1.first_column) }
+    : IDENTIFICADOR MAS_MAS     { $$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), 0, null, null, @1.first_line, @1.first_column), true, @1.first_line, @1.first_column) }
 ;
 
 decremento_sin_punto_y_coma
-    : IDENTIFICADOR MENOS_MENOS     {$$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), @1.first_line, @1.first_column), false, @1.first_line, @1.first_column) }
+    : IDENTIFICADOR MENOS_MENOS     {$$ = new Increment_Decrement($1, new Acceso($1.toLowerCase(), 0, null, null, @1.first_line, @1.first_column), false, @1.first_line, @1.first_column) }
 ;
 
 //_____________________________________________OPERADOR TERNARIO_____________________________________________//
@@ -328,38 +360,36 @@ declaracion_vectores
     | vector_dos_dimensiones
 ;
 
-//Tipo(string), id(string), dimension1(lista), tam1(number), dimension2(lista), tam2(number)
 vector_una_dimension
     : INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.ENTERO, $2, [], $9, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.ENTERO, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
     | INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.ENTERO, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.ENTERO, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
 
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.DOBLE, $2, [], $9, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.DOBLE, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.DOBLE, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.DOBLE, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
 
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.CARACTER, $2, [], $9, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CARACTER, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.CARACTER, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CARACTER, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
 
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.BOOLEAN, $2, [], $9, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.BOOLEAN, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.BOOLEAN, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.BOOLEAN, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
 
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.CADENA, $2, [], $9, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CADENA, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.CADENA, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CADENA, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
 ;
 
-//Tipo(string), id(string), dimension1(lista), tam1(number), dimension2(lista), tam2(number)
 vector_dos_dimensiones
     : INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.ENTERO, $2, [], $11, $14, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.ENTERO, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
     | INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mi = 0;
@@ -372,12 +402,12 @@ vector_dos_dimensiones
                 }
                 if (auxi < ni) { auxi = ni; }
             }
-            $$ = new Matriz(Type.ENTERO, $2, $9, new Literal(mi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.ENTERO, $2, $9, new Literal(mi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.DOBLE, $2, [], $11, $14, @1.first_line, @1.first_column) }
-    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.DOBLE, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+    | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let md = 0;
             let auxd = 0;
@@ -387,12 +417,12 @@ vector_dos_dimensiones
                 for (const j of i) { nd++; }
                 if (auxd < nd) { auxd = nd; }
             }
-            $$ = new Matriz(Type.DOBLE, $2, $9, new Literal(md, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxd, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.DOBLE, $2, $9, new Literal(md, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxd, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.CARACTER, $2, [], $11, $14, @1.first_line, @1.first_column) }
-    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.CARACTER, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mc = 0;
             let auxc = 0;
@@ -402,12 +432,12 @@ vector_dos_dimensiones
                 for (const j of i) { nc++; }
                 if (auxc < nc) { auxc = nc; }
             }
-            $$ = new Matriz(Type.CARACTER, $2, $9, new Literal(mc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column)
+            $$ = new Matriz(Type.CARACTER, $2, $9, new Literal(mc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column)
         }
 
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.BOOLEAN, $2, [], $11, $14, @1.first_line, @1.first_column) }
-    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.BOOLEAN, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+    | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mb = 0;
             let auxb = 0;
@@ -417,12 +447,12 @@ vector_dos_dimensiones
                 for (const j of i) { nb++; }
                 if (auxb < nb) { auxb = nb; }
             }
-            $$ = new Matriz(Type.BOOLEAN, $2, $9, new Literal(mb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.BOOLEAN, $2, $9, new Literal(mb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.CADENA, $2, [], $11, $14, @1.first_line, @1.first_column) }
-    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE expresion COR_CIERRA
+        { $$ = new Matriz(Type.CADENA, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+    | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let ms = 0; 
             let auxs = 0;
@@ -432,7 +462,7 @@ vector_dos_dimensiones
                 for (const j of i) { ns++; }
                 if (auxs < ns) { auxs = ns; }
             }
-            $$ = new Matriz(Type.CADENA, $2, $9, new Literal(ms, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxs, TipoLiteral.ENTERO, @1.first_line, @1.first_column), @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.CADENA, $2, $9, new Literal(ms, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxs, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
         }
 ;
 
@@ -444,7 +474,46 @@ acceso_vectores
 ;
 
 modificacion_vectores
-    : IDENTIFICADOR COR_ABRE expresion COR_CIERRA IGUAL expresion PUNTO_Y_COMA
+    : IDENTIFICADOR COR_ABRE expresion COR_CIERRA IGUAL expresion
+        { $$ = new Declaracion([$1], $6, @1.first_line, @1.first_column, 2, $3, null, $6.tipo) }
+    | IDENTIFICADOR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA IGUAL expresion
+        { $$ = new Declaracion([$1], $9, @1.first_line, @1.first_column, 3, $3, $6, $9.tipo) }
+;
+
+//_____________________________________________FUNCIONES NATIVAS_____________________________________________//
+type_of
+    : TYPEOF PAR_ABRE expresion PAR_CIERRA
+        { $$ = new TypeOf($3, @1.first_line, @1.first_column) }
+;
+
+to_string
+    : TOSTRING PAR_ABRE expresion PAR_CIERRA
+        { $$ = new ToString($3, @1.first_line, @1.first_column) }
+;
+
+to_char_array
+    : TOCHARARRAY PAR_ABRE expresion PAR_CIERRA
+        { $$ = new ToCharArray($3, @1.first_line, @1.first_column) }
+;
+
+length_
+    : LENGTH PAR_ABRE expresion PAR_CIERRA
+        { $$ = new Length($3, @1.first_line, @1.first_column) }
+;
+
+to_lower
+    : TOLOWER PAR_ABRE expresion PAR_CIERRA
+        { $$ = new ToLower($3, @1.first_line, @1.first_column) }
+;
+
+to_upper
+    : TOUPPER PAR_ABRE expresion PAR_CIERRA
+        { $$ = new ToUpper($3, @1.first_line, @1.first_column) }
+;
+
+round
+    : ROUND PAR_ABRE expresion PAR_CIERRA
+        { $$ = new Round($3, @1.first_line, @1.first_column) }
 ;
 
 //_____________________________________________EXPRESION_____________________________________________//
@@ -487,4 +556,12 @@ expresion
     //Vectores
     | COR_ABRE ListaExpr COR_CIERRA     { $$ = $2 }
     | acceso_vectores                   { $$ = $1 }
+    //Funciones nativas
+    | type_of                           { $$ = $1 }
+    | to_string                         { $$ = $1 }
+    | to_char_array                     { $$ = $1 }
+    | length_                           { $$ = $1 }
+    | to_lower                          { $$ = $1 }
+    | to_upper                          { $$ = $1 }
+    | round                             { $$ = $1 }
 ;

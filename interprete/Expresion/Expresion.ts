@@ -12,7 +12,9 @@ export abstract class Expresion { //Clase padre
         this.column = column;
     }
 
-    public abstract execute(ambito: Ambito): Retorno;
+    public abstract execute(ambito: Ambito): Retorno
+
+    //public abstract grafo()
 
     //Tipo dominante para la suma
     public tipoDominante(tipo1: Type, tipo2: Type): Type {

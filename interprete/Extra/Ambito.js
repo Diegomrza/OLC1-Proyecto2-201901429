@@ -10,17 +10,17 @@ class Ambito {
         this.funciones = new Map();
     }
     //____________________________________Variables____________________________________//
-    crearVar(id, value, type, line, column) {
+    crearVar(id, value, type, line, column, tipoDato) {
         if (!this.variables.has(id)) {
-            this.variables.set(id, new Simbolo_1.Simbolo(value, id, type));
+            this.variables.set(id, new Simbolo_1.Simbolo(value, id, type, tipoDato));
         }
         else {
             throw new Error_1.Error_(line, column, 'Semántico', 'Ya existe una variable con ese nombre: ' + id);
         }
     }
-    setVal(id, value, type, line, column, tipoAsignacion) {
+    setVal(id, value, type, line, column, tipoAsignacion, tipoDato) {
         if (tipoAsignacion == 0) { //Para crear la variable
-            this.crearVar(id, value, type, line, column);
+            this.crearVar(id, value, type, line, column, tipoDato);
         }
         else {
             let env = this;
@@ -28,7 +28,7 @@ class Ambito {
                 if (env.variables.has(id)) {
                     const val = env.variables.get(id);
                     if (val.type == type) {
-                        env.variables.set(id, new Simbolo_1.Simbolo(value, id, type));
+                        env.variables.set(id, new Simbolo_1.Simbolo(value, id, type, tipoDato));
                     }
                     else {
                         throw new Error_1.Error_(line, column, 'Semántico', 'No se puede asignar: ' + value + ' a ' + id);
@@ -50,9 +50,14 @@ class Ambito {
         return null;
     }
     //____________________________________Funciones____________________________________//
-    guardarFuncion(id, funcion) {
+    guardarFuncion(id, funcion, line, column) {
         //Ver si la funcion ya existe, reportar error
-        this.funciones.set(id, funcion);
+        if (!this.funciones.has(id)) {
+            this.funciones.set(id, funcion);
+        }
+        else {
+            throw new Error_1.Error_(line, column, "Semántico", `Ya existe una función con ese nombre: ${id}.`);
+        }
     }
     getFuncion(id) {
         let env = this;

@@ -16,19 +16,19 @@ export class Increment_Decrement extends Instruccion {
         if (val.type == Type.DOBLE) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             } else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             return {value:val.value, type:Type.DOBLE}
         } else if (val.type == Type.ENTERO) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             } else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
             }
             return {value:val.value, type:Type.ENTERO}
         } else {

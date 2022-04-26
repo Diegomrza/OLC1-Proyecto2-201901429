@@ -17,7 +17,8 @@ class Acceso extends Expresion_1.Expresion {
             if (this.tipoAcceso == 0) { //Variables
                 return {
                     value: value.valor,
-                    type: value.type
+                    type: value.type,
+                    tipoDato: value.TipoDato
                 };
             }
             else if (this.tipoAcceso == 1) { //Vector
@@ -25,7 +26,8 @@ class Acceso extends Expresion_1.Expresion {
                 let vector = value.valor;
                 return {
                     value: vector[v1.value],
-                    type: value.type
+                    type: value.type,
+                    tipoDato: value.TipoDato
                 };
             }
             else if (this.tipoAcceso == 2) { //Matriz
@@ -34,7 +36,8 @@ class Acceso extends Expresion_1.Expresion {
                 let vector = value.valor;
                 return {
                     value: vector[v1.value][v2.value],
-                    type: value.type
+                    type: value.type,
+                    tipoDato: value.TipoDato
                 };
             }
         }

@@ -14,3 +14,12 @@ export abstract class Instruccion {
 
     public abstract execute(ambito: Ambito): any;
 }
+
+export enum TipoFuncion {
+    INT,
+    DOUBLE,
+    CHAR,
+    BOOLEAN,
+    STRING,
+    VOID
+}

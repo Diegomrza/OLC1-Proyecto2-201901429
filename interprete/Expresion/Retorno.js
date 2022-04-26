@@ -7,7 +7,8 @@ var Type;
     Type[Type["DOBLE"] = 1] = "DOBLE";
     Type[Type["BOOLEAN"] = 2] = "BOOLEAN";
     Type[Type["CARACTER"] = 3] = "CARACTER";
-    Type[Type["CADENA"] = 4] = "CADENA"; //CADENA
+    Type[Type["CADENA"] = 4] = "CADENA";
+    Type[Type["VECTOR"] = 5] = "VECTOR";
 })(Type = exports.Type || (exports.Type = {}));
 //Matriz tipo dominante suma
 exports.tipos = [

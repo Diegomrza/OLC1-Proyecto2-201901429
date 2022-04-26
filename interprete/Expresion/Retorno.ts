@@ -3,7 +3,8 @@ export enum Type{
     DOBLE = 1,//DOUBLE
     BOOLEAN = 2,//BOOLEAN
     CARACTER = 3,//CARACTER
-    CADENA = 4//CADENA
+    CADENA = 4,//CADENA
+    VECTOR = 5
 }
 
 export type Retorno = {

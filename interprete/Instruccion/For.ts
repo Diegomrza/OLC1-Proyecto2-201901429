@@ -12,22 +12,28 @@ export class For extends Instruccion {
 
     public execute(ambito: Ambito) {
 
-        this.decl_asig.execute(ambito);
-        let val = this.condicion.execute(ambito);
+        const nuevoAmbito = new Ambito(ambito); //Ambito para declaracion o asignacion
+        this.decl_asig.execute(nuevoAmbito);    //Ejecutamos la declaracion
 
+        let val = this.condicion.execute(nuevoAmbito);  //
+        
+        
         if (val.type != Type.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`)
 
         while (val.value) {
-            const retorno = this.cuerpo.execute(ambito);
+            const entorno = new Ambito(nuevoAmbito);    //Ambito del for
+
+            const retorno = this.cuerpo.execute(entorno);   //
             if (retorno != null && retorno != undefined) {
                 if (retorno.type == 'Break') {
                     break;
-                } else if (retorno.this == 'Continue') {
+                } else if (retorno.type == 'Continue') {
                     continue;
                 }
             }
-            this.actualizacion.execute(ambito); //Actualizacion tiene que ser de tipo declaracion o de tipo incremento/decremento
-            val = this.condicion.execute(ambito); //tipo retorno: {type, value}
+            
+            this.actualizacion.execute(nuevoAmbito); //Actualizacion tiene que ser de tipo declaracion o de tipo incremento/decremento
+            val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value}
         }
 
     }

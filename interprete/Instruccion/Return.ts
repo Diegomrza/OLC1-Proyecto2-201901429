@@ -1,20 +1,15 @@
-// function noEsDiez(){
-//     print("------");
-//     print("No es diez");
-//     print("------");
-// }
+import { Expresion } from "../Expresion/Expresion";
+import { Ambito } from "../Extra/Ambito";
+import { Instruccion } from "./Instruccion";
 
-// function main(n) {
+export class Return extends Instruccion {
+    constructor(private expresion:Expresion | Instruccion, line:number, column:number) {
+        super(line, column);
+    }
 
-//     if (n == 10) {
-//         print("------");
-//         print("Diez");
-//         print("------");
-//     } else {
-//         print("------");
-//         noEsDiez();
-//         print("------");
-//     }
+    public execute(ambito: Ambito) {
+        let Valor = this.expresion.execute(ambito);
+        return {type: "Return", line: this.line, column: this.column, value: Valor.value}
+    }
 
-// }
-// main(10);
+}

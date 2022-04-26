@@ -3,26 +3,28 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Vector = void 0;
 const Error_1 = require("../Error/Error");
 const Literal_1 = require("../Expresion/Literal");
+const Retorno_1 = require("../Expresion/Retorno");
 const Instruccion_1 = require("./Instruccion");
 class Vector extends Instruccion_1.Instruccion {
-    constructor(tipo, id, arreglo, tam, line, column) {
+    constructor(tipo, id, arreglo, tam, tipoEs, line, column) {
         super(line, column);
         this.tipo = tipo;
         this.id = id;
         this.arreglo = arreglo;
         this.tam = tam;
+        this.tipoEs = tipoEs;
     }
     execute(ambito) {
-        //console.log("\n\nNombre: ",this.id);
-        //console.log("Dimension: ", this.arreglo);
-        //console.log("Tamaño arreglo: ", this.tam);
         let tamanio = this.tam.execute(ambito);
+        if (tamanio.type != Retorno_1.Type.ENTERO) {
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'El atributo tamaño no es de tipo int');
+        }
         if (this.arreglo.length == 0) {
             let lista = [];
             for (let i = 0; i < tamanio.value; i++) {
                 lista.push(this.defecto(this.tipo));
             }
-            ambito.setVal(this.id, lista, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, lista, this.tipoEs, this.line, this.column, 0, this.tipo);
         }
         else {
             let aux = [];
@@ -35,7 +37,7 @@ class Vector extends Instruccion_1.Instruccion {
                     throw new Error_1.Error_(this.line, this.column, "Semántico", `El valor ${valor.value} no coincide con el tipo ${(0, Literal_1.nombreTipos)(this.tipo)}`);
                 }
             }
-            ambito.setVal(this.id, aux, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, aux, this.tipoEs, this.line, this.column, 0, this.tipo);
         }
     }
     defecto(tipo) {
@@ -62,16 +64,5 @@ exports.Vector = Vector;
  *
  * TIPO ID [] = [x1, x2, ...];
  * TIPO ID [][] = [[x1, x2, ...], [x1, x2, ...], [x1, x2, ...], ...];
- *
- *
- * if
- * else
- * while
- * do while
- * switch
- *  case
- *  default
- * for
- *
- *
+
  */ 

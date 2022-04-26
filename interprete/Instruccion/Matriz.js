@@ -5,13 +5,14 @@ const Error_1 = require("../Error/Error");
 const Literal_1 = require("../Expresion/Literal");
 const Instruccion_1 = require("./Instruccion");
 class Matriz extends Instruccion_1.Instruccion {
-    constructor(tipo, id, arreglo, tam1, tam2, line, column) {
+    constructor(tipo, id, arreglo, tam1, tam2, tipoEs, line, column) {
         super(line, column);
         this.tipo = tipo;
         this.id = id;
         this.arreglo = arreglo;
         this.tam1 = tam1;
         this.tam2 = tam2;
+        this.tipoEs = tipoEs;
     }
     execute(ambito) {
         let tamFilas = this.tam1.execute(ambito);
@@ -25,7 +26,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 filas.push(columnas);
             }
-            ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, filas, this.tipoEs, this.line, this.column, 0, this.tipo);
         }
         else {
             let auxFilas = [];
@@ -55,7 +56,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
-            ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0);
+            ambito.setVal(this.id, auxFilas, this.tipoEs, this.line, this.column, 0, this.tipo);
         }
     }
     defecto(tipo) {
