@@ -4,6 +4,7 @@ exports.Matriz = void 0;
 const Error_1 = require("../Error/Error");
 const Literal_1 = require("../Expresion/Literal");
 const Instruccion_1 = require("./Instruccion");
+const Retorno_1 = require("../Expresion/Retorno");
 class Matriz extends Instruccion_1.Instruccion {
     constructor(tipo, id, arreglo, tam1, tam2, tipoEs, line, column) {
         super(line, column);
@@ -17,6 +18,10 @@ class Matriz extends Instruccion_1.Instruccion {
     execute(ambito) {
         let tamFilas = this.tam1.execute(ambito);
         let tamColumnas = this.tam2.execute(ambito);
+        if (tamFilas.tipoDato != Retorno_1.TipoDato.ENTERO)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `El valor ${tamFilas.value} no es int`);
+        if (tamColumnas.tipoDato != Retorno_1.TipoDato.ENTERO)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `El valor ${tamColumnas.value} no es int`);
         if (this.arreglo.length == 0) {
             let filas = [];
             for (let i = 0; i < tamFilas.value; i++) {
@@ -26,7 +31,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 filas.push(columnas);
             }
-            ambito.setVal(this.id, filas, this.tipoEs, this.line, this.column, 0, this.tipo);
+            ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
         else {
             let auxFilas = [];
@@ -56,7 +61,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
-            ambito.setVal(this.id, auxFilas, this.tipoEs, this.line, this.column, 0, this.tipo);
+            ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
     }
     defecto(tipo) {

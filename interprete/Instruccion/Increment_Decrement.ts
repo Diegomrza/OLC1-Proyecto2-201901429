@@ -16,23 +16,23 @@ export class Increment_Decrement extends Instruccion {
         if (val.type == Type.DOBLE) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             } else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             return {value:val.value, type:Type.DOBLE}
         } else if (val.type == Type.ENTERO) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             } else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             return {value:val.value, type:Type.ENTERO}
         } else {
-            throw new Error_(this.line, this.column, "Semántico", `Este operador no aplica con ${nombreTipos(val.type)}`);
+            throw new Error_(this.line, this.column, "Semántico", `Este operador no aplica con ${nombreTipos(val.tipoDato)}`);
         }
         
     }

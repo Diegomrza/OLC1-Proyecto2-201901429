@@ -1,17 +1,18 @@
 import { Error_ } from "../Error/Error";
-import { Type } from "../Expresion/Retorno";
+import { Expresion } from "../Expresion/Expresion";
+import { TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
 export class If extends Instruccion {
-    constructor(private condicion, private cuerpo: Instruccion, private elsE: Instruccion, line: number, column: number) {
+    constructor(private condicion: Expresion, private cuerpo: Instruccion, private elsE: Instruccion, line: number, column: number) {
         super(line, column)
     }
 
     public execute(ambito: Ambito) {
         const value = this.condicion.execute(ambito)
 
-        if (value.type != Type.BOOLEAN) throw new Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar en el if no es de tipo boolean')
+        if (value.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar en el if no es de tipo booleano')
 
         if (value.value) {
             return this.cuerpo.execute(ambito);

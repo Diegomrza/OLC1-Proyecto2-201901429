@@ -4,11 +4,19 @@ import { Expresion } from "./Expresion";
 import { Retorno } from "./Retorno";
 
 export class Acceso extends Expresion {
-    constructor(private id: string, private tipoAcceso: number, private valor1: Expresion, private valor2: Expresion, line: number, column: number) {
+
+    constructor(
+        public id: string,          //identificador de la variable
+        public tipoAcceso: number,  //Variable = 0, vector = 1, matriz = 2
+        public valor1: Expresion,   //Para vector se usa valor1
+        public valor2: Expresion,   //Para matriz se usa valor1 y valor2
+        public line: number,        //Linea
+        public column: number       //Columna
+    ) {
         super(line, column)
     }
 
-    public execute(ambito: Ambito) {
+    public execute(ambito: Ambito): Retorno {
 
         const value = ambito.getVal(this.id);
 
@@ -17,7 +25,7 @@ export class Acceso extends Expresion {
                 return {
                     value: value.valor,
                     type: value.type,
-                    tipoDato:value.TipoDato
+                    tipoDato: value.TipoDato
                 };
             } else if (this.tipoAcceso == 1) { //Vector
                 let v1 = this.valor1.execute(ambito);
@@ -37,7 +45,6 @@ export class Acceso extends Expresion {
                     tipoDato: value.TipoDato
                 }
             }
-
         } else {
             throw new Error_(this.line, this.column, 'Semántico', `No se encuentra la variable ${this.id}`);
         }

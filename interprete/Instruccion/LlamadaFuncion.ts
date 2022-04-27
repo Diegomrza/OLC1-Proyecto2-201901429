@@ -21,7 +21,7 @@ export class LlamadaFuncion extends Instruccion {
 
             const value = this.expresiones[i].execute(ambito);
             //id, valor, tipo, linea, columna, tipoAsignacion, tipoDato
-            newEnv.setVal(funcion.parametros[i], value.value, value.type, this.line, this.column, 0, value.type);
+            newEnv.setVal(funcion.parametros[i], value.value, value.type, this.line, this.column, 0, value.tipoDato);
 
         }
 

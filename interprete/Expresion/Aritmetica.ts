@@ -1,19 +1,19 @@
 import { Expresion } from "./Expresion";
-import { Retorno, Type } from "./Retorno"
+import { Retorno, TipoDato, Type } from "./Retorno"
 import { Error_ } from "../Error/Error";
 import { Ambito } from "../Extra/Ambito";
 import { nombreTipos } from "./Literal";
 
 export class Aritmetica extends Expresion {
 
-    constructor(private left: Expresion, private right: Expresion, private tipo: TipoAritmetica, line: number, column: number) {
+    constructor(public left: Expresion, public right: Expresion, public tipo: TipoAritmetica, line: number, column: number) {
         super(line, column);
     }
 
     public execute(ambito: Ambito): Retorno {
 
         const leftValue = this.left.execute(ambito);    //va a traer un retorno que contiene: value, type
-        const rightValue = this.right.execute(ambito);  //va a traer un retorno que contiene: value, type   
+        const rightValue = this.right.execute(ambito);  //va a traer un retorno que contiene: value, type 
 
         let asciiLeft = null;
         if (leftValue.type == Type.CARACTER && rightValue.type != Type.CARACTER) {   //Si left = char y right != char
@@ -31,22 +31,50 @@ export class Aritmetica extends Expresion {
         if (this.tipo == TipoAritmetica.SUMA) {//SUMA
 
             if (dominante == Type.CADENA) {                                                                         //Tipo dominante string
-                return { value: (leftValue.value.toString() + rightValue.value.toString()), type: Type.CADENA };
+                return { 
+                    value: (leftValue.value.toString() + rightValue.value.toString()), 
+                    type: Type.CADENA,
+                    tipoDato: TipoDato.CADENA
+                };
             } else if (dominante == Type.ENTERO) {                                                                  //Si el tipo dominante es int
                 if (asciiLeft != null) {                                                                            //Si el izquierdo tiene un ascii
-                    return { value: (asciiLeft + Number(rightValue.value)), type: Type.ENTERO };
+                    return { 
+                        value: (asciiLeft + Number(rightValue.value)), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    };
                 } else if (asciiRight != null) {                                                                    //Si el derecho tiene un ascii
-                    return { value: (Number(leftValue.value) + asciiRight), type: Type.ENTERO };
+                    return { 
+                        value: (Number(leftValue.value) + asciiRight), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    };
                 } else {                                                                                            //Caso general
-                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Type.ENTERO };
+                    return { 
+                        value: (Number(leftValue.value) + Number(rightValue.value)), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    };
                 }
             } else if (dominante == Type.DOBLE) {                                                                   //Tipo dominante double
                 if (asciiLeft != null) {                                                                            //Si el izquierdo tiene un ascii
-                    return { value: (asciiLeft + Number(rightValue.value)), type: Type.DOBLE };
+                    return { 
+                        value: (asciiLeft + Number(rightValue.value)), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    };
                 } else if (asciiRight != null) {                                                                    //Si el derecho tiene un ascii
-                    return { value: (Number(leftValue.value) + asciiRight), type: Type.DOBLE };
+                    return { 
+                        value: (Number(leftValue.value) + asciiRight), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    };
                 } else {                                                                                            //Caso general
-                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Type.DOBLE };
+                    return { 
+                        value: (Number(leftValue.value) + Number(rightValue.value)), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    };
                 }
             } else {
                 throw new Error_(this.line, this.column, 'Semántico', 'No se puede operar: ' + leftValue.type + ' con ' + rightValue.type); //Error
@@ -56,19 +84,43 @@ export class Aritmetica extends Expresion {
 
             if (dominante == Type.ENTERO) {
                 if (asciiLeft != null) {
-                    return { value: (asciiLeft - rightValue.value), type: Type.ENTERO }
+                    return { 
+                        value: (asciiLeft - rightValue.value), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    }
                 } else if (asciiRight != null) {
-                    return { value: (leftValue.value - asciiRight), type: Type.ENTERO }
+                    return { 
+                        value: (leftValue.value - asciiRight), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    }
                 } else {
-                    return { value: (leftValue.value - rightValue.value), type: Type.ENTERO }
+                    return { 
+                        value: (leftValue.value - rightValue.value), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    }
                 }
             } else if (dominante == Type.DOBLE) {
                 if (asciiLeft != null) {
-                    return { value: (asciiLeft - rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: (asciiLeft - rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else if (asciiRight != null) {
-                    return { value: (leftValue.value - asciiRight), type: Type.DOBLE }
+                    return { 
+                        value: (leftValue.value - asciiRight), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else {
-                    return { value: (leftValue.value - rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: (leftValue.value - rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 }
             } else {
                 throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -79,11 +131,23 @@ export class Aritmetica extends Expresion {
             if (dominante == Type.ENTERO) {
                 if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return { value: (asciiLeft * rightValue.value), type: Type.ENTERO }
+                        return { 
+                            value: (asciiLeft * rightValue.value), 
+                            type: Type.ENTERO,
+                            tipoDato: TipoDato.ENTERO
+                        }
                     } else if (asciiRight != null) {
-                        return { value: (leftValue.value * asciiRight), type: Type.ENTERO }
+                        return { 
+                            value: (leftValue.value * asciiRight), 
+                            type: Type.ENTERO,
+                            tipoDato: TipoDato.ENTERO
+                        }
                     } else {
-                        return { value: (leftValue.value * rightValue.value), type: Type.ENTERO }
+                        return { 
+                            value: (leftValue.value * rightValue.value), 
+                            type: Type.ENTERO,
+                            tipoDato: TipoDato.ENTERO
+                        }
                     }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -92,11 +156,23 @@ export class Aritmetica extends Expresion {
             } else if (dominante == Type.DOBLE) {
                 if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return { value: (asciiLeft * rightValue.value), type: Type.DOBLE }
+                        return { 
+                            value: (asciiLeft * rightValue.value), 
+                            type: Type.DOBLE,
+                            tipoDato: TipoDato.DOBLE
+                        }
                     } else if (asciiRight != null) {
-                        return { value: (leftValue.value * asciiRight), type: Type.DOBLE }
+                        return { 
+                            value: (leftValue.value * asciiRight), 
+                            type: Type.DOBLE,
+                            tipoDato: TipoDato.DOBLE
+                        }
                     } else {
-                        return { value: (leftValue.value * rightValue.value), type: Type.DOBLE }
+                        return { 
+                            value: (leftValue.value * rightValue.value), 
+                            type: Type.DOBLE,
+                            tipoDato: TipoDato.DOBLE
+                        }
                     }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -112,11 +188,23 @@ export class Aritmetica extends Expresion {
                         throw new Error_(this.line, this.column, "Semántico", "No se puede dividir entre 0");
                     } else {
                         if (asciiLeft != null) {
-                            return { value: (asciiLeft / rightValue.value), type: Type.DOBLE }
+                            return { 
+                                value: (asciiLeft / rightValue.value), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
+                            }
                         } else if (asciiRight != null) {
-                            return { value: (leftValue.value / asciiRight), type: Type.DOBLE }
+                            return { 
+                                value: (leftValue.value / asciiRight), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
+                            }
                         } else {
-                            return { value: (leftValue.value / rightValue.value), type: Type.DOBLE }
+                            return { 
+                                value: (leftValue.value / rightValue.value), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
+                            }
                         }
                     }
                 } else {
@@ -128,14 +216,22 @@ export class Aritmetica extends Expresion {
                         throw new Error_(this.line, this.column, "Semántico", "No se puede dividir entre 0");
                     } else {
                         if (asciiLeft != null) {
-                            return { value: (asciiLeft / rightValue.value), type: Type.DOBLE }
+                            return { 
+                                value: (asciiLeft / rightValue.value), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
+                            }
                         } else if (asciiRight != null) {
                             return {
-                                value: (leftValue.value / asciiRight), type: Type.DOBLE
+                                value: (leftValue.value / asciiRight), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
                             }
                         } else {
                             return {
-                                value: (leftValue.value / rightValue.value), type: Type.DOBLE
+                                value: (leftValue.value / rightValue.value), 
+                                type: Type.DOBLE,
+                                tipoDato: TipoDato.DOBLE
                             }
                         }
                     }
@@ -150,18 +246,34 @@ export class Aritmetica extends Expresion {
 
             if (dominante == Type.ENTERO) {
                 if (leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Type.ENTERO }
+                    return { 
+                        value: Math.pow(leftValue.value, rightValue.value), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
                 }
                 //return {value: Math.pow(leftValue.value, rightValue.value),type: Type.ENTERO}
             } else if (dominante == Type.DOBLE) {
                 if (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: Math.pow(leftValue.value, rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else if (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: Math.pow(leftValue.value, rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else if (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: Math.pow(leftValue.value, rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
                 }
@@ -177,7 +289,11 @@ export class Aritmetica extends Expresion {
                     (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) ||
                     (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
                     (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) {
-                    return { value: (leftValue.value % rightValue.value), type: Type.ENTERO }
+                    return { 
+                        value: (leftValue.value % rightValue.value), 
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
+                    }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
                 }
@@ -186,7 +302,11 @@ export class Aritmetica extends Expresion {
                     (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) ||
                     (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
                     (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) {
-                    return { value: (leftValue.value % rightValue.value), type: Type.DOBLE }
+                    return { 
+                        value: (leftValue.value % rightValue.value), 
+                        type: Type.DOBLE,
+                        tipoDato: TipoDato.DOBLE
+                    }
                 } else {
                     throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
                 }
@@ -201,7 +321,7 @@ export class Aritmetica extends Expresion {
 
     }
 
-    private mensaje(leftValue:Retorno, rightValue:Retorno):string{
+    private mensaje(leftValue: Retorno, rightValue: Retorno): string {
         return `No se puede realizar esta operación => ${tipoOperacion(this.tipo)} con: ` + nombreTipos(leftValue.type) + ' y ' + nombreTipos(rightValue.type);
     }
 

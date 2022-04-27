@@ -3,7 +3,7 @@
     const { Aritmetica, TipoAritmetica } = require('../Expresion/Aritmetica')
     const { Relacional, TipoRelacional } = require('../Expresion/Relacional')
     const { Logica, TipoLogica } = require('../Expresion/Logica')
-    const { Type } = require('../Expresion/Retorno')
+    const { Type, TipoDato } = require('../Expresion/Retorno')
     const { Literal, TipoLiteral } = require('../Expresion/Literal')
     const { Acceso } = require('../Expresion/Acceso')
 
@@ -192,7 +192,7 @@ inicio
     | for
     | switch
     | funcion
-    | llamadaFuncion PUNTO_Y_COMA
+    //| llamadaFuncion PUNTO_Y_COMA
     | incremento
     | decremento
     | BREAK PUNTO_Y_COMA    { $$ = new Break(@1.first_line, @1.first_column) }
@@ -313,7 +313,7 @@ parametros
 llamadaFuncion
     : IDENTIFICADOR PAR_ABRE PAR_CIERRA     { $$ = new LlamadaFuncion($1, [], @1.first_line, @1.first_column); }
     | IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA   { $$ = new LlamadaFuncion($1, $3, @1.first_line, @1.first_column); }
-    | RUN 
+    //| RUN 
 ;
 
 tipo_dato
@@ -362,34 +362,40 @@ declaracion_vectores
 
 vector_una_dimension
     : INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.ENTERO, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.ENTERO, $2, [], $9, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.ENTERO, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.ENTERO, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) }
 
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.DOBLE, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.DOBLE, $2, [], $9, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.DOBLE, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.DOBLE, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) }
 
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.CARACTER, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CARACTER, $2, [], $9, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.CARACTER, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CARACTER, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) }
+    | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL to_char_array
+        { 
+            let objeto = new Vector(Type.CARACTER, $2, [], 0, TipoDato.VECTOR, @1.first_line, @1.first_column);
+            objeto.charArray = $6;
+            $$ = objeto;
+        }
 
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.BOOLEAN, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.BOOLEAN, $2, [], $9, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.BOOLEAN, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.BOOLEAN, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) }
 
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA
-        { $$ = new Vector(Type.CADENA, $2, [], $9, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CADENA, $2, [], $9, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
-        { $$ = new Vector(Type.CADENA, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Vector(Type.CADENA, $2, $7, new Literal($7.length, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) }
 ;
 
 vector_dos_dimensiones
     : INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.ENTERO, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.ENTERO, $2, [], $11, $14, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mi = 0;
@@ -402,11 +408,11 @@ vector_dos_dimensiones
                 }
                 if (auxi < ni) { auxi = ni; }
             }
-            $$ = new Matriz(Type.ENTERO, $2, $9, new Literal(mi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.ENTERO, $2, $9, new Literal(mi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxi, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.DOBLE, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.DOBLE, $2, [], $11, $14, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let md = 0;
@@ -417,11 +423,11 @@ vector_dos_dimensiones
                 for (const j of i) { nd++; }
                 if (auxd < nd) { auxd = nd; }
             }
-            $$ = new Matriz(Type.DOBLE, $2, $9, new Literal(md, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxd, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.DOBLE, $2, $9, new Literal(md, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxd, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.CARACTER, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.CARACTER, $2, [], $11, $14, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mc = 0;
@@ -432,11 +438,11 @@ vector_dos_dimensiones
                 for (const j of i) { nc++; }
                 if (auxc < nc) { auxc = nc; }
             }
-            $$ = new Matriz(Type.CARACTER, $2, $9, new Literal(mc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column)
+            $$ = new Matriz(Type.CARACTER, $2, $9, new Literal(mc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxc, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column)
         }
 
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.BOOLEAN, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.BOOLEAN, $2, [], $11, $14, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let mb = 0;
@@ -447,11 +453,11 @@ vector_dos_dimensiones
                 for (const j of i) { nb++; }
                 if (auxb < nb) { auxb = nb; }
             }
-            $$ = new Matriz(Type.BOOLEAN, $2, $9, new Literal(mb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.BOOLEAN, $2, $9, new Literal(mb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxb, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) 
         }
 
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
-        { $$ = new Matriz(Type.CADENA, $2, [], $11, $14, Type.VECTOR, @1.first_line, @1.first_column) }
+        { $$ = new Matriz(Type.CADENA, $2, [], $11, $14, TipoDato.VECTOR, @1.first_line, @1.first_column) }
     | STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
         { 
             let ms = 0; 
@@ -462,7 +468,7 @@ vector_dos_dimensiones
                 for (const j of i) { ns++; }
                 if (auxs < ns) { auxs = ns; }
             }
-            $$ = new Matriz(Type.CADENA, $2, $9, new Literal(ms, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxs, TipoLiteral.ENTERO, @1.first_line, @1.first_column), Type.VECTOR, @1.first_line, @1.first_column) 
+            $$ = new Matriz(Type.CADENA, $2, $9, new Literal(ms, TipoLiteral.ENTERO, @1.first_line, @1.first_column), new Literal(auxs, TipoLiteral.ENTERO, @1.first_line, @1.first_column), TipoDato.VECTOR, @1.first_line, @1.first_column) 
         }
 ;
 
@@ -493,7 +499,7 @@ to_string
 
 to_char_array
     : TOCHARARRAY PAR_ABRE expresion PAR_CIERRA
-        { $$ = new ToCharArray($3, @1.first_line, @1.first_column) }
+        { $$ = new ToCharArray($3, @1.first_line, @1.first_column); }
 ;
 
 length_

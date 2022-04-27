@@ -1,6 +1,6 @@
 import { Error_ } from "../Error/Error";
 import { Expresion } from "../Expresion/Expresion";
-import { Type } from "../Expresion/Retorno";
+import { TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
@@ -12,7 +12,7 @@ export class While extends Instruccion {
     public execute(ambito: Ambito) {
         let value = this.condicion.execute(ambito)
 
-        if (value.type != Type.BOOLEAN) throw new Error_(this.line, this.column, 'Semántico', "La condicion a evaluar no es de tipo boolean")
+        if (value.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, 'Semántico', "La condicion a evaluar no es de tipo boolean")
 
         while (value.value) {
             const retorno = this.cuerpo.execute(ambito)

@@ -12,12 +12,13 @@ class ToUpper extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         let valor = this.expresion.execute(ambito);
-        if (valor.type != Retorno_1.Type.CADENA)
-            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se aplicar esta función a un tipo: ${(0, Literal_1.nombreTipos)(valor.type)}`);
+        if (valor.tipoDato != Retorno_1.TipoDato.CADENA)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se aplicar esta función a un tipo: ${(0, Literal_1.nombreTipos)(valor.tipoDato)}`);
         let mayus = valor.value.toUpperCase();
         return {
             value: mayus,
-            type: Retorno_1.Type.CADENA
+            type: Retorno_1.Type.CADENA,
+            tipoDato: Retorno_1.TipoDato.CADENA
         };
     }
 }

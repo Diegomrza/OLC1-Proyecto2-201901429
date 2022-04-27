@@ -13,8 +13,8 @@ class If extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         const value = this.condicion.execute(ambito);
-        if (value.type != Retorno_1.Type.BOOLEAN)
-            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar en el if no es de tipo boolean');
+        if (value.tipoDato != Retorno_1.TipoDato.BOOLEAN)
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar en el if no es de tipo booleano');
         if (value.value) {
             return this.cuerpo.execute(ambito);
         }

@@ -12,12 +12,13 @@ class Round extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         let valor = this.expresion.execute(ambito);
-        if (valor.type != Retorno_1.Type.DOBLE)
-            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se puede redondear un tipo: ${(0, Literal_1.nombreTipos)(valor.type)}`);
+        if (valor.tipoDato != Retorno_1.TipoDato.DOBLE)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se puede redondear un tipo: ${(0, Literal_1.nombreTipos)(valor.tipoDato)}`);
         let redondeado = Math.round(valor.value).toFixed(1);
         return {
             value: redondeado,
-            type: Retorno_1.Type.DOBLE
+            type: Retorno_1.Type.DOBLE,
+            tipoDato: Retorno_1.TipoDato.DOBLE
         };
     }
 }

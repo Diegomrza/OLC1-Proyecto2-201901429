@@ -9,7 +9,12 @@ class Return extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         let Valor = this.expresion.execute(ambito);
-        return { type: "Return", line: this.line, column: this.column, value: Valor.value };
+        return {
+            type: "Return",
+            line: this.line,
+            column: this.column,
+            value: Valor.value
+        };
     }
 }
 exports.Return = Return;

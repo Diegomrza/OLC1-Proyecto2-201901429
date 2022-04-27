@@ -1,13 +1,9 @@
 import { Ambito } from "../Extra/Ambito";
 import { tipos, Type, Retorno } from "./Retorno"
 
-export abstract class Expresion { //Clase padre
-
-    //Atributos obligatorios en toda expresion: linea y columna
-    public line: number;
-    public column: number;
-
-    constructor(line: number, column: number) {
+export abstract class Expresion {
+    
+    constructor(public line: number, public column: number) {
         this.line = line;
         this.column = column;
     }
@@ -16,7 +12,6 @@ export abstract class Expresion { //Clase padre
 
     //public abstract grafo()
 
-    //Tipo dominante para la suma
     public tipoDominante(tipo1: Type, tipo2: Type): Type {
         return tipos[tipo1][tipo2];
     }

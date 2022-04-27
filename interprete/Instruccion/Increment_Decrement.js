@@ -17,27 +17,27 @@ class Increment_Decrement extends Instruccion_1.Instruccion {
         if (val.type == Retorno_1.Type.DOBLE) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             return { value: val.value, type: Retorno_1.Type.DOBLE };
         }
         else if (val.type == Retorno_1.Type.ENTERO) {
             if (this.incremento) {
                 val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             else {
                 val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.type);
+                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
             return { value: val.value, type: Retorno_1.Type.ENTERO };
         }
         else {
-            throw new Error_1.Error_(this.line, this.column, "Semántico", `Este operador no aplica con ${(0, Literal_1.nombreTipos)(val.type)}`);
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `Este operador no aplica con ${(0, Literal_1.nombreTipos)(val.tipoDato)}`);
         }
     }
 }

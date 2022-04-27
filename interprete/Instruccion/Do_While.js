@@ -11,7 +11,7 @@ class Do_While extends Instruccion_1.Instruccion {
         this.cuerpo = cuerpo;
     }
     execute(ambito) {
-        let condition = null;
+        let condition;
         do {
             const retorno = this.cuerpo.execute(ambito);
             if (retorno != null && retorno != undefined) {
@@ -21,10 +21,12 @@ class Do_While extends Instruccion_1.Instruccion {
                 else if (retorno.type == 'Continue') {
                     continue;
                 }
+                else if (retorno.type == 'Return') {
+                }
             }
             condition = this.condicion.execute(ambito);
-            if (condition.type != Retorno_1.Type.BOOLEAN)
-                throw new Error_1.Error_(this.line, this.column, "", ``);
+            if (condition.tipoDato != Retorno_1.TipoDato.BOOLEAN)
+                throw new Error_1.Error_(this.line, this.column, "Semántico", `La condición no es de tipo booleana`);
         } while (condition.value);
     }
 }

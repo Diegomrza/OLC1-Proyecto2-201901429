@@ -1,9 +1,6 @@
 import { Error_ } from "../Error/Error";
-import { Type } from "../Expresion/Retorno";
+import { TipoDato, Type } from "../Expresion/Retorno";
 import { Funcion } from "../Instruccion/Funcion";
-import { TipoFuncion } from "../Instruccion/Instruccion";
-import { Matriz } from "../Instruccion/Matriz";
-import { Vector } from "../Instruccion/Vector";
 import { Simbolo } from "./Simbolo"
 
 export class Ambito {
@@ -24,14 +21,19 @@ export class Ambito {
         }
     }
 
-    public setVal(id: string, value: any, type: Type, line: number, column: number, tipoAsignacion: number, tipoDato) { //Busca una variable y si no existe la crea
+    public setVal(id: string, value: any, type: Type, line: number, column: number, tipoAsignacion: number, tipoDato: TipoDato) {
 
-        if (tipoAsignacion == 0) {//Para crear la variable
+        if (tipoAsignacion == TipoAsignacion.DECLARACION) {
+
             this.crearVar(id, value, type, line, column, tipoDato);
-        } else {
+
+        } else if (tipoAsignacion == TipoAsignacion.ASIGNACION) {
+
             let env: Ambito | null = this;
             while (env != null) {
+
                 if (env.variables.has(id)) {
+
                     const val = env.variables.get(id);
 
                     if (val.type == type) {
@@ -39,9 +41,12 @@ export class Ambito {
                     } else {
                         throw new Error_(line, column, 'Semántico', 'No se puede asignar: ' + value + ' a ' + id);
                     }
+
                 }
+
                 env = env.anterior;
             }
+
         }
 
         //this.variables.set(id, new Simbolo(value, id, type));
@@ -92,4 +97,9 @@ export class Ambito {
         return env;
     }
 
+}
+
+export enum TipoAsignacion {
+    DECLARACION,
+    ASIGNACION
 }

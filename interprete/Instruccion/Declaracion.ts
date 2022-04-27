@@ -33,7 +33,7 @@ export class Declaracion extends Instruccion {
                 //Si el valor excede el tamaño establecido del vector
                 if (p1.value >= aux.valor.length) throw new Error_(this.line, this.column, "Semántico", `La posición ${p1.value} no existe en el arreglo.`);
 
-                if (val.type != aux.TipoDato) throw new Error_(this.line, this.column, "Semántico", `No se puede asignar un ${nombreTipos(val.type)} a un vector de ${nombreTipos(aux.TipoDato)}`);
+                if (val.tipoDato != aux.TipoDato) throw new Error_(this.line, this.column, "Semántico", `No se puede asignar un ${nombreTipos(val.type)} a un vector de ${nombreTipos(aux.TipoDato)}`);
 
                 //Cambiando el valor en el vector
                 aux.valor[p1.value] = val.value;
@@ -62,7 +62,7 @@ export class Declaracion extends Instruccion {
                 //Si algún valor excede el tamaño establecido de la matriz
                 if (p1.value >= aux.valor.length || p2.value >= aux.valor[0].length) throw new Error_(this.line, this.column, "Semántico", `La posición ${p1.value + " " + p2.value} no existe.`);
 
-                if (val.type != aux.TipoDato) throw new Error_(this.line, this.column, "Semántico", `No se puede asignar un ${nombreTipos(val.type)} a una matriz de ${nombreTipos(aux.TipoDato)}`);
+                if (val.tipoDato != aux.TipoDato) throw new Error_(this.line, this.column, "Semántico", `No se puede asignar un ${nombreTipos(val.tipoDato)} a una matriz de ${nombreTipos(aux.TipoDato)}`);
                 //Cambiando el valor en la matriz
                 aux.valor[p1.value][p2.value] = val.value;
             }

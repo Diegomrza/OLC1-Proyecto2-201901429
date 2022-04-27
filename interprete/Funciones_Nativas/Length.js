@@ -12,12 +12,13 @@ class Length extends Instruccion_1.Instruccion {
     execute(ambito) {
         //Recibe vector, lista o cadena
         let exp = this.expresion.execute(ambito);
-        if (exp.type != Retorno_1.Type.VECTOR && exp.type != Retorno_1.Type.CADENA)
-            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se puede obtener el tamaño de un tipo: ${exp.type}`);
+        if (exp.tipoDato != Retorno_1.TipoDato.VECTOR && exp.tipoDato != Retorno_1.TipoDato.CADENA)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `No se puede obtener el tamaño de un tipo: ${exp.tipoDato}`);
         let tamanio = exp.value.length;
         return {
             value: tamanio,
-            type: Retorno_1.Type.ENTERO
+            type: Retorno_1.Type.ENTERO,
+            tipoDato: Retorno_1.TipoDato.ENTERO //Tipo de estructura
         };
     }
 }

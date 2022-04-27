@@ -1,5 +1,5 @@
 import { Expresion } from "./Expresion";
-import { Retorno, Type } from "./Retorno";
+import { Retorno, TipoDato, Type } from "./Retorno";
 import { Error_ } from '../Error/Error';
 import { Ambito } from "../Extra/Ambito";
 export class Relacional extends Expresion {
@@ -8,8 +8,8 @@ export class Relacional extends Expresion {
         super(line, column);
     }
     public execute(ambito: Ambito): Retorno {
-        const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {type, value}
-        const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {type, value}
+        const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {value, type, tipoDato}
+        const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {value, type, tipoDato}
 
         if ((leftValue.type == Type.CADENA && rightValue.type == Type.CARACTER) || (leftValue.type == Type.CARACTER && rightValue.type == Type.CADENA)) {
             throw new Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
@@ -57,7 +57,11 @@ export class Relacional extends Expresion {
             } else {
                 result = (leftValue.value == rightValue.value);
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN
+            }
 
         } else if (this.tipo == TipoRelacional.DIFERENTE) {// !=
             let result: boolean;
@@ -70,7 +74,11 @@ export class Relacional extends Expresion {
             } else {
                 result = leftValue.value != rightValue.value;
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN 
+            }
 
         } else if (this.tipo == TipoRelacional.MAYOR) {// >
             let result: boolean;
@@ -83,7 +91,11 @@ export class Relacional extends Expresion {
             } else {
                 result = leftValue.value > rightValue.value;
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN
+            }
 
         } else if (this.tipo == TipoRelacional.MAYOR_IGUAL) {// >=
             let result: boolean;
@@ -96,7 +108,11 @@ export class Relacional extends Expresion {
             } else {
                 result = leftValue.value >= rightValue.value;
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN
+            }
 
         } else if (this.tipo == TipoRelacional.MENOR) {// <
             let result: boolean;
@@ -109,7 +125,11 @@ export class Relacional extends Expresion {
             } else {
                 result = leftValue.value < rightValue.value;
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN
+            }
 
         } else if (this.tipo == TipoRelacional.MENOR_IGUAL) {//<=
             let result: boolean;
@@ -122,7 +142,11 @@ export class Relacional extends Expresion {
             } else {
                 result = leftValue.value <= rightValue.value;
             }
-            return { value: result, type: Type.BOOLEAN }
+            return { 
+                value: result, 
+                type: Type.BOOLEAN,
+                tipoDato: TipoDato.BOOLEAN
+            }
         }
     }
 }

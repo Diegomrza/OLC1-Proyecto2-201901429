@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Ambito = void 0;
+exports.TipoAsignacion = exports.Ambito = void 0;
 const Error_1 = require("../Error/Error");
 const Simbolo_1 = require("./Simbolo");
 class Ambito {
@@ -19,10 +19,10 @@ class Ambito {
         }
     }
     setVal(id, value, type, line, column, tipoAsignacion, tipoDato) {
-        if (tipoAsignacion == 0) { //Para crear la variable
+        if (tipoAsignacion == TipoAsignacion.DECLARACION) {
             this.crearVar(id, value, type, line, column, tipoDato);
         }
-        else {
+        else if (tipoAsignacion == TipoAsignacion.ASIGNACION) {
             let env = this;
             while (env != null) {
                 if (env.variables.has(id)) {
@@ -78,3 +78,8 @@ class Ambito {
     }
 }
 exports.Ambito = Ambito;
+var TipoAsignacion;
+(function (TipoAsignacion) {
+    TipoAsignacion[TipoAsignacion["DECLARACION"] = 0] = "DECLARACION";
+    TipoAsignacion[TipoAsignacion["ASIGNACION"] = 1] = "ASIGNACION";
+})(TipoAsignacion = exports.TipoAsignacion || (exports.TipoAsignacion = {}));

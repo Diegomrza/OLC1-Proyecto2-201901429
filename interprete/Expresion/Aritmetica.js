@@ -14,7 +14,7 @@ class Aritmetica extends Expresion_1.Expresion {
     }
     execute(ambito) {
         const leftValue = this.left.execute(ambito); //va a traer un retorno que contiene: value, type
-        const rightValue = this.right.execute(ambito); //va a traer un retorno que contiene: value, type   
+        const rightValue = this.right.execute(ambito); //va a traer un retorno que contiene: value, type 
         let asciiLeft = null;
         if (leftValue.type == Retorno_1.Type.CARACTER && rightValue.type != Retorno_1.Type.CARACTER) { //Si left = char y right != char
             asciiLeft = leftValue.value.charCodeAt(0); //Obteniendo el codigo ascii
@@ -28,28 +28,56 @@ class Aritmetica extends Expresion_1.Expresion {
             throw new Error_1.Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
         if (this.tipo == TipoAritmetica.SUMA) { //SUMA
             if (dominante == Retorno_1.Type.CADENA) { //Tipo dominante string
-                return { value: (leftValue.value.toString() + rightValue.value.toString()), type: Retorno_1.Type.CADENA };
+                return {
+                    value: (leftValue.value.toString() + rightValue.value.toString()),
+                    type: Retorno_1.Type.CADENA,
+                    tipoDato: Retorno_1.TipoDato.CADENA
+                };
             }
             else if (dominante == Retorno_1.Type.ENTERO) { //Si el tipo dominante es int
                 if (asciiLeft != null) { //Si el izquierdo tiene un ascii
-                    return { value: (asciiLeft + Number(rightValue.value)), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (asciiLeft + Number(rightValue.value)),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else if (asciiRight != null) { //Si el derecho tiene un ascii
-                    return { value: (Number(leftValue.value) + asciiRight), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (Number(leftValue.value) + asciiRight),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else { //Caso general
-                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (Number(leftValue.value) + Number(rightValue.value)),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
             }
             else if (dominante == Retorno_1.Type.DOBLE) { //Tipo dominante double
                 if (asciiLeft != null) { //Si el izquierdo tiene un ascii
-                    return { value: (asciiLeft + Number(rightValue.value)), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (asciiLeft + Number(rightValue.value)),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else if (asciiRight != null) { //Si el derecho tiene un ascii
-                    return { value: (Number(leftValue.value) + asciiRight), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (Number(leftValue.value) + asciiRight),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else { //Caso general
-                    return { value: (Number(leftValue.value) + Number(rightValue.value)), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (Number(leftValue.value) + Number(rightValue.value)),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
             }
             else {
@@ -59,24 +87,48 @@ class Aritmetica extends Expresion_1.Expresion {
         else if (this.tipo == TipoAritmetica.RESTA) { //RESTA
             if (dominante == Retorno_1.Type.ENTERO) {
                 if (asciiLeft != null) {
-                    return { value: (asciiLeft - rightValue.value), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (asciiLeft - rightValue.value),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else if (asciiRight != null) {
-                    return { value: (leftValue.value - asciiRight), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (leftValue.value - asciiRight),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else {
-                    return { value: (leftValue.value - rightValue.value), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (leftValue.value - rightValue.value),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
             }
             else if (dominante == Retorno_1.Type.DOBLE) {
                 if (asciiLeft != null) {
-                    return { value: (asciiLeft - rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (asciiLeft - rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else if (asciiRight != null) {
-                    return { value: (leftValue.value - asciiRight), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (leftValue.value - asciiRight),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else {
-                    return { value: (leftValue.value - rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (leftValue.value - rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
             }
             else {
@@ -87,13 +139,25 @@ class Aritmetica extends Expresion_1.Expresion {
             if (dominante == Retorno_1.Type.ENTERO) {
                 if (leftValue.type != Retorno_1.Type.BOOLEAN && rightValue.type != Retorno_1.Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return { value: (asciiLeft * rightValue.value), type: Retorno_1.Type.ENTERO };
+                        return {
+                            value: (asciiLeft * rightValue.value),
+                            type: Retorno_1.Type.ENTERO,
+                            tipoDato: Retorno_1.TipoDato.ENTERO
+                        };
                     }
                     else if (asciiRight != null) {
-                        return { value: (leftValue.value * asciiRight), type: Retorno_1.Type.ENTERO };
+                        return {
+                            value: (leftValue.value * asciiRight),
+                            type: Retorno_1.Type.ENTERO,
+                            tipoDato: Retorno_1.TipoDato.ENTERO
+                        };
                     }
                     else {
-                        return { value: (leftValue.value * rightValue.value), type: Retorno_1.Type.ENTERO };
+                        return {
+                            value: (leftValue.value * rightValue.value),
+                            type: Retorno_1.Type.ENTERO,
+                            tipoDato: Retorno_1.TipoDato.ENTERO
+                        };
                     }
                 }
                 else {
@@ -103,13 +167,25 @@ class Aritmetica extends Expresion_1.Expresion {
             else if (dominante == Retorno_1.Type.DOBLE) {
                 if (leftValue.type != Retorno_1.Type.BOOLEAN && rightValue.type != Retorno_1.Type.BOOLEAN) {
                     if (asciiLeft != null) {
-                        return { value: (asciiLeft * rightValue.value), type: Retorno_1.Type.DOBLE };
+                        return {
+                            value: (asciiLeft * rightValue.value),
+                            type: Retorno_1.Type.DOBLE,
+                            tipoDato: Retorno_1.TipoDato.DOBLE
+                        };
                     }
                     else if (asciiRight != null) {
-                        return { value: (leftValue.value * asciiRight), type: Retorno_1.Type.DOBLE };
+                        return {
+                            value: (leftValue.value * asciiRight),
+                            type: Retorno_1.Type.DOBLE,
+                            tipoDato: Retorno_1.TipoDato.DOBLE
+                        };
                     }
                     else {
-                        return { value: (leftValue.value * rightValue.value), type: Retorno_1.Type.DOBLE };
+                        return {
+                            value: (leftValue.value * rightValue.value),
+                            type: Retorno_1.Type.DOBLE,
+                            tipoDato: Retorno_1.TipoDato.DOBLE
+                        };
                     }
                 }
                 else {
@@ -128,13 +204,25 @@ class Aritmetica extends Expresion_1.Expresion {
                     }
                     else {
                         if (asciiLeft != null) {
-                            return { value: (asciiLeft / rightValue.value), type: Retorno_1.Type.DOBLE };
+                            return {
+                                value: (asciiLeft / rightValue.value),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
+                            };
                         }
                         else if (asciiRight != null) {
-                            return { value: (leftValue.value / asciiRight), type: Retorno_1.Type.DOBLE };
+                            return {
+                                value: (leftValue.value / asciiRight),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
+                            };
                         }
                         else {
-                            return { value: (leftValue.value / rightValue.value), type: Retorno_1.Type.DOBLE };
+                            return {
+                                value: (leftValue.value / rightValue.value),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
+                            };
                         }
                     }
                 }
@@ -149,16 +237,24 @@ class Aritmetica extends Expresion_1.Expresion {
                     }
                     else {
                         if (asciiLeft != null) {
-                            return { value: (asciiLeft / rightValue.value), type: Retorno_1.Type.DOBLE };
+                            return {
+                                value: (asciiLeft / rightValue.value),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
+                            };
                         }
                         else if (asciiRight != null) {
                             return {
-                                value: (leftValue.value / asciiRight), type: Retorno_1.Type.DOBLE
+                                value: (leftValue.value / asciiRight),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
                             };
                         }
                         else {
                             return {
-                                value: (leftValue.value / rightValue.value), type: Retorno_1.Type.DOBLE
+                                value: (leftValue.value / rightValue.value),
+                                type: Retorno_1.Type.DOBLE,
+                                tipoDato: Retorno_1.TipoDato.DOBLE
                             };
                         }
                     }
@@ -174,7 +270,11 @@ class Aritmetica extends Expresion_1.Expresion {
         else if (this.tipo == TipoAritmetica.POTENCIA) { //POTENCIA
             if (dominante == Retorno_1.Type.ENTERO) {
                 if (leftValue.type == Retorno_1.Type.ENTERO && rightValue.type == Retorno_1.Type.ENTERO) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: Math.pow(leftValue.value, rightValue.value),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else {
                     throw new Error_1.Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -183,13 +283,25 @@ class Aritmetica extends Expresion_1.Expresion {
             }
             else if (dominante == Retorno_1.Type.DOBLE) {
                 if (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.ENTERO) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: Math.pow(leftValue.value, rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else if (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.DOBLE) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: Math.pow(leftValue.value, rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else if (leftValue.type == Retorno_1.Type.ENTERO && rightValue.type == Retorno_1.Type.DOBLE) {
-                    return { value: Math.pow(leftValue.value, rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: Math.pow(leftValue.value, rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else {
                     throw new Error_1.Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -206,7 +318,11 @@ class Aritmetica extends Expresion_1.Expresion {
                     (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.DOBLE) ||
                     (leftValue.type == Retorno_1.Type.ENTERO && rightValue.type == Retorno_1.Type.DOBLE) ||
                     (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.ENTERO)) {
-                    return { value: (leftValue.value % rightValue.value), type: Retorno_1.Type.ENTERO };
+                    return {
+                        value: (leftValue.value % rightValue.value),
+                        type: Retorno_1.Type.ENTERO,
+                        tipoDato: Retorno_1.TipoDato.ENTERO
+                    };
                 }
                 else {
                     throw new Error_1.Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
@@ -217,7 +333,11 @@ class Aritmetica extends Expresion_1.Expresion {
                     (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.DOBLE) ||
                     (leftValue.type == Retorno_1.Type.ENTERO && rightValue.type == Retorno_1.Type.DOBLE) ||
                     (leftValue.type == Retorno_1.Type.DOBLE && rightValue.type == Retorno_1.Type.ENTERO)) {
-                    return { value: (leftValue.value % rightValue.value), type: Retorno_1.Type.DOBLE };
+                    return {
+                        value: (leftValue.value % rightValue.value),
+                        type: Retorno_1.Type.DOBLE,
+                        tipoDato: Retorno_1.TipoDato.DOBLE
+                    };
                 }
                 else {
                     throw new Error_1.Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));

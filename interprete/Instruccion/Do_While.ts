@@ -1,6 +1,6 @@
 import { Error_ } from "../Error/Error";
 import { Expresion } from "../Expresion/Expresion";
-import { Type } from "../Expresion/Retorno";
+import { TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
@@ -10,7 +10,7 @@ export class Do_While extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        let condition = null;
+        let condition;
         do {
             const retorno = this.cuerpo.execute(ambito);
             if (retorno != null && retorno != undefined) {
@@ -18,10 +18,12 @@ export class Do_While extends Instruccion {
                     break;
                 } else if (retorno.type == 'Continue') {
                     continue;
+                } else if (retorno.type == 'Return') {
+
                 }
             }
             condition = this.condicion.execute(ambito);
-            if (condition.type != Type.BOOLEAN) throw new Error_(this.line, this.column, "", ``);
+            if (condition.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condición no es de tipo booleana`);
         } while (condition.value)
     }
 

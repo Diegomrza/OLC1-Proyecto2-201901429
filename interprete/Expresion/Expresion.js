@@ -6,9 +6,10 @@ class Expresion {
     constructor(line, column) {
         this.line = line;
         this.column = column;
+        this.line = line;
+        this.column = column;
     }
     //public abstract grafo()
-    //Tipo dominante para la suma
     tipoDominante(tipo1, tipo2) {
         return Retorno_1.tipos[tipo1][tipo2];
     }

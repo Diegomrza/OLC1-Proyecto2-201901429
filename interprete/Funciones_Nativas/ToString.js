@@ -13,11 +13,12 @@ class ToString extends Instruccion_1.Instruccion {
         let valor = this.expresion.execute(ambito);
         let val = valor.value;
         val = val.toString();
-        if (valor.type == Retorno_1.Type.CADENA)
+        if (valor.tipoDato == Retorno_1.TipoDato.CADENA)
             throw new Error_1.Error_(this.line, this.column, "", `No se puede castear un string a string`);
         return {
             value: val,
-            type: Retorno_1.Type.CADENA
+            type: Retorno_1.Type.CADENA,
+            tipoDato: Retorno_1.TipoDato.CADENA
         };
     }
 }

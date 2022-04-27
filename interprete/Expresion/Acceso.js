@@ -4,12 +4,20 @@ exports.Acceso = void 0;
 const Error_1 = require("../Error/Error");
 const Expresion_1 = require("./Expresion");
 class Acceso extends Expresion_1.Expresion {
-    constructor(id, tipoAcceso, valor1, valor2, line, column) {
+    constructor(id, //identificador de la variable
+    tipoAcceso, //Variable = 0, vector = 1, matriz = 2
+    valor1, //Para vector se usa valor1
+    valor2, //Para matriz se usa valor1 y valor2
+    line, //Linea
+    column //Columna
+    ) {
         super(line, column);
         this.id = id;
         this.tipoAcceso = tipoAcceso;
         this.valor1 = valor1;
         this.valor2 = valor2;
+        this.line = line;
+        this.column = column;
     }
     execute(ambito) {
         const value = ambito.getVal(this.id);

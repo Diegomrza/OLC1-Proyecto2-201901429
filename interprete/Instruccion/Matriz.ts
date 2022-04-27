@@ -3,9 +3,10 @@ import { nombreTipos } from "../Expresion/Literal";
 import { Expresion } from "../Expresion/Expresion";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
+import { TipoDato } from "../Expresion/Retorno";
 
 export class Matriz extends Instruccion {
-    constructor(private tipo: number, private id: string, private arreglo: [], public tam1: Expresion, public tam2: Expresion, private tipoEs:number, line: number, column: number) {
+    constructor(private tipo: number, private id: string, private arreglo: [], public tam1: Expresion, public tam2: Expresion, private tipoEs: number, line: number, column: number) {
         super(line, column)
     }
 
@@ -13,6 +14,9 @@ export class Matriz extends Instruccion {
 
         let tamFilas = this.tam1.execute(ambito);
         let tamColumnas = this.tam2.execute(ambito);
+
+        if (tamFilas.tipoDato != TipoDato.ENTERO) throw new Error_(this.line, this.column, "Semántico", `El valor ${tamFilas.value} no es int`);
+        if (tamColumnas.tipoDato != TipoDato.ENTERO) throw new Error_(this.line, this.column, "Semántico", `El valor ${tamColumnas.value} no es int`);
 
         if (this.arreglo.length == 0) {
             let filas = [];
@@ -23,7 +27,7 @@ export class Matriz extends Instruccion {
                 }
                 filas.push(columnas);
             }
-            ambito.setVal(this.id, filas, this.tipoEs, this.line, this.column, 0, this.tipo);
+            ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0, this.tipoEs);
         } else {
             let auxFilas = [];
             for (let i = 0; i < tamFilas.value; i++) {
@@ -39,7 +43,7 @@ export class Matriz extends Instruccion {
                     } else {
                         valor = undefined;
                     }
-                    
+
                     if (valor != undefined) {
                         if (valor.type == this.tipo) {
                             auxColumnas.push(valor.value);
@@ -52,7 +56,7 @@ export class Matriz extends Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
-            ambito.setVal(this.id, auxFilas, this.tipoEs, this.line, this.column, 0, this.tipo);
+            ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
 
     }

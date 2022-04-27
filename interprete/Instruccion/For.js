@@ -17,7 +17,7 @@ class For extends Instruccion_1.Instruccion {
         const nuevoAmbito = new Ambito_1.Ambito(ambito); //Ambito para declaracion o asignacion
         this.decl_asig.execute(nuevoAmbito); //Ejecutamos la declaracion
         let val = this.condicion.execute(nuevoAmbito); //
-        if (val.type != Retorno_1.Type.BOOLEAN)
+        if (val.tipoDato != Retorno_1.TipoDato.BOOLEAN)
             throw new Error_1.Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`);
         while (val.value) {
             const entorno = new Ambito_1.Ambito(nuevoAmbito); //Ambito del for
@@ -31,7 +31,7 @@ class For extends Instruccion_1.Instruccion {
                 }
             }
             this.actualizacion.execute(nuevoAmbito); //Actualizacion tiene que ser de tipo declaracion o de tipo incremento/decremento
-            val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value}
+            val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value, tipoDato}
         }
     }
 }

@@ -1,6 +1,6 @@
 import { Error_ } from "../Error/Error";
 import { Expresion } from "../Expresion/Expresion";
-import { Type } from "../Expresion/Retorno";
+import { TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
@@ -18,7 +18,7 @@ export class For extends Instruccion {
         let val = this.condicion.execute(nuevoAmbito);  //
         
         
-        if (val.type != Type.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`)
+        if (val.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`)
 
         while (val.value) {
             const entorno = new Ambito(nuevoAmbito);    //Ambito del for
@@ -33,7 +33,7 @@ export class For extends Instruccion {
             }
             
             this.actualizacion.execute(nuevoAmbito); //Actualizacion tiene que ser de tipo declaracion o de tipo incremento/decremento
-            val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value}
+            val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value, tipoDato}
         }
 
     }

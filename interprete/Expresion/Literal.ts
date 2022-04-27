@@ -1,6 +1,6 @@
 import { Ambito } from "../Extra/Ambito";
 import { Expresion } from "./Expresion";
-import { Retorno, Type } from './Retorno';
+import { Retorno, TipoDato, Type } from './Retorno';
 
 export class Literal extends Expresion {
 
@@ -9,28 +9,45 @@ export class Literal extends Expresion {
     }
 
     public execute(ambito: Ambito): Retorno {
+
         if (this.tipo == TipoLiteral.ENTERO) {                      //Si es int
-            //console.log(this.value, " - " ,"Entero")
-            return { value: Number(this.value), type: Type.ENTERO };
-
+            return {
+                value: Number(this.value),
+                type: Type.ENTERO,
+                tipoDato: TipoDato.ENTERO
+            };
         } else if (this.tipo == TipoLiteral.CADENA) {               //Si es string
-            //console.log(this.value, " - " ,"Cadena")
-            return { value: this.value.toString(), type: Type.CADENA };
-
+            return {
+                value: this.value.toString(),
+                type: Type.CADENA,
+                tipoDato: TipoDato.CADENA
+            };
         } else if (this.tipo == TipoLiteral.BOOLEAN) {              //Si es boolean
-            //console.log(this.value, " - " ,"Booleano")
             if (this.value.toString().toLowerCase() == "true") {
-                return { value: true, type: Type.BOOLEAN }
+                return { 
+                    value: true, 
+                    type: Type.BOOLEAN,
+                    tipoDato: TipoDato.BOOLEAN 
+                };
             } else {
-                return { value: false, type: Type.BOOLEAN };
+                return { 
+                    value: false, 
+                    type: Type.BOOLEAN,
+                    tipoDato: TipoDato.BOOLEAN
+                };
             }
         } else if (this.tipo == TipoLiteral.DOBLE) {                //Si es double
-            //console.log(this.value, " - " ,"Decimal")
-            return { value: Number(this.value), type: Type.DOBLE }
-
+            return { 
+                value: Number(this.value), 
+                type: Type.DOBLE,
+                tipoDato: TipoDato.DOBLE 
+            }
         } else if (this.tipo == TipoLiteral.CARACTER) {             //Si es char
-            //console.log(this.value, " - " ,"Caracter")
-            return { value: this.value, type: Type.CARACTER }
+            return { 
+                value: this.value, 
+                type: Type.CARACTER,
+                tipoDato: TipoDato.CARACTER
+            }
         }
     }
 
@@ -56,5 +73,7 @@ export function nombreTipos(num: number): string {
             return "char";
         case 4:
             return "string";
+        case 5:
+            return "vector";
     }
 }

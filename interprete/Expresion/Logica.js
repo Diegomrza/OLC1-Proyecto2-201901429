@@ -12,32 +12,52 @@ class Logica extends Expresion_1.Expresion {
         this.tipo = tipo;
     }
     execute(ambito) {
-        let leftValue = this.left.execute(ambito);
+        let leftValue = this.left.execute(ambito); //El izquierdo siempre viene
         let rightValue = null;
-        if (this.right != null) {
+        if (this.right != null) { //Se valida que el segundo venga, sino solo se evalua el primero
             rightValue = this.right.execute(ambito);
         }
-        if (this.tipo == TipoLogica.NOT) {
+        if (this.tipo == TipoLogica.NOT) { //NOT
             if (leftValue.type != Retorno_1.Type.BOOLEAN)
                 throw new Error_1.Error_(this.line, this.column, "Semántico", `La expresion no es booleana`);
-            return { value: !(leftValue.value), type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: !(leftValue.value),
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
-        else if (this.tipo == TipoLogica.AND) {
+        else if (this.tipo == TipoLogica.AND) { //AND
             if ((leftValue.type != Retorno_1.Type.BOOLEAN) || (rightValue.type != Retorno_1.Type.BOOLEAN))
                 throw new Error_1.Error_(this.line, this.column, "Semántico", `Una o ambas expresiones no son de tipo booleanas`);
-            return { value: (leftValue.value && rightValue.value), type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: (leftValue.value && rightValue.value),
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
-        else if (this.tipo == TipoLogica.OR) {
+        else if (this.tipo == TipoLogica.OR) { //OR
             if ((leftValue.type != Retorno_1.Type.BOOLEAN) && (rightValue.type != Retorno_1.Type.BOOLEAN))
                 throw new Error_1.Error_(this.line, this.column, "Semántico", `Ninguna de las expresiones son de tipo booleanas`);
             if (leftValue.value == true) {
-                return { value: true, type: Retorno_1.Type.BOOLEAN };
+                return {
+                    value: true,
+                    type: Retorno_1.Type.BOOLEAN,
+                    tipoDato: Retorno_1.TipoDato.BOOLEAN
+                };
             }
             else if (rightValue.value == true) {
-                return { value: true, type: Retorno_1.Type.BOOLEAN };
+                return {
+                    value: true,
+                    type: Retorno_1.Type.BOOLEAN,
+                    tipoDato: Retorno_1.TipoDato.BOOLEAN
+                };
             }
             else {
-                return { value: (leftValue.value || rightValue.value), type: Retorno_1.Type.BOOLEAN };
+                return {
+                    value: (leftValue.value || rightValue.value),
+                    type: Retorno_1.Type.BOOLEAN,
+                    tipoDato: Retorno_1.TipoDato.BOOLEAN
+                };
             }
         }
     }

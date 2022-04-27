@@ -12,8 +12,8 @@ class Relacional extends Expresion_1.Expresion {
         this.tipo = tipo;
     }
     execute(ambito) {
-        const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {type, value}
-        const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {type, value}
+        const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {value, type, tipoDato}
+        const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {value, type, tipoDato}
         if ((leftValue.type == Retorno_1.Type.CADENA && rightValue.type == Retorno_1.Type.CARACTER) || (leftValue.type == Retorno_1.Type.CARACTER && rightValue.type == Retorno_1.Type.CADENA)) {
             throw new Error_1.Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
         }
@@ -63,7 +63,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = (leftValue.value == rightValue.value);
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
         else if (this.tipo == TipoRelacional.DIFERENTE) { // !=
             let result;
@@ -79,7 +83,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = leftValue.value != rightValue.value;
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
         else if (this.tipo == TipoRelacional.MAYOR) { // >
             let result;
@@ -95,7 +103,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = leftValue.value > rightValue.value;
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
         else if (this.tipo == TipoRelacional.MAYOR_IGUAL) { // >=
             let result;
@@ -111,7 +123,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = leftValue.value >= rightValue.value;
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
         else if (this.tipo == TipoRelacional.MENOR) { // <
             let result;
@@ -127,7 +143,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = leftValue.value < rightValue.value;
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
         else if (this.tipo == TipoRelacional.MENOR_IGUAL) { //<=
             let result;
@@ -143,7 +163,11 @@ class Relacional extends Expresion_1.Expresion {
             else {
                 result = leftValue.value <= rightValue.value;
             }
-            return { value: result, type: Retorno_1.Type.BOOLEAN };
+            return {
+                value: result,
+                type: Retorno_1.Type.BOOLEAN,
+                tipoDato: Retorno_1.TipoDato.BOOLEAN
+            };
         }
     }
 }

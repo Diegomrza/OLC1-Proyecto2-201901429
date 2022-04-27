@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TypeOf = void 0;
+const Literal_1 = require("../Expresion/Literal");
 const Retorno_1 = require("../Expresion/Retorno");
 const Instruccion_1 = require("../Instruccion/Instruccion");
 class TypeOf extends Instruccion_1.Instruccion {
@@ -11,25 +12,10 @@ class TypeOf extends Instruccion_1.Instruccion {
     execute(ambito) {
         let valor = this.expresion.execute(ambito);
         return {
-            value: this.tipo(valor.type),
-            type: Retorno_1.Type.CADENA
+            value: (0, Literal_1.nombreTipos)(valor.tipoDato),
+            type: Retorno_1.Type.CADENA,
+            tipoDato: Retorno_1.TipoDato.CADENA
         };
-    }
-    tipo(num) {
-        switch (num) {
-            case 0:
-                return "int";
-            case 1:
-                return "double";
-            case 2:
-                return "boolean";
-            case 3:
-                return "char";
-            case 4:
-                return "string";
-            case 5:
-                return "vector";
-        }
     }
 }
 exports.TypeOf = TypeOf;
