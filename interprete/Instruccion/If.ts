@@ -21,6 +21,10 @@ export class If extends Instruccion {
         }
     }
 
+    public grafo(): string {
+        return "";
+    }
+
 }
 //1. ejecutar la condicion
 //2. verificar que la condicion sea de tipo booleana

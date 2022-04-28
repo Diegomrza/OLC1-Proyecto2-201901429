@@ -64,6 +64,9 @@ class Matriz extends Instruccion_1.Instruccion {
             ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
     }
+    grafo() {
+        return "";
+    }
     defecto(tipo) {
         switch (tipo) {
             case 0:

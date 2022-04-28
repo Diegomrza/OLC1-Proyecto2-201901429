@@ -5,61 +5,57 @@ const Expresion_1 = require("./Expresion");
 const Retorno_1 = require("./Retorno");
 const Error_1 = require("../Error/Error");
 class Logica extends Expresion_1.Expresion {
-    constructor(left, right, tipo, line, column) {
+    constructor(left, right, tipoL, line, column) {
         super(line, column);
         this.left = left;
         this.right = right;
-        this.tipo = tipo;
+        this.tipoL = tipoL;
+        this.tipo = Retorno_1.Type.BOOLEAN;
     }
     execute(ambito) {
-        let leftValue = this.left.execute(ambito); //El izquierdo siempre viene
-        let rightValue = null;
-        if (this.right != null) { //Se valida que el segundo venga, sino solo se evalua el primero
-            rightValue = this.right.execute(ambito);
+        switch (this.tipoL) {
+            case TipoLogica.OR:
+                return this.or(ambito);
+            case TipoLogica.AND:
+                return this.and(ambito);
+            case TipoLogica.NOT:
+                return this.not(ambito);
         }
-        if (this.tipo == TipoLogica.NOT) { //NOT
-            if (leftValue.type != Retorno_1.Type.BOOLEAN)
-                throw new Error_1.Error_(this.line, this.column, "Semántico", `La expresion no es booleana`);
-            return {
-                value: !(leftValue.value),
-                type: Retorno_1.Type.BOOLEAN,
-                tipoDato: Retorno_1.TipoDato.BOOLEAN
-            };
-        }
-        else if (this.tipo == TipoLogica.AND) { //AND
-            if ((leftValue.type != Retorno_1.Type.BOOLEAN) || (rightValue.type != Retorno_1.Type.BOOLEAN))
-                throw new Error_1.Error_(this.line, this.column, "Semántico", `Una o ambas expresiones no son de tipo booleanas`);
-            return {
-                value: (leftValue.value && rightValue.value),
-                type: Retorno_1.Type.BOOLEAN,
-                tipoDato: Retorno_1.TipoDato.BOOLEAN
-            };
-        }
-        else if (this.tipo == TipoLogica.OR) { //OR
-            if ((leftValue.type != Retorno_1.Type.BOOLEAN) && (rightValue.type != Retorno_1.Type.BOOLEAN))
-                throw new Error_1.Error_(this.line, this.column, "Semántico", `Ninguna de las expresiones son de tipo booleanas`);
-            if (leftValue.value == true) {
-                return {
-                    value: true,
-                    type: Retorno_1.Type.BOOLEAN,
-                    tipoDato: Retorno_1.TipoDato.BOOLEAN
-                };
-            }
-            else if (rightValue.value == true) {
-                return {
-                    value: true,
-                    type: Retorno_1.Type.BOOLEAN,
-                    tipoDato: Retorno_1.TipoDato.BOOLEAN
-                };
-            }
-            else {
-                return {
-                    value: (leftValue.value || rightValue.value),
-                    type: Retorno_1.Type.BOOLEAN,
-                    tipoDato: Retorno_1.TipoDato.BOOLEAN
-                };
-            }
-        }
+    }
+    grafo() {
+        return "";
+    }
+    or(ambito) {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+        if (izquierda.type != Retorno_1.Type.BOOLEAN && derecha.type != Retorno_1.Type.BOOLEAN)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `Ninguna de las expresiones son de tipo booleanas`);
+        return {
+            value: (izquierda.value || derecha.value),
+            type: Retorno_1.Type.BOOLEAN,
+            tipoDato: Retorno_1.TipoDato.BOOLEAN
+        };
+    }
+    and(ambito) {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+        if (izquierda.type != Retorno_1.Type.BOOLEAN || derecha.type != Retorno_1.Type.BOOLEAN)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `Ninguna de las expresiones son de tipo booleanas`);
+        return {
+            value: (izquierda.value && derecha.value),
+            type: Retorno_1.Type.BOOLEAN,
+            tipoDato: Retorno_1.TipoDato.BOOLEAN
+        };
+    }
+    not(ambito) {
+        let izquierda = this.left.execute(ambito);
+        if (izquierda.type != Retorno_1.Type.BOOLEAN)
+            throw new Error_1.Error_(this.line, this.column, "Semántico", `Ninguna de las expresiones son de tipo booleanas`);
+        return {
+            value: !izquierda.value,
+            type: Retorno_1.Type.BOOLEAN,
+            tipoDato: Retorno_1.TipoDato.BOOLEAN
+        };
     }
 }
 exports.Logica = Logica;

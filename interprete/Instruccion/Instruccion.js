@@ -12,8 +12,8 @@ var TipoFuncion;
 (function (TipoFuncion) {
     TipoFuncion[TipoFuncion["INT"] = 0] = "INT";
     TipoFuncion[TipoFuncion["DOUBLE"] = 1] = "DOUBLE";
-    TipoFuncion[TipoFuncion["CHAR"] = 2] = "CHAR";
-    TipoFuncion[TipoFuncion["BOOLEAN"] = 3] = "BOOLEAN";
+    TipoFuncion[TipoFuncion["BOOLEAN"] = 2] = "BOOLEAN";
+    TipoFuncion[TipoFuncion["CHAR"] = 3] = "CHAR";
     TipoFuncion[TipoFuncion["STRING"] = 4] = "STRING";
     TipoFuncion[TipoFuncion["VOID"] = 5] = "VOID";
 })(TipoFuncion = exports.TipoFuncion || (exports.TipoFuncion = {}));

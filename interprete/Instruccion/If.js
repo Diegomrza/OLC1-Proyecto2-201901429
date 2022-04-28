@@ -22,6 +22,9 @@ class If extends Instruccion_1.Instruccion {
             return this.elsE.execute(ambito);
         }
     }
+    grafo() {
+        return "";
+    }
 }
 exports.If = If;
 //1. ejecutar la condicion

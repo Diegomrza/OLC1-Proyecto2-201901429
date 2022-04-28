@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Funcion = void 0;
-const Instruccion_1 = require("./Instruccion");
+const Instruccion_1 = require("../Instruccion/Instruccion");
 class Funcion extends Instruccion_1.Instruccion {
     constructor(id, cuerpo, parametros, tipo, line, column) {
         super(line, column);
@@ -12,6 +12,9 @@ class Funcion extends Instruccion_1.Instruccion {
     }
     execute(ambito) {
         ambito.guardarFuncion(this.id, this, this.line, this.column);
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Funcion = Funcion;

@@ -10,4 +10,8 @@ export class Break extends Instruccion {
         return { type: 'Break', line: this.line, column: this.column }
     }
 
+    public grafo(): string {
+        return "";
+    }
+
 }

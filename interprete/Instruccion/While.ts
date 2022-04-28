@@ -18,12 +18,18 @@ export class While extends Instruccion {
             const retorno = this.cuerpo.execute(ambito)
             if (retorno != null && retorno != undefined) {
                 if (retorno.type == 'Break') {
-                    break
+                    break;
                 } else if (retorno.type == 'Continue') {
-                    continue
+                    continue;
+                } else if (retorno.type == 'Return') {
+                    return retorno.value;
                 }
             }
             value = this.condicion.execute(ambito)
         }
+    }
+
+    public grafo(): string {
+        return "";
     }
 }

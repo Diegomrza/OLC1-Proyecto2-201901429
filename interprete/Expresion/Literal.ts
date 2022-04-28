@@ -38,7 +38,7 @@ export class Literal extends Expresion {
             }
         } else if (this.tipo == TipoLiteral.DOBLE) {                //Si es double
             return { 
-                value: Number(this.value), 
+                value: Number(this.value).toFixed(2), 
                 type: Type.DOBLE,
                 tipoDato: TipoDato.DOBLE 
             }
@@ -49,6 +49,10 @@ export class Literal extends Expresion {
                 tipoDato: TipoDato.CARACTER
             }
         }
+    }
+
+    public grafo(): string {
+        return "";
     }
 
 }

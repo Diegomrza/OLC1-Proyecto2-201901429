@@ -1,5 +1,6 @@
 import { Error_ } from "../Error/Error";
 import { Expresion } from "../Expresion/Expresion";
+import { nombreTipos } from "../Expresion/Literal";
 import { Retorno, TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
@@ -23,12 +24,12 @@ export class Casteo extends Instruccion {
                     }
                 } else if (valor.type == Type.DOBLE) {
                     return {
-                        value: parseInt(valor.value).toFixed(2),
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
+                        value: parseInt(valor.value),
+                        type: Type.ENTERO,
+                        tipoDato: TipoDato.ENTERO
                     }
                 } else {
-                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede castear un ${nombreTipos(valor.type)} a ${nombreTipos(this.tipo)}.`);
                 }
             case 1:
                 if (valor.type == Type.CARACTER) {
@@ -44,7 +45,7 @@ export class Casteo extends Instruccion {
                         tipoDato: TipoDato.DOBLE
                     }
                 } else {
-                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede castear un ${nombreTipos(valor.type)} a ${nombreTipos(this.tipo)}.`);
                 }
             case 2:
                 if (valor.type == Type.ENTERO) {
@@ -54,10 +55,10 @@ export class Casteo extends Instruccion {
                         tipoDato: TipoDato.CARACTER
                     }
                 } else {
-                    throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
+                    throw new Error_(this.line, this.column, "Semántico", `No se puede castear un ${nombreTipos(valor.type)} a ${nombreTipos(this.tipo)}.`);
                 }
             case 3:
-                throw new Error_(this.line, this.column, "Semántico", `No se puede realizar el casteo`);
+                throw new Error_(this.line, this.column, "Semántico", `No se puede castear un ${nombreTipos(valor.type)} a ${nombreTipos(this.tipo)}.`);
             case 4:
                 return {
                     value: valor.value.toString(),
@@ -67,14 +68,18 @@ export class Casteo extends Instruccion {
         }
 
     }
+
+    public grafo(): string {
+        return "";
+    }
 }
 
 export enum TipoCasteo {
-    ENTERO,
-    DOBLE,
-    CARACTER,
-    BOOLEAN,
-    CADENA
+    ENTERO, //Castear a entero
+    DOBLE,  //Castear a double
+    CARACTER,   //Castear a char
+    BOOLEAN,    //Castear a boolean
+    CADENA  //Castear a string
 }
 
 /*

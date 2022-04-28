@@ -8,13 +8,32 @@ export class Return extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        let Valor = this.expresion.execute(ambito);
-        return {
-            type: "Return",
-            line: this.line,
-            column: this.column,
-            value: Valor.value
+        if (this.expresion != null) {
+            let Valor = this.expresion.execute(ambito);
+            return {
+                type: "Return",
+                line: this.line,
+                column: this.column,
+                value: Valor.value,
+                tipo: Valor.type,
+                tipoDato: Valor.tipoDato
+            }
+
+        } else {
+            return {
+                type: "Return",
+                line: this.line,
+                column: this.column,
+                value: null,
+                tipo: null,
+                tipoDato: null
+            }
         }
+
+
     }
 
+    public grafo(): string {
+        return "";
+    }
 }

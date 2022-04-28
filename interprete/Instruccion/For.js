@@ -29,10 +29,16 @@ class For extends Instruccion_1.Instruccion {
                 else if (retorno.type == 'Continue') {
                     continue;
                 }
+                else if (retorno.type == 'Return') {
+                    return retorno.value;
+                }
             }
             this.actualizacion.execute(nuevoAmbito); //Actualizacion tiene que ser de tipo declaracion o de tipo incremento/decremento
             val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value, tipoDato}
         }
+    }
+    grafo() {
+        return "";
     }
 }
 exports.For = For;

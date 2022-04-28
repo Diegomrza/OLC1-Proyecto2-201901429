@@ -5,22 +5,26 @@ const Error_1 = require("../Error/Error");
 const Retorno_1 = require("../Expresion/Retorno");
 const Instruccion_1 = require("./Instruccion");
 class Ternario extends Instruccion_1.Instruccion {
-    constructor(condicion, cuerpo, ElsE, line, column) {
+    constructor(condicion, cuerpo, ElsE, tipo, line, column) {
         super(line, column);
         this.condicion = condicion;
         this.cuerpo = cuerpo;
         this.ElsE = ElsE;
+        this.tipo = tipo;
     }
     execute(ambito) {
         const valor = this.condicion.execute(ambito);
-        if (valor.tipoDato != Retorno_1.TipoDato.BOOLEAN)
-            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar no es de tipo boolean');
+        if (valor.type != Retorno_1.Type.BOOLEAN)
+            throw new Error_1.Error_(this.line, this.column, 'Semántico', 'La condicion a evaluar no es de tipo boolean.');
         if (valor.value) {
             return this.cuerpo.execute(ambito);
         }
         else if (this.ElsE != null) {
             return this.ElsE.execute(ambito);
         }
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Ternario = Ternario;

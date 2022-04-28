@@ -9,5 +9,8 @@ class Continue extends Instruccion_1.Instruccion {
     execute(ambito) {
         return { type: 'Continue', line: this.line, column: this.column };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.Continue = Continue;

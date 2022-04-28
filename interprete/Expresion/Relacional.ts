@@ -2,151 +2,157 @@ import { Expresion } from "./Expresion";
 import { Retorno, TipoDato, Type } from "./Retorno";
 import { Error_ } from '../Error/Error';
 import { Ambito } from "../Extra/Ambito";
+import { nombreTipos } from "./Literal";
 export class Relacional extends Expresion {
-
-    constructor(private left: Expresion, private right: Expresion, private tipo: TipoRelacional, line: number, column: number) {
+    public tipo =Type.BOOLEAN;
+    constructor(private left: Expresion, private right: Expresion, private tipoR: TipoRelacional, line: number, column: number) {
         super(line, column);
     }
     public execute(ambito: Ambito): Retorno {
-        const leftValue = this.left.execute(ambito); //Ejecucion de la parte izquierda => {value, type, tipoDato}
-        const rightValue = this.right.execute(ambito); //Ejecucion de la parte derecha => {value, type, tipoDato}
+        const leftValue = this.left.execute(ambito);
+        const rightValue = this.right.execute(ambito);
 
-        if ((leftValue.type == Type.CADENA && rightValue.type == Type.CARACTER) || (leftValue.type == Type.CARACTER && rightValue.type == Type.CADENA)) {
-            throw new Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
+        if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.ENTERO && rightValue.type == Type.CARACTER)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.DOBLE && rightValue.type == Type.CARACTER)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.CARACTER && rightValue.type == Type.ENTERO)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.CARACTER && rightValue.type == Type.DOBLE)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.CARACTER && rightValue.type == Type.CARACTER)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.BOOLEAN && rightValue.type == Type.BOOLEAN)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
+        } else if ((leftValue.type == Type.CADENA && rightValue.type == Type.CADENA)) {
+            let objeto = this.relaciones(ambito)
+            return objeto;
         } else {
-            if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) ||
-                (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
-                (leftValue.type == Type.ENTERO && rightValue.type == Type.CARACTER) ||
-                (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO) ||
-                (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) ||
-                (leftValue.type == Type.DOBLE && rightValue.type == Type.CARACTER) ||
-                (leftValue.type == Type.CARACTER && rightValue.type == Type.ENTERO) ||
-                (leftValue.type == Type.CARACTER && rightValue.type == Type.DOBLE) ||
-                (leftValue.type == Type.CARACTER && rightValue.type == Type.CARACTER) ||
-                (leftValue.type == Type.BOOLEAN && rightValue.type == Type.BOOLEAN) ||
-                (leftValue.type == Type.CADENA && rightValue.type == Type.CADENA)) {
-                    return this.relaciones(leftValue, rightValue);
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', `No se pueden operar ${leftValue.type} con  ${rightValue.type}`);
-            }
+            throw new Error_(this.line, this.column, 'Semántico', `No se puede operar ${nombreTipos(leftValue.type)} con  ${nombreTipos(rightValue.type)}`);
         }
     }
 
-    private relaciones(leftValue: Retorno, rightValue: Retorno): Retorno {
+    public grafo(): string {
+        return "";
+    }
 
-        let asciiLeft = null;
-        let asciiRight = null;
-        if (leftValue.type == Type.CARACTER) asciiLeft = leftValue.value.charCodeAt(0);
-        if (rightValue.type == Type.CARACTER) asciiRight = rightValue.value.charCodeAt(0);
+    private relaciones(ambito: Ambito): Retorno {
 
-        if (leftValue.type == Type.ENTERO || leftValue.type == Type.DOBLE) {
-            leftValue.value = Number(leftValue.value);
+        switch (this.tipoR) {
+            case TipoRelacional.IGUALIGUAL:
+                return this.igual_igual(ambito);
+            case TipoRelacional.DIFERENTE:
+                return this.diferente(ambito);
+            case TipoRelacional.MAYOR:
+                return this.mayor(ambito);
+            case TipoRelacional.MAYOR_IGUAL:
+                return this.mayor_igual(ambito);
+            case TipoRelacional.MENOR:
+                return this.menor(ambito);
+            case TipoRelacional.MENOR_IGUAL:
+                return this.menor_igual(ambito);
         }
-        if (rightValue.type == Type.ENTERO || rightValue.type == Type.DOBLE) {
-            rightValue.value = Number(rightValue.value);
+    }
+
+    private igual_igual(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
+
+        return {
+            value: izquierda.value == derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
         }
+    }
 
-        if (this.tipo == TipoRelacional.IGUALIGUAL) {// ==
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = (asciiLeft === asciiRight);
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = (asciiLeft === rightValue.value);
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = (leftValue.value === asciiRight);
-            } else {
-                result = (leftValue.value == rightValue.value);
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN
-            }
+    private diferente(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
 
-        } else if (this.tipo == TipoRelacional.DIFERENTE) {// !=
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = asciiLeft != asciiRight;
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = asciiLeft != rightValue.value;
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = leftValue.value != asciiRight;
-            } else {
-                result = leftValue.value != rightValue.value;
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN 
-            }
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
 
-        } else if (this.tipo == TipoRelacional.MAYOR) {// >
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = asciiLeft > asciiRight;
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = asciiLeft > rightValue.value;
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = leftValue.value > asciiRight;
-            } else {
-                result = leftValue.value > rightValue.value;
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN
-            }
+        return {
+            value: izquierda.value != derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
+        }
+    }
 
-        } else if (this.tipo == TipoRelacional.MAYOR_IGUAL) {// >=
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = asciiLeft >= asciiRight;
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = asciiLeft >= rightValue.value;
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = leftValue.value >= asciiRight;
-            } else {
-                result = leftValue.value >= rightValue.value;
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN
-            }
+    private mayor(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
 
-        } else if (this.tipo == TipoRelacional.MENOR) {// <
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = asciiLeft < asciiRight;
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = asciiLeft < rightValue.value;
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = leftValue.value < asciiRight;
-            } else {
-                result = leftValue.value < rightValue.value;
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN
-            }
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
 
-        } else if (this.tipo == TipoRelacional.MENOR_IGUAL) {//<=
-            let result: boolean;
-            if (asciiLeft != null && asciiRight != null) { //Si asciileft y asciiriht son diferente de nulo usamos su valor
-                result = asciiLeft <= asciiRight;
-            } else if (asciiLeft != null && asciiRight == null) { //Si asciileft es diferente de nulo usamos su valor
-                result = asciiLeft <= rightValue.value;
-            } else if (asciiLeft == null && asciiRight != null) { //Si asciiriht es diferente de nulo usamos su valor
-                result = leftValue.value <= asciiRight;
-            } else {
-                result = leftValue.value <= rightValue.value;
-            }
-            return { 
-                value: result, 
-                type: Type.BOOLEAN,
-                tipoDato: TipoDato.BOOLEAN
-            }
+        return {
+            value: izquierda.value > derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
+        }
+    }
+
+    private mayor_igual(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
+
+        return {
+            value: izquierda.value >= derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
+        }
+    }
+
+    private menor(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
+
+        return {
+            value: izquierda.value < derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
+        }
+    }
+
+    private menor_igual(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        if (izquierda.type == Type.CARACTER) izquierda.value = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) derecha.value = derecha.value.charCodeAt(0);
+
+        return {
+            value: izquierda.value <= derecha.value,
+            type: Type.BOOLEAN,
+            tipoDato: TipoDato.BOOLEAN
         }
     }
 }

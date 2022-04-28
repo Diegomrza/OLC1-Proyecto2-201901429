@@ -1,6 +1,7 @@
 import { Instruccion } from '../Instruccion/Instruccion';
 import { Expresion } from '../Expresion/Expresion';
 import { Ambito } from '../Extra/Ambito';
+import { Singleton } from '../Singleton';
 
 export class Print extends Instruccion {
 
@@ -16,11 +17,16 @@ export class Print extends Instruccion {
 
         for (const actual of this.value) {
             const val = actual.execute(ambito);
-            aux.push(val.value);
-            console.log("Print: ",val.value);
+            val.value = val.value.toString();
+            val.value = val.value.replace("\\n", "\n")
+            new Singleton().push(val.value);
         }
-        if (this.saltoDeLinea == 1) {   //No hay salto de linea
-            aux.push("\n");
+        if (this.saltoDeLinea == 1) {
+            new Singleton().push("\n");
         }
+    }
+
+    public grafo(): string {
+        return "";
     }
 }

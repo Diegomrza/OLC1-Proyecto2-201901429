@@ -9,7 +9,7 @@ class Ambito {
         this.variables = new Map();
         this.funciones = new Map();
     }
-    //____________________________________Variables____________________________________//
+    //____________________________________Crear variables____________________________________//
     crearVar(id, value, type, line, column, tipoDato) {
         if (!this.variables.has(id)) {
             this.variables.set(id, new Simbolo_1.Simbolo(value, id, type, tipoDato));
@@ -18,6 +18,7 @@ class Ambito {
             throw new Error_1.Error_(line, column, 'Semántico', 'Ya existe una variable con ese nombre: ' + id);
         }
     }
+    //id, valor, tipo, linea, columna, tipoAsignacion, tipoDato
     setVal(id, value, type, line, column, tipoAsignacion, tipoDato) {
         if (tipoAsignacion == TipoAsignacion.DECLARACION) {
             this.crearVar(id, value, type, line, column, tipoDato);
@@ -36,8 +37,8 @@ class Ambito {
                 }
                 env = env.anterior;
             }
+            //throw new Error_(line, column, 'Semántico', `La variable ${id} no existe.`);
         }
-        //this.variables.set(id, new Simbolo(value, id, type));
     }
     getVal(id) {
         let env = this;

@@ -61,6 +61,10 @@ export class Matriz extends Instruccion {
 
     }
 
+    public grafo(): string {
+        return "";
+    }
+
     private defecto(tipo: number) {
         switch (tipo) {
             case 0:

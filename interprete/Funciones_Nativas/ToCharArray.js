@@ -26,5 +26,8 @@ class ToCharArray extends Instruccion_1.Instruccion {
             tipoDato: Retorno_1.TipoDato.VECTOR //Tipo de estructura
         };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.ToCharArray = ToCharArray;

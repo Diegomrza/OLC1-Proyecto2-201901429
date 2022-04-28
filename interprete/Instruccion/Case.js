@@ -13,5 +13,8 @@ class Case extends Instruccion_1.Instruccion {
         if (valCuerpo != null && valCuerpo != undefined)
             return valCuerpo;
     }
+    grafo() {
+        return "";
+    }
 }
 exports.Case = Case;

@@ -22,12 +22,16 @@ class Do_While extends Instruccion_1.Instruccion {
                     continue;
                 }
                 else if (retorno.type == 'Return') {
+                    return retorno.value;
                 }
             }
             condition = this.condicion.execute(ambito);
             if (condition.tipoDato != Retorno_1.TipoDato.BOOLEAN)
                 throw new Error_1.Error_(this.line, this.column, "Semántico", `La condición no es de tipo booleana`);
         } while (condition.value);
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Do_While = Do_While;

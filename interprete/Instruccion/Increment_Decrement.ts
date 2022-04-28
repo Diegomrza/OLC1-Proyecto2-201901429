@@ -1,39 +1,58 @@
 import { Error_ } from "../Error/Error";
 import { Expresion } from "../Expresion/Expresion";
 import { nombreTipos } from "../Expresion/Literal";
-import { Type } from "../Expresion/Retorno";
+import { Retorno, TipoDato, Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 
 export class Increment_Decrement extends Instruccion {
-    constructor (private id:string, private value:Expresion, public incremento:boolean, line:number, column:number) {
+    public tipo: number = 0;
+    constructor(private id: string, private value: Expresion, public incremento: boolean, line: number, column: number) {
         super(line, column);
     }
 
-    public execute(ambito: Ambito) {
+    public execute(ambito: Ambito): Retorno {
         let val = this.value.execute(ambito);
+        let variable = ambito.getVal(this.id);
+        if (!variable) throw new Error_(this.line, this.column, "Semántico", `La variable ${this.id} no existe`);
 
         if (val.type == Type.DOBLE) {
             if (this.incremento) {
-                val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
+                ++variable.valor;
+                //val.value++;
+                //ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             } else {
-                val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
+                --variable.valor;
+                //val.value--;
+                //ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
-            return {value:val.value, type:Type.DOBLE}
+            return {
+                value: variable.valor,
+                type: val.type,
+                tipoDato: val.tipoDato
+            }
         } else if (val.type == Type.ENTERO) {
             if (this.incremento) {
-                val.value++;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
+                ++variable.valor;
+                //val.value++;
+                //ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             } else {
-                val.value--;
-                ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
+                --variable.valor;
+                //val.value--;
+                //ambito.setVal(this.id, val.value, val.type, this.line, this.column, 1, val.tipoDato);
             }
-            return {value:val.value, type:Type.ENTERO}
+            return { 
+                value: variable.valor, 
+                type: val.type,
+                tipoDato: val.tipoDato
+            }
         } else {
             throw new Error_(this.line, this.column, "Semántico", `Este operador no aplica con ${nombreTipos(val.tipoDato)}`);
         }
-        
+
+    }
+
+    public grafo(): string {
+        return "";
     }
 }

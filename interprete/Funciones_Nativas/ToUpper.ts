@@ -22,6 +22,9 @@ export class ToUpper extends Instruccion {
             type: Type.CADENA,
             tipoDato: TipoDato.CADENA
         }
+    }
 
+    public grafo(): string {
+        return "";
     }
 }

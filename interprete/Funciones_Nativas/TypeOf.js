@@ -17,5 +17,8 @@ class TypeOf extends Instruccion_1.Instruccion {
             tipoDato: Retorno_1.TipoDato.CADENA
         };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.TypeOf = TypeOf;

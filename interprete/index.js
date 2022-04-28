@@ -2,6 +2,11 @@ const parser = require('./Grammar/grammar')         //Importe del parser
 const express = require('express')                  //Importe de express
 const cors = require('cors');                       //Importe de politicas cors
 const { Ambito } = require('./Extra/Ambito');       //Importe para el ambito global
+const { Singleton } = require('./Singleton');
+const { Error_ } = require('./Error/Error');
+const { LlamadaFuncion } = require('./Funcion/LlamadaFuncion');
+const { Funcion } = require('./Funcion/Funcion');
+const { Run } = require('./Funcion/Run');
 
 const app = express();
 
@@ -18,33 +23,50 @@ app.post('/', (req, res) => {
     console.log("-----------------------------------\n");
 
     const ambito = new Ambito(null);    //Ambito global
-    let result = "";                    //Aquí se almacena el resultado del parser
-    let lista = [];                     //Lista en donde se almacenan las salidas del código
+    const consola = new Singleton();
+    let result;                    //Aquí se almacena el resultado del parser
 
-    try{
+    try {
         result = parser.parse(exp);
-        console.log("Resultado:\n",result,"\nFin resultado.");
-        for (const res of result) {
-            
-            let aux = res.execute(ambito);
-            if (aux != undefined) lista.push(aux);
-        }
-        
+        console.log("Resultado:\n", result, "\nFin resultado.");
     } catch (e) {
         console.log(e)
-        return res.send({
-            "message":"Failed",
-            "result":"Error al intentar analizar el código.",
-            "error":e
-        });
+        consola.pushError(new Error_(Object.values(e)[0].loc.first_line, Object.values(e)[0].loc.first_column, "Sintáctico", `Se esperaba: ${Object.values(e)[0].expected}, se tiene: ${Object.values(e)[0].token}`));
+    }
+
+    //Primera pasada
+    try {
+        for (const res of result) {
+            if (res instanceof Funcion) {
+                res.execute(ambito);
+            } 
+        }
+    } catch (e) {
+        consola.pushError(e);
+    }
+
+    //Segunda pasada
+    try {
+        for (const res1 of result) {
+            if (!(res1 instanceof Funcion)) {
+                res1.execute(ambito);
+            }
+        }
+    } catch (e) {
+        consola.pushError(e);
     }
 
     let objeto = {
-        "message":"Success",
+        "message": "Success",
         "result": result,
-        "lista": lista
+        "lista": consola.listaPrint,
+        "errores": consola.listaErrores
     };
-    
+
+    console.log(consola.listaPrint);
+    console.log(consola.listaErrores);
+    consola.clear();
+    consola.clearErrores();
     return res.send(objeto);
 });
-app.listen(PORT, ()=> console.log('server running on port: ' + PORT));
+app.listen(PORT, () => console.log('server running on port: ' + PORT));

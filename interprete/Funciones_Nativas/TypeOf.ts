@@ -10,7 +10,6 @@ export class TypeOf extends Instruccion {
     }
 
     public execute(ambito: Ambito): Retorno {
-
         let valor = this.expresion.execute(ambito);
 
         return {
@@ -21,4 +20,7 @@ export class TypeOf extends Instruccion {
 
     }
 
+    public grafo(): string {
+        return "";
+    }
 }

@@ -30,21 +30,26 @@ function App() {
             .then(response => {
 
                 console.log("Respuesta: ", response);
-                if (response.message == "Success") { //Funcionó
+                if (response.message == "Success") {
 
-                    let consola = document.getElementById('consola');   //Trayendo el elemento textArea
-                    let texto = "";                                     //Variable aux para concatenar la respuesta
-
-                    console.log(response.lista);
-
-                    for (const i of response.lista) {                   //Recorriendo la lista y concatenandola
-                        for (const j of i) {
-                            texto += j;    
+                    let consola = document.getElementById('consola');
+                    let texto = "";
+                    if (response.errores.length != 0) {
+                        for (const i of response.errores) {
+                            
+                                texto += i.tipo +": "+ i.mensaje;
+                            
                         }
-                        //texto = texto.substring(0, texto.length-1)
-                    }
+                    } else {
+                        for (const i of response.lista) {
+                            for (const j of i) {
+                                texto += j;
+                            }
 
-                    consola.innerHTML = texto;                          //Metiendo el texto auxiliar a la textArea
+                        }
+
+                    }
+                    consola.innerHTML = texto;
 
                 } else { //Error
 

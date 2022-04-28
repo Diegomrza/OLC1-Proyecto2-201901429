@@ -19,12 +19,16 @@ export class Do_While extends Instruccion {
                 } else if (retorno.type == 'Continue') {
                     continue;
                 } else if (retorno.type == 'Return') {
-
+                    return retorno.value;
                 }
             }
             condition = this.condicion.execute(ambito);
             if (condition.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condición no es de tipo booleana`);
         } while (condition.value)
+    }
+
+    public grafo(): string {
+        return "";
     }
 
 }

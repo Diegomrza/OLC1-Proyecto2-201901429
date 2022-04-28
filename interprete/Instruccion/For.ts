@@ -29,6 +29,8 @@ export class For extends Instruccion {
                     break;
                 } else if (retorno.type == 'Continue') {
                     continue;
+                } else if (retorno.type == 'Return') {
+                    return retorno.value;
                 }
             }
             
@@ -36,6 +38,10 @@ export class For extends Instruccion {
             val = this.condicion.execute(nuevoAmbito); //tipo retorno: {type, value, tipoDato}
         }
 
+    }
+
+    public grafo(): string {
+        return "";
     }
 
 }

@@ -1,10 +1,10 @@
 import { Error_ } from "../Error/Error";
 import { TipoDato, Type } from "../Expresion/Retorno";
-import { Funcion } from "../Instruccion/Funcion";
+import { Funcion } from "../Funcion/Funcion";
 import { Simbolo } from "./Simbolo"
 
 export class Ambito {
-    private variables: Map<string, Simbolo> //Guarda las variables
+    private variables: Map<string, Simbolo> //Guarda las variables, vectores y matrices
     public funciones: Map<string, Funcion>; //Guarda las funciones
 
     constructor(public anterior: Ambito | null) {
@@ -12,7 +12,7 @@ export class Ambito {
         this.funciones = new Map();
     }
 
-    //____________________________________Variables____________________________________//
+    //____________________________________Crear variables____________________________________//
     public crearVar(id: string, value: any, type: Type, line: number, column: number, tipoDato) {
         if (!this.variables.has(id)) {
             this.variables.set(id, new Simbolo(value, id, type, tipoDato));
@@ -21,36 +21,25 @@ export class Ambito {
         }
     }
 
+    //id, valor, tipo, linea, columna, tipoAsignacion, tipoDato
     public setVal(id: string, value: any, type: Type, line: number, column: number, tipoAsignacion: number, tipoDato: TipoDato) {
-
         if (tipoAsignacion == TipoAsignacion.DECLARACION) {
-
             this.crearVar(id, value, type, line, column, tipoDato);
-
         } else if (tipoAsignacion == TipoAsignacion.ASIGNACION) {
-
             let env: Ambito | null = this;
             while (env != null) {
-
                 if (env.variables.has(id)) {
-
                     const val = env.variables.get(id);
-
                     if (val.type == type) {
                         env.variables.set(id, new Simbolo(value, id, type, tipoDato));
                     } else {
                         throw new Error_(line, column, 'Semántico', 'No se puede asignar: ' + value + ' a ' + id);
                     }
-
                 }
-
                 env = env.anterior;
             }
-
+            //throw new Error_(line, column, 'Semántico', `La variable ${id} no existe.`);
         }
-
-        //this.variables.set(id, new Simbolo(value, id, type));
-
     }
 
     public getVal(id: string): Simbolo {

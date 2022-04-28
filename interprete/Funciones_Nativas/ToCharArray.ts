@@ -29,6 +29,9 @@ export class ToCharArray extends Instruccion {
             type: Type.CARACTER,        //Tipo primitivo
             tipoDato: TipoDato.VECTOR   //Tipo de estructura
         }
+    }
 
+    public grafo(): string {
+        return "";
     }
 }

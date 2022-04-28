@@ -6,6 +6,7 @@ import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "../Instruccion/Instruccion";
 
 export class Round extends Instruccion {
+    public tipo = 1;
     constructor(private expresion: Expresion, line: number, column: number) {
         super(line, column);
     }
@@ -22,5 +23,9 @@ export class Round extends Instruccion {
             type: Type.DOBLE,
             tipoDato: TipoDato.DOBLE
         }
+    }
+
+    public grafo(): string {
+        return "";
     }
 }

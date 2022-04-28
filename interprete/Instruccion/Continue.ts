@@ -10,4 +10,8 @@ export class Continue extends Instruccion {
         return { type: 'Continue', line: this.line, column: this.column }
     }
 
+    public grafo(): string {
+        return "";
+    }
+
 }

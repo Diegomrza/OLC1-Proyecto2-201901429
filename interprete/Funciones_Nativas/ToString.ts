@@ -10,7 +10,6 @@ export class ToString extends Instruccion {
     }
 
     public execute(ambito: Ambito): Retorno {
-
         let valor = this.expresion.execute(ambito);
 
         let val = valor.value;
@@ -24,6 +23,9 @@ export class ToString extends Instruccion {
             type: Type.CADENA,
             tipoDato: TipoDato.CADENA
         }
+    }
 
+    public grafo(): string {
+        return "";
     }
 }

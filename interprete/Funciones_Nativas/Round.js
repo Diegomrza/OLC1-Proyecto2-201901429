@@ -9,6 +9,7 @@ class Round extends Instruccion_1.Instruccion {
     constructor(expresion, line, column) {
         super(line, column);
         this.expresion = expresion;
+        this.tipo = 1;
     }
     execute(ambito) {
         let valor = this.expresion.execute(ambito);
@@ -20,6 +21,9 @@ class Round extends Instruccion_1.Instruccion {
             type: Retorno_1.Type.DOBLE,
             tipoDato: Retorno_1.TipoDato.DOBLE
         };
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Round = Round;

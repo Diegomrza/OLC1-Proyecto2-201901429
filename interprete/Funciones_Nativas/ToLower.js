@@ -21,5 +21,8 @@ class ToLower extends Instruccion_1.Instruccion {
             tipoDato: Retorno_1.TipoDato.CADENA
         };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.ToLower = ToLower;

@@ -40,3 +40,100 @@ export const tipos = [
     ]
 ]
 
+export const matrizResta = [
+    [
+        Type.ENTERO, Type.DOBLE, Type.ENTERO, Type.ENTERO, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, Type.DOBLE, Type.DOBLE,    null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE,      null,       null,    null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE,      null,       null,    null
+    ],
+    [
+               null,       null,      null,       null,    null
+    ]
+]
+
+export const matrizMultiplicacion = [
+    [
+        Type.ENTERO, Type.DOBLE, null, Type.ENTERO, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+]
+
+export const matrizDivision = [
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+]
+
+export const matrizPotencia = [
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+]
+
+export const matrizModulo = [
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+]
+
+export const matrizNegacionUnaria = [
+    Type.ENTERO,
+    Type.DOBLE,
+    null,
+    null,
+    null
+]

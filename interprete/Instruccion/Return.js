@@ -8,13 +8,30 @@ class Return extends Instruccion_1.Instruccion {
         this.expresion = expresion;
     }
     execute(ambito) {
-        let Valor = this.expresion.execute(ambito);
-        return {
-            type: "Return",
-            line: this.line,
-            column: this.column,
-            value: Valor.value
-        };
+        if (this.expresion != null) {
+            let Valor = this.expresion.execute(ambito);
+            return {
+                type: "Return",
+                line: this.line,
+                column: this.column,
+                value: Valor.value,
+                tipo: Valor.type,
+                tipoDato: Valor.tipoDato
+            };
+        }
+        else {
+            return {
+                type: "Return",
+                line: this.line,
+                column: this.column,
+                value: null,
+                tipo: null,
+                tipoDato: null
+            };
+        }
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Return = Return;

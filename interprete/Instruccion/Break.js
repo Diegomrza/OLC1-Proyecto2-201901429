@@ -9,5 +9,8 @@ class Break extends Instruccion_1.Instruccion {
     execute(ambito) {
         return { type: 'Break', line: this.line, column: this.column };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.Break = Break;

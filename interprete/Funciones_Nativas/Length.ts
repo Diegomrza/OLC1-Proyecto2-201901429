@@ -22,6 +22,9 @@ export class Length extends Instruccion {
             type: Type.ENTERO,          //Tipo primitivo
             tipoDato: TipoDato.ENTERO   //Tipo de estructura
         }
+    }
 
+    public grafo(): string {
+        return "";
     }
 }

@@ -1,5 +1,5 @@
 import { Expresion } from "./Expresion";
-import { Retorno, TipoDato, Type } from "./Retorno"
+import { matrizResta, Retorno, TipoDato, Type } from "./Retorno"
 import { Error_ } from "../Error/Error";
 import { Ambito } from "../Extra/Ambito";
 import { nombreTipos } from "./Literal";
@@ -11,320 +11,195 @@ export class Aritmetica extends Expresion {
     }
 
     public execute(ambito: Ambito): Retorno {
-
-        const leftValue = this.left.execute(ambito);    //va a traer un retorno que contiene: value, type
-        const rightValue = this.right.execute(ambito);  //va a traer un retorno que contiene: value, type 
-
-        let asciiLeft = null;
-        if (leftValue.type == Type.CARACTER && rightValue.type != Type.CARACTER) {   //Si left = char y right != char
-            asciiLeft = leftValue.value.charCodeAt(0); //Obteniendo el codigo ascii
+        switch (this.tipo) {
+            case TipoAritmetica.SUMA:
+                return this.suma(ambito);
+            case TipoAritmetica.RESTA:
+                return this.resta(ambito);
+            case TipoAritmetica.MULTIPLICACION:
+                return this.multiplicacion(ambito);
+            case TipoAritmetica.DIVISION:
+                return this.division(ambito);
+            case TipoAritmetica.POTENCIA:
+                return this.potencia(ambito);
+            case TipoAritmetica.MODULO:
+                return this.modulo(ambito);
         }
+    }
 
-        let asciiRight = null
-        if (rightValue.type == Type.CARACTER && leftValue.type != Type.CARACTER) {  //Si right = char y left  != char
-            asciiRight = rightValue.value.charCodeAt(0); //Obteniendo el codigo ascii
-        }
+    public grafo(): string {
+        return "";
+    }
 
-        let dominante = this.tipoDominante(leftValue.type, rightValue.type); //Devuelve el tipo dominante de la matriz de tipos
-        if (dominante == null) throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
+    private suma(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
 
-        if (this.tipo == TipoAritmetica.SUMA) {//SUMA
+        let asciiIzq: number;
+        let asciiDer: number;
+        if (izquierda.type == Type.CARACTER) asciiIzq = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) asciiDer = derecha.value.charCodeAt(0);
 
-            if (dominante == Type.CADENA) {                                                                         //Tipo dominante string
-                return { 
-                    value: (leftValue.value.toString() + rightValue.value.toString()), 
+        let tipoDominante = this.tipoDominante(izquierda.type, derecha.type);
+        
+        switch (tipoDominante) {
+            case Type.ENTERO:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                
+                return {
+                    value: (Number(izquierda.value) + Number(derecha.value)),
+                    type: Type.ENTERO,
+                    tipoDato: TipoDato.ENTERO
+                }
+            case Type.DOBLE:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) + Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            case Type.CADENA:
+                return {
+                    value: (izquierda.value + derecha.value),
                     type: Type.CADENA,
                     tipoDato: TipoDato.CADENA
-                };
-            } else if (dominante == Type.ENTERO) {                                                                  //Si el tipo dominante es int
-                if (asciiLeft != null) {                                                                            //Si el izquierdo tiene un ascii
-                    return { 
-                        value: (asciiLeft + Number(rightValue.value)), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    };
-                } else if (asciiRight != null) {                                                                    //Si el derecho tiene un ascii
-                    return { 
-                        value: (Number(leftValue.value) + asciiRight), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    };
-                } else {                                                                                            //Caso general
-                    return { 
-                        value: (Number(leftValue.value) + Number(rightValue.value)), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    };
                 }
-            } else if (dominante == Type.DOBLE) {                                                                   //Tipo dominante double
-                if (asciiLeft != null) {                                                                            //Si el izquierdo tiene un ascii
-                    return { 
-                        value: (asciiLeft + Number(rightValue.value)), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    };
-                } else if (asciiRight != null) {                                                                    //Si el derecho tiene un ascii
-                    return { 
-                        value: (Number(leftValue.value) + asciiRight), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    };
-                } else {                                                                                            //Caso general
-                    return { 
-                        value: (Number(leftValue.value) + Number(rightValue.value)), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    };
-                }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', 'No se puede operar: ' + leftValue.type + ' con ' + rightValue.type); //Error
-            }
-
-        } else if (this.tipo == TipoAritmetica.RESTA) {//RESTA
-
-            if (dominante == Type.ENTERO) {
-                if (asciiLeft != null) {
-                    return { 
-                        value: (asciiLeft - rightValue.value), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    }
-                } else if (asciiRight != null) {
-                    return { 
-                        value: (leftValue.value - asciiRight), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    }
-                } else {
-                    return { 
-                        value: (leftValue.value - rightValue.value), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    }
-                }
-            } else if (dominante == Type.DOBLE) {
-                if (asciiLeft != null) {
-                    return { 
-                        value: (asciiLeft - rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else if (asciiRight != null) {
-                    return { 
-                        value: (leftValue.value - asciiRight), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else {
-                    return { 
-                        value: (leftValue.value - rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-            }
-
-        } else if (this.tipo == TipoAritmetica.MULTIPLICACION) {//MULTIPLICACION
-
-            if (dominante == Type.ENTERO) {
-                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
-                    if (asciiLeft != null) {
-                        return { 
-                            value: (asciiLeft * rightValue.value), 
-                            type: Type.ENTERO,
-                            tipoDato: TipoDato.ENTERO
-                        }
-                    } else if (asciiRight != null) {
-                        return { 
-                            value: (leftValue.value * asciiRight), 
-                            type: Type.ENTERO,
-                            tipoDato: TipoDato.ENTERO
-                        }
-                    } else {
-                        return { 
-                            value: (leftValue.value * rightValue.value), 
-                            type: Type.ENTERO,
-                            tipoDato: TipoDato.ENTERO
-                        }
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-
-            } else if (dominante == Type.DOBLE) {
-                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
-                    if (asciiLeft != null) {
-                        return { 
-                            value: (asciiLeft * rightValue.value), 
-                            type: Type.DOBLE,
-                            tipoDato: TipoDato.DOBLE
-                        }
-                    } else if (asciiRight != null) {
-                        return { 
-                            value: (leftValue.value * asciiRight), 
-                            type: Type.DOBLE,
-                            tipoDato: TipoDato.DOBLE
-                        }
-                    } else {
-                        return { 
-                            value: (leftValue.value * rightValue.value), 
-                            type: Type.DOBLE,
-                            tipoDato: TipoDato.DOBLE
-                        }
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-            }
-
-        } else if (this.tipo == TipoAritmetica.DIVISION) {//DIVISION
-            if (dominante == Type.ENTERO) {
-                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
-                    if (rightValue.value == 0) {
-                        throw new Error_(this.line, this.column, "Semántico", "No se puede dividir entre 0");
-                    } else {
-                        if (asciiLeft != null) {
-                            return { 
-                                value: (asciiLeft / rightValue.value), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        } else if (asciiRight != null) {
-                            return { 
-                                value: (leftValue.value / asciiRight), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        } else {
-                            return { 
-                                value: (leftValue.value / rightValue.value), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        }
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-            } else if (dominante == Type.DOBLE) {
-                if (leftValue.type != Type.BOOLEAN && rightValue.type != Type.BOOLEAN) {
-                    if (rightValue.value == 0) {
-                        throw new Error_(this.line, this.column, "Semántico", "No se puede dividir entre 0");
-                    } else {
-                        if (asciiLeft != null) {
-                            return { 
-                                value: (asciiLeft / rightValue.value), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        } else if (asciiRight != null) {
-                            return {
-                                value: (leftValue.value / asciiRight), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        } else {
-                            return {
-                                value: (leftValue.value / rightValue.value), 
-                                type: Type.DOBLE,
-                                tipoDato: TipoDato.DOBLE
-                            }
-                        }
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-            }
-
-        } else if (this.tipo == TipoAritmetica.POTENCIA) {//POTENCIA
-
-            if (dominante == Type.ENTERO) {
-                if (leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) {
-                    return { 
-                        value: Math.pow(leftValue.value, rightValue.value), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-                //return {value: Math.pow(leftValue.value, rightValue.value),type: Type.ENTERO}
-            } else if (dominante == Type.DOBLE) {
-                if (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO) {
-                    return { 
-                        value: Math.pow(leftValue.value, rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else if (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) {
-                    return { 
-                        value: Math.pow(leftValue.value, rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else if (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) {
-                    return { 
-                        value: Math.pow(leftValue.value, rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-                //return { value: Math.pow(leftValue.value, rightValue.value), type: Type.DOBLE }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-            }
-
-        } else if (this.tipo == TipoAritmetica.MODULO) {//MODULO
-
-            if (dominante == Type.ENTERO) {
-                if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) ||
-                    (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) ||
-                    (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
-                    (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) {
-                    return { 
-                        value: (leftValue.value % rightValue.value), 
-                        type: Type.ENTERO,
-                        tipoDato: TipoDato.ENTERO
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-            } else if (dominante == Type.DOBLE) {
-                if ((leftValue.type == Type.ENTERO && rightValue.type == Type.ENTERO) ||
-                    (leftValue.type == Type.DOBLE && rightValue.type == Type.DOBLE) ||
-                    (leftValue.type == Type.ENTERO && rightValue.type == Type.DOBLE) ||
-                    (leftValue.type == Type.DOBLE && rightValue.type == Type.ENTERO)) {
-                    return { 
-                        value: (leftValue.value % rightValue.value), 
-                        type: Type.DOBLE,
-                        tipoDato: TipoDato.DOBLE
-                    }
-                } else {
-                    throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-                }
-            } else {
-                throw new Error_(this.line, this.column, 'Semántico', this.mensaje(leftValue, rightValue));
-            }
-
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede sumar: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`);
         }
-        // else if () {
-
-        // }
-
     }
 
-    private mensaje(leftValue: Retorno, rightValue: Retorno): string {
-        return `No se puede realizar esta operación => ${tipoOperacion(this.tipo)} con: ` + nombreTipos(leftValue.type) + ' y ' + nombreTipos(rightValue.type);
+    private resta(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        let asciiIzq: number;
+        let asciiDer: number;
+        if (izquierda.type == Type.CARACTER) asciiIzq = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) asciiDer = derecha.value.charCodeAt(0);
+
+        let tipoDominante = this.tipoDominanteResta(izquierda.type, derecha.type);
+        switch (tipoDominante) {
+            case Type.ENTERO:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) - Number(derecha.value)),
+                    type: Type.ENTERO,
+                    tipoDato: TipoDato.ENTERO
+                }
+            case Type.DOBLE:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) - Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede restar: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`); //Error
+        }
     }
 
+    private multiplicacion(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        let asciiIzq: number;
+        let asciiDer: number;
+        if (izquierda.type == Type.CARACTER) asciiIzq = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) asciiDer = derecha.value.charCodeAt(0);
+
+        let tipoDominante = this.tipoDominanteMultiplicacion(izquierda.type, derecha.type);
+        switch (tipoDominante) {
+            case Type.ENTERO:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) * Number(derecha.value)),
+                    type: Type.ENTERO,
+                    tipoDato: TipoDato.ENTERO
+                }
+            case Type.DOBLE:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) * Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede multiplicar: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`);
+        }
+    }
+
+    private division(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        let asciiIzq: number;
+        let asciiDer: number;
+        if (izquierda.type == Type.CARACTER) asciiIzq = izquierda.value.charCodeAt(0);
+        if (derecha.type == Type.CARACTER) asciiDer = derecha.value.charCodeAt(0);
+
+        if (derecha.value == 0) throw new Error_(this.line, this.column, 'Semántico', `La división entre cero no está definida.`);
+
+        let tipoDominante = this.tipoDominanteDivision(izquierda.type, derecha.type);
+        switch (tipoDominante) {
+            case Type.DOBLE:
+                if (izquierda.type == Type.CARACTER) izquierda.value = asciiIzq;
+                if (derecha.type == Type.CARACTER) derecha.value = asciiDer;
+                return {
+                    value: (Number(izquierda.value) / Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede dividir: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`); //Error
+        }
+    }
+
+    private potencia(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        let tipoDominante = this.tipoDominantePotencia(izquierda.type, derecha.type);
+        switch (tipoDominante) {
+            case Type.ENTERO:
+                return {
+                    value: Math.pow(Number(izquierda.value), Number(derecha.value)),
+                    type: Type.ENTERO,
+                    tipoDato: TipoDato.ENTERO
+                }
+            case Type.DOBLE:
+                return {
+                    value: Math.pow(Number(izquierda.value), Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede hacer la potencia: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`); //Error
+        }
+    }
+
+    private modulo(ambito: Ambito): Retorno {
+        let izquierda = this.left.execute(ambito);
+        let derecha = this.right.execute(ambito);
+
+        let tipoDominante = this.tipoDominanteModulo(izquierda.type, derecha.type);
+        switch (tipoDominante) {
+            case Type.DOBLE:
+                return {
+                    value: (Number(izquierda.value) % Number(derecha.value)),
+                    type: Type.DOBLE,
+                    tipoDato: TipoDato.DOBLE
+                }
+            default:
+                throw new Error_(this.line, this.column, 'Semántico', `No se puede sacar el módulo: ${nombreTipos(izquierda.type)} con ${nombreTipos(derecha.type)}.`); //Error
+        }
+    }
 }
 
 export enum TipoAritmetica {
@@ -334,22 +209,4 @@ export enum TipoAritmetica {
     DIVISION = 3,
     POTENCIA = 4,
     MODULO = 5
-}
-
-export function tipoOperacion(num: number): string {
-    switch (num) {
-        case 0:
-            return "suma";
-        case 1:
-            return "resta";
-        case 2:
-            return "multiplicacion";
-        case 3:
-            return "division";
-        case 4:
-            return "potencia";
-        case 5:
-            return "modulo";
-    }
-
 }

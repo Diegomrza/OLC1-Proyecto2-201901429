@@ -23,9 +23,15 @@ class While extends Instruccion_1.Instruccion {
                 else if (retorno.type == 'Continue') {
                     continue;
                 }
+                else if (retorno.type == 'Return') {
+                    return retorno.value;
+                }
             }
             value = this.condicion.execute(ambito);
         }
+    }
+    grafo() {
+        return "";
     }
 }
 exports.While = While;

@@ -13,13 +13,16 @@ export abstract class Instruccion {
     }
 
     public abstract execute(ambito: Ambito): any;
+
+    public abstract grafo(): string;
+
 }
 
 export enum TipoFuncion {
     INT,
     DOUBLE,
-    CHAR,
     BOOLEAN,
+    CHAR,
     STRING,
     VOID
 }

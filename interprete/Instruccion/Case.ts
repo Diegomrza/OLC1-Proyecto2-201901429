@@ -12,4 +12,8 @@ export class Case extends Instruccion {
         let valCuerpo = this.cuerpo.execute(ambito);
         if (valCuerpo != null && valCuerpo != undefined) return valCuerpo;
     }
+
+    public grafo(): string {
+        return "";
+    }
 }

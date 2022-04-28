@@ -30,7 +30,9 @@ export class Switch extends Instruccion {
                             banderaBreak = true;    //Break encontrado
                             break;
                         } else if (retorno.type == 'Return') {
-                            return;
+                            return retorno.value;
+                        } else if (retorno.type == 'Continue') {
+                            continue;
                         }
                     }
                 }
@@ -57,5 +59,8 @@ export class Switch extends Instruccion {
         if (this.defecto != null && banderaBreak == false) this.defecto.execute(ambito);
     }
 
+    public grafo(): string {
+        return "";
+    }
 
 }

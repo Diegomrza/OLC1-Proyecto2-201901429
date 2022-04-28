@@ -7,7 +7,7 @@ import { ToCharArray } from "../Funciones_Nativas/ToCharArray";
 import { Instruccion } from "./Instruccion";
 
 export class Vector extends Instruccion {
-    public charArray: ToCharArray;
+    public charArray: ToCharArray; //Si el valor viene de un ToCharArray
 
     constructor(
         private tipo: number, 
@@ -30,11 +30,11 @@ export class Vector extends Instruccion {
         }
 
         let tamanio = this.tam.execute(ambito);     //El tamaño vector siempre viene, entonces obtenemos su valor
-        if (tamanio.type != Type.ENTERO && tamanio.value != 0) {
+        if (tamanio.type != Type.ENTERO || tamanio.value == 0) {
             throw new Error_(this.line, this.column, 'Semántico', 'El atributo tamaño no es de tipo int ó es 0.');
         }
 
-        if (this.arreglo.length == 0) {     //Si el arreglo viene vacío significa que el tamaño tiene que ser 
+        if (this.arreglo.length == 0) {     //Si el arreglo viene vacío significa que el tamaño tiene que ser tamanio
 
             let lista = []; //Lista auxiliar
 
@@ -63,6 +63,10 @@ export class Vector extends Instruccion {
             //Guardamos el vector
             ambito.setVal(this.id, aux, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
+    }
+
+    public grafo(): string {
+        return "";
     }
 
     private defecto(tipo: number) { //Retorna el valor por defecto según el tipo

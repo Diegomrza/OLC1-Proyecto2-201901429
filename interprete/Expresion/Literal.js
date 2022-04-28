@@ -42,7 +42,7 @@ class Literal extends Expresion_1.Expresion {
         }
         else if (this.tipo == TipoLiteral.DOBLE) { //Si es double
             return {
-                value: Number(this.value),
+                value: Number(this.value).toFixed(2),
                 type: Retorno_1.Type.DOBLE,
                 tipoDato: Retorno_1.TipoDato.DOBLE
             };
@@ -54,6 +54,9 @@ class Literal extends Expresion_1.Expresion {
                 tipoDato: Retorno_1.TipoDato.CARACTER
             };
         }
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Literal = Literal;

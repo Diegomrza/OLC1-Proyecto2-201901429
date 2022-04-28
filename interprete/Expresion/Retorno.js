@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tipos = exports.TipoDato = exports.Type = void 0;
+exports.matrizNegacionUnaria = exports.matrizModulo = exports.matrizPotencia = exports.matrizDivision = exports.matrizMultiplicacion = exports.matrizResta = exports.tipos = exports.TipoDato = exports.Type = void 0;
 var Type;
 (function (Type) {
     Type[Type["ENTERO"] = 0] = "ENTERO";
@@ -35,4 +35,96 @@ exports.tipos = [
     [
         Type.CADENA, Type.CADENA, Type.CADENA, Type.CADENA, Type.CADENA
     ]
+];
+exports.matrizResta = [
+    [
+        Type.ENTERO, Type.DOBLE, Type.ENTERO, Type.ENTERO, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, Type.DOBLE, Type.DOBLE, null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+];
+exports.matrizMultiplicacion = [
+    [
+        Type.ENTERO, Type.DOBLE, null, Type.ENTERO, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+];
+exports.matrizDivision = [
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, Type.DOBLE, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+];
+exports.matrizPotencia = [
+    [
+        Type.ENTERO, Type.DOBLE, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+];
+exports.matrizModulo = [
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        Type.DOBLE, Type.DOBLE, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ],
+    [
+        null, null, null, null, null
+    ]
+];
+exports.matrizNegacionUnaria = [
+    Type.ENTERO,
+    Type.DOBLE,
+    null,
+    null,
+    null
 ];

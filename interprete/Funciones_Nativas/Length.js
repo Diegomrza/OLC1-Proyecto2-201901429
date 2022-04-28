@@ -21,5 +21,8 @@ class Length extends Instruccion_1.Instruccion {
             tipoDato: Retorno_1.TipoDato.ENTERO //Tipo de estructura
         };
     }
+    grafo() {
+        return "";
+    }
 }
 exports.Length = Length;

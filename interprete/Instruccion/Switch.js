@@ -29,7 +29,10 @@ class Switch extends Instruccion_1.Instruccion {
                             break;
                         }
                         else if (retorno.type == 'Return') {
-                            return;
+                            return retorno.value;
+                        }
+                        else if (retorno.type == 'Continue') {
+                            continue;
                         }
                     }
                 }
@@ -57,6 +60,9 @@ class Switch extends Instruccion_1.Instruccion {
         }
         if (this.defecto != null && banderaBreak == false)
             this.defecto.execute(ambito);
+    }
+    grafo() {
+        return "";
     }
 }
 exports.Switch = Switch;

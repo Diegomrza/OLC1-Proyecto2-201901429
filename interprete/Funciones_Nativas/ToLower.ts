@@ -21,4 +21,8 @@ export class ToLower extends Instruccion {
             tipoDato: TipoDato.CADENA
         }
     }
+
+    public grafo(): string {
+        return "";
+    }
 }
