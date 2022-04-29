@@ -1,107 +1,346 @@
-PALABRAS RESERVADAS:
-true = {TRUE}
-false = {FALSE}
-print = {PRINT}
-println = {PRINT}
-if = {IF}
-else = {ELSE}
-while = {WHILE}
-switch = {SWITCH}
-break = {BREAK}
-return = {RETURN}
-function = {FUNCTION}
-
-int = {INT}
-double = {DOUBLE}
-char = {CHAR}
-boolean = {BOOLEAN}
-string = {STRING}
-
-EXPRESIONES REGULARES:
-\d+"."\d+ = {DECIMAL}
+Terminales:
+“true” = {TRUE}
+“false” = {FALSE}
+“print” = {PRINT}
+“println” = {PRINTLN}
+“typeof” = {TYPE_OF}
+“toString” = {TO_STRING}
+“toCharArray” = {TO_CHAR_ARRAY}
+“length” = {LENGTH}
+“toLower” = {TO_LOWER}
+“toUpper” = {TO_UPPER}
+“round” = {ROUND}
+“if” = {IF}
+“else” = {ELSE}
+“do” = {DO}
+“while” = {WHILE}
+“switch” = {SWITCH}
+“case” = {CASE}
+“default” = {DEFAULT}
+“for” = {FOR}
+“break” = {BREAK}
+“continue” = {CONTINUE}
+“return” = {RETURN}
+“new” = {NEW}
+“void” = {VOID}
+“run” = {RUN}
+“int” = {INT]
+“double” = {DOUBLE}
+“char” = {CHAR}
+“boolean” = {BOOLEAN}
+“string” = {STRING}
+“vector” = {VECTOR}
+\d+\.\d+ = {DECIMAL}
 \d+ = {ENTERO}
-\'.\' = {CARACTER}
+\’.\’ = {CARACTER}
 (\"[^\"]*\") = {CADENA}
 ([a-zA-Z])[a-zA-Z0-9_]* = {IDENTIFICADOR}
-
-SIMBOLOS:
-"(" = {PAR_ABRE}
-")" = {PAR_CIERRA}
-
-"{" = {LL_ABRE}
-"}" = {LL_CIERRA}
-
-"==" = {IGUAL_IGUAL}
-"<=" = {MENOR_IGUAL}
-"<" = {MENOR}
-">=" = {MAYOR_IGUAL}
-">" = {MAYOR}
-"!=" = {DIFERENTE}
-"=" = {IGUAL}
-"?" = {QUESTION}
-
-"||" = {OR}
-"&&" = {AND}
-"!" = {NOT}
-
-"," = {COMA}
-":" = {DOSPUNTOS}
-";" = {PUNTO_Y_COMA}
-"++" = {MAS_MAS}
-"+" = {MAS}
-"--" = {MENOS_MENOS}
-"-" = {MENOS}
-"*" = {POR}
-"/" = {DIVIDIR}
-"^" = {POTENCIA}
-"%" = {MODULO}
-
-PRECEDENCIA
-%izquierda 'QUESTION'
-%izquierda 'OR'                                                                      //7
-%izquierda 'AND'                                                                     //6
-%derecha   'NOT'                                                                    //5
-%izquierda 'IGUAL_IGUAL' 'DIFERENTE'
-%izquierda 'MENOR_IGUAL' 'MAYOR_IGUAL' 'MENOR' 'MAYOR'                               //4
-%izquierda 'MAS' 'MENOS'                                                             //3
-%izquierda 'DIVIDIR' 'POR'                                                           //2
-%izquierda 'POTENCIA', 'MODULO', NUMERO                                              //1
-%derecha   UMENOS                                                                   //0
-%izquierda 'MAS_MAS' 'MENOS_MENOS'
-
-PRODUCCIONES:
-inicio ::= 
-    instrucciones 
-
-instrucciones ::= 
-    instrucciones instruccion
-    | instruccion
-
-instruccion ::=
-    asignacion
-    | declaracion
-    | print
-    
-    | if
-    | switch
-
-    | while
-    | for
-    | do_while
-    
-    | print
-    | println
+“(“ = {PAR_ABRE}
+“)” = {PAR_CIERRA}
+“{“ = {LL_ABRE}
+“}” = {LL_CIERRA}
+“[“ = {COR_ABRE}
+“]” = {COR_CIERRA}
+“==” = {IGUAL_IGUAL}
+“<=” = {MENOR_IGUAL}
+“<” = {MENOR}
+“>=” = {MAYOR_IGUAL}
+“>” = {MAYOR}
+“!=” = {DIFERENTE}
+“=” = {IGUAL}
+“?” = {QUESTION}
+“||” = {OR}
+“&&” = {AND}
+“!” = {NOT}
+“,” = {COMA}
+“:” = {DOS_PUNTOS}
+“;” = {PUNTO_Y_COMA}
+“++” = {MAS_MAS}
+“+” = {MAS}
+“- -“ = {MENOS_MENOS}
+“-“ = {MENOS}
+“*” = {POR}
+“/” = {DIVIDIR}
+“^” = {POTENCIA}
+“%” = {MODULO}
 
 
-declaracion ::=
+No terminales:
+ini
+instrucciones
+inicio
+declaración
+declaracion_multiple
+asignacion
+print
+listaExpr
+if
+else
+switch
+lista_case
+case
+statement_case
+default
+while
+for
+do_while
+statement
+function
+tipo_dato
+parametros
+tipos
+llamada_funcion
+return
+incremento_decremento
+ternario
+casteos
+declaracion_vectores
+vector_una_dimension
+vector_dos_dimensiones
+acceso_vectores
+modificacion_vectores
+type_of
+to_string
+to_char_array
+length
+to_lower
+to_upper
+round
+expresion
+ 
 
+Producciones:
+ini ::= instrucciones EOF
 
-asignacion ::=
+instrucciones ::= inicio
+| inicio
 
+inicio ::= asignacion PUNTO_Y_COMA
+| declaracion PUNTO_Y_COMA
+| print PUNTO_Y_COMA
+| if
+| while
+| do_while
+| for
+| switch
+| function
+| llamada_funcion PUNTO_Y_COMA
+| incremento_decremento PUNTO_Y_COMA
+| BREAK PUNTO_Y_COMA
+| CONTINUE PUNTO_Y_COMA
+| return PUNTO_Y_COMA
+| declaracion_vectores PUNTO_Y_COMA
+| modificacion_vectores PUNTO_Y_COMA
 
-print ::=
+declaracion ::= INT declaracion_multiple
+| DOUBLE declaracion_multiple
+| CHAR declaracion_multiple
+| BOOLEAN declaracion_multiple
+| STRING declaracion_multiple
+| INT declaracion_multiple IGUAL expresion
+| DOUBLE declaracion_multiple IGUAL expresion
+| CHAR declaracion_multiple IGUAL expresion
+| BOOLEAN declaracion_multiple IGUAL expresion
+| STRING declaracion_multiple IGUAL expresion
+| INT declaracion_multiple IGUAL casteos
+| DOUBLE declaracion_multiple IGUAL casteos
+| CHAR declaracion_multiple IGUAL casteos
+| BOOLEAN declaracion_multiple IGUAL casteos
+| STRING declaracion_multiple IGUAL casteos
 
+declaracion_multiple ::= declaracion_multiple COMA IDENTIFICADOR
+| IDENTIFICADOR
 
-println ::=
+asignacion ::= IDENTIFICADOR IGUAL expresion
+| IDENTIFICADOR
 
+print ::= PRINT PAR_ABRE listaExpr PAR_CIERRA
+| PRINTLN PAR_ABRE listaExpr PAR_CIERRA
 
+listaExpr ::= listaExpr COMA expresion
+| expresion
+
+if ::= IF PAR_ABRE expresion PAR_CIERRA statement elsE
+
+elsE ::= ELSE statement 
+    | ELSE if
+    |
+
+switch ::= SWITCH PAR_ABRE expresion PAR_CIERRA LL_ABRE lista_case default LL_CIERRA
+| SWITCH PAR_ABRE expresion PAR_CIERRA LL_ABRE default LL_CIERRA
+
+lista_case ::= lista_case case
+| case
+
+case ::= CASE expresion DOSPUNTOS statement_case
+
+statement_case ::= instrucciones 
+| 
+
+default ::= DEFAULT DOS_PUNTOS statement_case 
+| 
+
+while ::= WHILE PAR_ABRE expresion PAR_CIERRA statement
+
+for ::= FOR PAR_ABRE declaracion PUNTO_Y_COMA expresion PUNTO_Y_COMA incremento_decremento PAR_CIERRA statement
+| FOR PAR_ABRE declaracion PUNTO_Y_COMA expresion PUNTO_Y_COMA asignacion PAR_CIERRA statement
+| FOR PAR_ABRE asignacion PUNTO_Y_COMA expresion PUNTO_Y_COMA incremento_decremento PAR_CIERRA statement
+| FOR PAR_ABRE asignacion PUNTO_Y_COMA expresion PUNTO_Y_COMA asignacion PAR_CIERRA Statement
+
+do_while ::= DO statement WHILE PAR_ABRE expresion PAR_CIERRA
+
+statement ::= LL_ABRE instrucciones LL_CIERRA
+| LL_ABRE LL_CIERRA
+
+function ::= IDENTIFICADOR PAR_ABRE PAR_CIERRA DOS_PUNTOS tipo_dato statement
+| IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA DOS_PUNTOS tipo_dato statement
+| IDENTIFICADOR PAR_ABRE PAR_CIERRA statement
+| IDENTIFICADOR PAR_ABRE parametros PAR_CIERRA statement
+
+tipo_dato ::= INT
+| DOUBLE 
+| CHAR   
+| BOOLEAN
+| STRING 
+| VOID   
+
+parametros ::= parametros COMA tipos IDENTIFICADOR
+| tipos IDENTIFICADOR
+| parametros COMA tipos COR_ABRE COR_CIERRA IDENTIFICADOR
+| tipos COR_ABRE COR_CIERRA IDENTIFICADOR
+| parametros COMA tipos IDENTIFICADOR COR_ABRE COR_CIERRA
+| tipos IDENTIFICADOR COR_ABRE COR_CIERRA
+| parametros COMA tipos COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR
+| tipos COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR
+| parametros COMA tipos IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA
+| tipos IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA
+
+tipos ::= INT
+| DOUBLE
+| CHAR
+| BOOLEAN
+| STRING
+| VECTOR
+
+llamada_funcion ::= IDENTIFICADOR PAR_ABRE PAR_CIERRA
+| IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA
+| RUN IDENTIFICADOR PAR_ABRE PAR_CIERRA
+| RUN IDENTIFICADOR PAR_ABRE ListaExpr PAR_CIERRA
+
+return ::= RETURN
+| RETURN expresion 
+
+incremento_decremento ::= IDENTIFICADOR MAS_MAS
+| IDENTIFICADOR MENOS_MENOS
+
+ternario ::= expresion QUESTION expresion DOS_PUNTOS expresion
+
+casteos ::= PAR_ABRE DOUBLE PAR_CIERRA expresion
+| PAR_ABRE CHAR PAR_CIERRA expresion
+| PAR_ABRE INT PAR_CIERRA expresion
+| PAR_ABRE BOOLEAN PAR_CIERRA expresion
+| PAR_ABRE STRING PAR_CIERRA expresion
+
+declaracion_vectores ::= vector_una_dimension
+| vector_dos_dimensiones
+
+vector_una_dimension ::= INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA
+| INT IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA
+| DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA
+| CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL to_char_array
+| BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA
+| BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA
+| STRING IDENTIFICADOR COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| INT COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW INT COR_ABRE expresion COR_CIERRA
+| INT COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| DOUBLE COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA
+| DOUBLE COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA
+| CHAR COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL to_char_array
+| BOOLEAN COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA
+| BOOLEAN COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| STRING COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW STRING COR_ABRE expresion COR_CIERRA
+| STRING COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+
+vector_dos_dimensiones ::= INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW INT COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| INT IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| DOUBLE IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| CHAR IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| BOOLEAN IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL NEW STRING COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| STRING IDENTIFICADOR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IGUAL COR_ABRE ListaExpr COR_CIERRA
+| INT COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW INT COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| INT COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| DOUBLE COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW DOUBLE COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| DOUBLE COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| CHAR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW CHAR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| CHAR COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| BOOLEAN COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW BOOLEAN COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| BOOLEAN COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+| STRING COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL NEW STRING COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+| STRING COR_ABRE COR_CIERRA COR_ABRE COR_CIERRA IDENTIFICADOR IGUAL COR_ABRE ListaExpr COR_CIERRA
+
+acceso_vectores ::= IDENTIFICADOR COR_ABRE expresion COR_CIERRA
+| IDENTIFICADOR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA
+
+modificacion_vectores ::= IDENTIFICADOR COR_ABRE expresion COR_CIERRA IGUAL expresion
+| IDENTIFICADOR COR_ABRE expresion COR_CIERRA COR_ABRE expresion COR_CIERRA IGUAL expresion
+
+type_of ::= TYPEOF PAR_ABRE expresion PAR_CIERRA
+
+to_string ::= TOSTRING PAR_ABRE expresion PAR_CIERRA
+
+to_char_array ::= TOCHARARRAY PAR_ABRE expresion PAR_CIERRA
+
+length_ ::= LENGTH PAR_ABRE expresion PAR_CIERRA
+
+to_lower ::= TOLOWER PAR_ABRE expresion PAR_CIERRA
+
+to_upper ::= TOUPPER PAR_ABRE expresion PAR_CIERRA
+
+round ::= ROUND PAR_ABRE expresion PAR_CIERRA
+
+expresion ::= MENOS expresion %prec UMENOS
+| expresion MAS expresion
+| expresion MENOS expresion
+| expresion POR expresion
+| expresion DIVIDIR expresion
+| expresion POTENCIA expresion
+| expresion MODULO expresion
+| expresion IGUAL_IGUAL expresion
+| expresion DIFERENTE expresion
+| expresion MAYOR_IGUAL expresion
+| expresion MENOR_IGUAL expresion
+| expresion MAYOR expresion
+| expresion MENOR expresion
+| PAR_ABRE expresion PAR_CIERRA
+| expresion AND expresion
+| expresion OR expresion
+| NOT expresion
+| CADENA
+| ENTERO
+| DECIMAL
+| TRUE
+| FALSE
+| CARACTER
+| IDENTIFICADOR
+| ternario
+| incremento_decremento
+| COR_ABRE ListaExpr COR_CIERRA
+| acceso_vectores
+| type_of
+| to_string
+| to_char_array
+| length_
+| to_lower
+| to_upper
+| round
+| llamada_funcion

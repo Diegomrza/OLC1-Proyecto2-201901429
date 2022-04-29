@@ -16,11 +16,11 @@ const PORT = 4000;
 app.post('/', (req, res) => {
     const exp = req.body.value;
 
-    console.log("\n-----------------------------------");
+    console.log("\n--------------------------------------------------------------------------------------------------------------------------------------------");
 
     console.log("Entrada: ", exp);
 
-    console.log("-----------------------------------\n");
+    console.log("--------------------------------------------------------------------------------------------------------------------------------------------\n");
 
     const ambito = new Ambito(null);    //Ambito global
     const consola = new Singleton();
@@ -28,7 +28,7 @@ app.post('/', (req, res) => {
 
     try {
         result = parser.parse(exp);
-        console.log("Resultado:\n", result, "\nFin resultado.");
+        //console.log("Resultado:\n", result, "\nFin resultado.");
     } catch (e) {
         console.log(e)
         consola.pushError(new Error_(Object.values(e)[0].loc.first_line, Object.values(e)[0].loc.first_column, "Sintáctico", `Se esperaba: ${Object.values(e)[0].expected}, se tiene: ${Object.values(e)[0].token}`));
@@ -36,9 +36,9 @@ app.post('/', (req, res) => {
 
     //Primera pasada
     try {
-        for (const res of result) {
-            if (res instanceof Funcion) {
-                res.execute(ambito);
+        for (const resp of result) {
+            if (resp instanceof Funcion) {
+                resp.execute(ambito);
             } 
         }
     } catch (e) {
@@ -48,7 +48,7 @@ app.post('/', (req, res) => {
     //Segunda pasada
     try {
         for (const res1 of result) {
-            if (!(res1 instanceof Funcion)) {
+            if (!(res1 instanceof Funcion) && !(res1 instanceof LlamadaFuncion)) {
                 res1.execute(ambito);
             }
         }
@@ -63,8 +63,6 @@ app.post('/', (req, res) => {
         "errores": consola.listaErrores
     };
 
-    console.log(consola.listaPrint);
-    console.log(consola.listaErrores);
     consola.clear();
     consola.clearErrores();
     return res.send(objeto);
