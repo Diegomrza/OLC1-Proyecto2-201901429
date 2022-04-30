@@ -8,6 +8,7 @@ export function App() {
 
     function handleEditorDidMount(editor, monaco) {
         editorRef.current = editor;
+        console.log(monaco)
     }
 
     function showValue() {
@@ -33,7 +34,7 @@ export function App() {
                         let texto = "";
                         if (response.errores.length != 0) {
                             for (const i of response.errores) {
-                                texto += i.tipo + ": " + i.mensaje;
+                                texto += i.tipo + ":     " + i.mensaje + "     Linea: " + i.line + "     Columna:" + i.column + "\n";
                             }
                         } else {
                             for (const i of response.lista) {
@@ -75,9 +76,9 @@ export function App() {
 export function Consola() {
     return (
         <div className='min-h-screen min-w-full  flex justify-center items-center flex-col gap-10'>
-            <div className='w-full rounded-xl' style={{ marginTop: 80 }}>
+            <div className='w-full rounded-xl' style={{ marginTop:57 }}>
                 <div className='text-white text-2xl font-bold' style={{ textAlign: 'center', fontSize: 50, marginBottom: 20 }}>Consola</div>
-                <textarea id='consola' readOnly style={{ width: 870, height: 746, backgroundColor: 'rgb(35, 35, 35)', color: 'white', resize:'none'}}>
+                <textarea id='consola' readOnly style={{marginTop:'3%',width: '100%', height: 746, backgroundColor: 'rgb(35, 35, 35)', color: 'white', resize: 'none' }}>
                 </textarea>
             </div>
         </div>
@@ -87,11 +88,15 @@ export function Consola() {
 export function Botones() {
     return (
         <div>
-            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>Leer archivo</button>
-            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>Guardar archivo</button>
-            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>Crear archivo</button>
+            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>
+                Leer archivo
+            </button>
+            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>
+                Guardar archivo
+            </button>
+            <button className="p-2 text-white rounded-xl hover:scale-110 btn" style={{ backgroundColor: 'rgb(80,80,80)', color: 'white', padding: 5, transition: 'all 2seg', marginLeft: 685, width: 500, marginBottom: 5 }}>
+                Crear archivo
+            </button>
         </div>
     )
 }
-
-//export default App;

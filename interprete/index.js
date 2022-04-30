@@ -7,6 +7,7 @@ const { Error_ } = require('./Error/Error');
 const { LlamadaFuncion } = require('./Funcion/LlamadaFuncion');
 const { Funcion } = require('./Funcion/Funcion');
 const { Run } = require('./Funcion/Run');
+const fs = require('fs');
 
 const app = express();
 
@@ -16,11 +17,11 @@ const PORT = 4000;
 app.post('/', (req, res) => {
     const exp = req.body.value;
 
-    console.log("\n--------------------------------------------------------------------------------------------------------------------------------------------");
+    console.log("\n----------------------------------------------------------------------------------------------------------------------");
 
     console.log("Entrada: ", exp);
 
-    console.log("--------------------------------------------------------------------------------------------------------------------------------------------\n");
+    console.log("----------------------------------------------------------------------------------------------------------------------\n");
 
     const ambito = new Ambito(null);    //Ambito global
     const consola = new Singleton();
@@ -28,9 +29,7 @@ app.post('/', (req, res) => {
 
     try {
         result = parser.parse(exp);
-        //console.log("Resultado:\n", result, "\nFin resultado.");
     } catch (e) {
-        console.log(e)
         consola.pushError(new Error_(Object.values(e)[0].loc.first_line, Object.values(e)[0].loc.first_column, "Sintáctico", `Se esperaba: ${Object.values(e)[0].expected}, se tiene: ${Object.values(e)[0].token}`));
     }
 
@@ -39,7 +38,7 @@ app.post('/', (req, res) => {
         for (const resp of result) {
             if (resp instanceof Funcion) {
                 resp.execute(ambito);
-            } 
+            }
         }
     } catch (e) {
         consola.pushError(e);
@@ -62,6 +61,103 @@ app.post('/', (req, res) => {
         "lista": consola.listaPrint,
         "errores": consola.listaErrores
     };
+
+    //Errores
+
+
+    if (consola.listaErrores.length != 0) {
+        let contadorErrores = 1;
+        let cadenaErrores = `<!DOCTYPE html>
+    <html lang="en">
+    
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Errores</title>
+        <style>
+            td {
+                width: 150px;
+            }
+    
+            .Titulos {
+                text-align: center;
+                font-size: x-large;
+                font-family: fantasy;
+            }
+    
+            .noTitulos {
+                text-align: center;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div>
+        <table style="margin: 0 auto;" border="1">
+            <tr>
+                <td>
+                    <p class="Titulos">#</p>
+                </td>
+                <td>
+                    <p class="Titulos">Tipo de error</p>
+                </td>
+                <td>
+                    <p class="Titulos">Descripción</p>
+                </td>
+                <td>
+                    <p class="Titulos">Línea</p>
+
+                </td>
+                <td>
+                    <p class="Titulos">Columna</p>
+
+                </td>
+            </tr>
+        `;
+        for (const i of consola.listaErrores) {
+            cadenaErrores += `<tr>
+            <td>
+                <p class="noTitulos">
+                    ${contadorErrores}
+                </p>
+            </td>
+            <td>
+                <p class="noTitulos">
+                    ${i.tipo}
+                </p>
+            </td>
+            <td>
+                <p class="noTitulos">
+                    ${i.mensaje}
+                </p>
+            </td>
+            <td>
+                <p class="noTitulos">
+                    ${i.line}
+                </p>
+            </td>
+            <td>
+                <p class="noTitulos">
+                    ${i.column}
+                </p>
+            </td>
+        </tr>`
+            contadorErrores++;
+        }
+        cadenaErrores += `</table>
+        </div>
+    
+    
+    </body>
+    
+    </html>`
+        try {
+            fs.writeFileSync('Errores.html', cadenaErrores);
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     consola.clear();
     consola.clearErrores();
