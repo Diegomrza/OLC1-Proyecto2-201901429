@@ -1,0 +1,37 @@
+digraph G {
+            label="Tabla de errores"
+            node[shape=box]
+           a0 [label=<
+           <TABLE border="1" >
+            <TR>
+            <TD border="3" >#</TD>
+            <TD border="3">Tipo</TD>
+            <TD border="3">Descripcion</TD>
+            <TD border="3">Linea</TD>
+            <TD border="3">Columna</TD>
+            </TR><TR>
+            <TD>
+                
+                1
+               
+            </TD>
+            <TD>
+                
+                Semántico
+               
+            </TD>
+            <TD>
+               
+                No se puede asignar un double a un int
+                
+            </TD>
+            <TD>
+                
+                1
+                
+            </TD>
+            <TD>
+                10
+            </TD>
+        </TR></TABLE>>];
+    }

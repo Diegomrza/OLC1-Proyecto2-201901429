@@ -100,3 +100,26 @@ export function Botones() {
         </div>
     )
 }
+
+export function Imagenes() {
+    return (
+        <div>
+            <br />
+            <br />
+            <img
+            style={{margin:'0 auto'}}
+            src={require('./reportes/grafo.png')}
+            alt='grafo'
+            >
+            </img>
+            <br />
+            <br />
+            <img
+            style={{margin:'0 auto'}}
+            src={require('./errores/grafo.png')}
+            alt='grafo'
+            >
+            </img>
+        </div>
+    )
+}

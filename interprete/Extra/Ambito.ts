@@ -1,13 +1,16 @@
 import { Error_ } from "../Error/Error";
+import { nombreTipos } from "../Expresion/Literal";
 import { TipoDato, Type } from "../Expresion/Retorno";
 import { Funcion } from "../Funcion/Funcion";
+import { nombreFuncion, TipoFuncion } from "../Instruccion/Instruccion";
+import { Singleton } from "../Singleton";
 import { Simbolo } from "./Simbolo"
 
 export class Ambito {
     private variables: Map<string, Simbolo> //Guarda las variables, vectores y matrices
     public funciones: Map<string, Funcion>; //Guarda las funciones
 
-    constructor(public anterior: Ambito | null) {
+    constructor(public anterior: Ambito | null, public nombre: string) {
         this.variables = new Map();
         this.funciones = new Map();
     }
@@ -59,6 +62,11 @@ export class Ambito {
         //Ver si la funcion ya existe, reportar error
 
         if (!this.funciones.has(id)) {
+            let metodo = "Metodo";
+            if (funcion.tipo != TipoFuncion.VOID) {
+                metodo = 'Funcion';
+            }
+            new Singleton().insertarSimbolo(id, nombreFuncion(funcion.tipo), metodo, '-', funcion, line.toString(), column.toString());
             this.funciones.set(id, funcion);
         } else {
             throw new Error_(line, column, "Semántico", `Ya existe una función con ese nombre: ${id}.`);

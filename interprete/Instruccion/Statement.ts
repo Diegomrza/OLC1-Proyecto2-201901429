@@ -9,7 +9,7 @@ export class Statement extends Instruccion {
     }
 
     public execute(ambito: Ambito) {
-        const newAmb = new Ambito(ambito);
+        const newAmb = new Ambito(ambito, ambito.nombre);
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb)

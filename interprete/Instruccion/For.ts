@@ -12,7 +12,7 @@ export class For extends Instruccion {
 
     public execute(ambito: Ambito) {
 
-        const nuevoAmbito = new Ambito(ambito); //Ambito para declaracion o asignacion
+        const nuevoAmbito = new Ambito(ambito, ambito.nombre); //Ambito para declaracion o asignacion
         this.decl_asig.execute(nuevoAmbito);    //Ejecutamos la declaracion
 
         let val = this.condicion.execute(nuevoAmbito);  //
@@ -21,7 +21,7 @@ export class For extends Instruccion {
         if (val.tipoDato != TipoDato.BOOLEAN) throw new Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`)
 
         while (val.value) {
-            const entorno = new Ambito(nuevoAmbito);    //Ambito del for
+            const entorno = new Ambito(nuevoAmbito, nuevoAmbito.nombre);    //Ambito del for
 
             const retorno = this.cuerpo.execute(entorno);   //
             if (retorno != null && retorno != undefined) {

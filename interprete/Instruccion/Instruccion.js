@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TipoFuncion = exports.Instruccion = void 0;
+exports.nombreFuncion = exports.TipoFuncion = exports.Instruccion = void 0;
 class Instruccion {
     constructor(line, column) {
         this.line = line;
@@ -17,3 +17,20 @@ var TipoFuncion;
     TipoFuncion[TipoFuncion["STRING"] = 4] = "STRING";
     TipoFuncion[TipoFuncion["VOID"] = 5] = "VOID";
 })(TipoFuncion = exports.TipoFuncion || (exports.TipoFuncion = {}));
+function nombreFuncion(num) {
+    switch (num) {
+        case 0:
+            return "int";
+        case 1:
+            return "double";
+        case 2:
+            return "boolean";
+        case 3:
+            return "char";
+        case 4:
+            return "string";
+        case 5:
+            return "void";
+    }
+}
+exports.nombreFuncion = nombreFuncion;

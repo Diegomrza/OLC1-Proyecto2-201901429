@@ -2,10 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TipoAsignacion = exports.Ambito = void 0;
 const Error_1 = require("../Error/Error");
+const Instruccion_1 = require("../Instruccion/Instruccion");
+const Singleton_1 = require("../Singleton");
 const Simbolo_1 = require("./Simbolo");
 class Ambito {
-    constructor(anterior) {
+    constructor(anterior, nombre) {
         this.anterior = anterior;
+        this.nombre = nombre;
         this.variables = new Map();
         this.funciones = new Map();
     }
@@ -54,6 +57,11 @@ class Ambito {
     guardarFuncion(id, funcion, line, column) {
         //Ver si la funcion ya existe, reportar error
         if (!this.funciones.has(id)) {
+            let metodo = "Metodo";
+            if (funcion.tipo != Instruccion_1.TipoFuncion.VOID) {
+                metodo = 'Funcion';
+            }
+            new Singleton_1.Singleton().insertarSimbolo(id, (0, Instruccion_1.nombreFuncion)(funcion.tipo), metodo, '-', funcion, line.toString(), column.toString());
             this.funciones.set(id, funcion);
         }
         else {

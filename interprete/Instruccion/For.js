@@ -14,13 +14,13 @@ class For extends Instruccion_1.Instruccion {
         this.cuerpo = cuerpo;
     }
     execute(ambito) {
-        const nuevoAmbito = new Ambito_1.Ambito(ambito); //Ambito para declaracion o asignacion
+        const nuevoAmbito = new Ambito_1.Ambito(ambito, ambito.nombre); //Ambito para declaracion o asignacion
         this.decl_asig.execute(nuevoAmbito); //Ejecutamos la declaracion
         let val = this.condicion.execute(nuevoAmbito); //
         if (val.tipoDato != Retorno_1.TipoDato.BOOLEAN)
             throw new Error_1.Error_(this.line, this.column, "Semántico", `La condicion a evaluar no es de tipo boolean`);
         while (val.value) {
-            const entorno = new Ambito_1.Ambito(nuevoAmbito); //Ambito del for
+            const entorno = new Ambito_1.Ambito(nuevoAmbito, nuevoAmbito.nombre); //Ambito del for
             const retorno = this.cuerpo.execute(entorno); //
             if (retorno != null && retorno != undefined) {
                 if (retorno.type == 'Break') {

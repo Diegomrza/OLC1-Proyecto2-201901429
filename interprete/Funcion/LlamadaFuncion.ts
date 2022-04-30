@@ -2,6 +2,8 @@ import { Instruccion, TipoFuncion } from '../Instruccion/Instruccion';
 import { Ambito } from '../Extra/Ambito';
 import { Expresion } from '../Expresion/Expresion';
 import { Error_ } from '../Error/Error';
+import { Singleton } from '../Singleton';
+import { nombreTipos } from '../Expresion/Literal';
 
 export class LlamadaFuncion extends Instruccion {
 
@@ -17,20 +19,19 @@ export class LlamadaFuncion extends Instruccion {
     public execute(ambito: Ambito) {
         const funcion = ambito.getFuncion(this.id);
         if (funcion == undefined) {
-            console.log(undefined);
             throw new Error_(this.line, this.column, 'Semántico', `Funcion ${this.id} no encontrada.`);
         } 
 
         if (this.expresiones.length != funcion.parametros.length) throw new Error_(this.line, this.column, 'Semántico', "Cantidad de parametros incorrecta")
 
         if (this.run) {
-            const newEnv = new Ambito(ambito.getGlobal());  //Obteniendo el ambito global
+            const newEnv = new Ambito(ambito.getGlobal(), this.id);  //Obteniendo el ambito global
 
             for (const i in this.expresiones) {
                 const value = this.expresiones[i].execute(ambito);
                 
                 if (value.tipoDato != funcion.parametros[i][1]) throw new Error_(this.line, this.column, 'Semántico', "Tipos incorrectos");
-
+                new Singleton().insertarSimbolo(this.id, nombreTipos(value.type), nombreTipos(value.tipoDato), newEnv.nombre, value.value, this.line.toString(), this.column.toString());
                 newEnv.setVal(funcion.parametros[i][0], value.value, value.type, this.line, this.column, 0, value.tipoDato);
             }
 

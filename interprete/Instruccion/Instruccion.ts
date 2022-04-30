@@ -26,3 +26,21 @@ export enum TipoFuncion {
     STRING,
     VOID
 }
+
+export function nombreFuncion(num: number) {
+    switch (num) {
+        case 0:
+            return "int";
+        case 1:
+            return "double";
+        case 2:
+            return "boolean";
+        case 3:
+            return "char";
+        case 4:
+            return "string";
+        case 5:
+            return "void";
+    }
+
+}

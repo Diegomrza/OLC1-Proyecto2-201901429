@@ -4,6 +4,7 @@ import { Literal, nombreTipos, TipoLiteral } from "../Expresion/Literal";
 import { Type } from "../Expresion/Retorno";
 import { Ambito } from "../Extra/Ambito";
 import { ToCharArray } from "../Funciones_Nativas/ToCharArray";
+import { Singleton } from "../Singleton";
 import { Instruccion } from "./Instruccion";
 
 export class Vector extends Instruccion {
@@ -43,6 +44,7 @@ export class Vector extends Instruccion {
             }
 
             //Guardamos el vector por defecto
+            new Singleton().insertarSimbolo(this.id, nombreTipos(this.tipo), nombreTipos(this.tipoEs), ambito.nombre, lista, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, lista, this.tipo, this.line, this.column, 0, this.tipoEs);
 
         } else {
@@ -61,6 +63,7 @@ export class Vector extends Instruccion {
             }
 
             //Guardamos el vector
+            new Singleton().insertarSimbolo(this.id, nombreTipos(this.tipo), nombreTipos(this.tipoEs), ambito.nombre, aux, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, aux, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
     }

@@ -1,0 +1,28 @@
+digraph G {
+        label="Tabla de simbolos"
+        node[shape=box]
+       a0 [label=<
+       <TABLE border="1" >
+        <TR>
+        <TD border="3" >#</TD>
+        <TD border="3">id</TD>
+        <TD border="3">Tipo</TD>
+        <TD border="3">Tipo Estructura</TD>
+        <TD border="3">entorno</TD>
+        </TR><TR>
+        <TD>
+            1
+        </TD>
+        <TD>
+            a
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            -
+        </TD>
+    </TR></TABLE>>]; }

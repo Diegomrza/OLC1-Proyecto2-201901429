@@ -10,7 +10,7 @@ class Statement extends Instruccion_1.Instruccion {
         this.code = code;
     }
     execute(ambito) {
-        const newAmb = new Ambito_1.Ambito(ambito);
+        const newAmb = new Ambito_1.Ambito(ambito, ambito.nombre);
         for (const inst of this.code) {
             try {
                 const element = inst.execute(newAmb);

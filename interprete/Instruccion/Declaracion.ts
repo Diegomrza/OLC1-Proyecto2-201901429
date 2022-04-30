@@ -4,6 +4,7 @@ import { Ambito } from '../Extra/Ambito';
 import { Error_ } from "../Error/Error";
 import { TipoDato, Type } from "../Expresion/Retorno";
 import { nombreTipos } from "../Expresion/Literal";
+import { Singleton } from "../Singleton";
 
 export class Declaracion extends Instruccion {
 
@@ -42,6 +43,7 @@ export class Declaracion extends Instruccion {
         
         if (valor.tipoDato != this.tipoDato) throw new Error_(this.line, this.column, "Semántico", `No se puede asignar un ${nombreTipos(valor.tipoDato)} a un ${nombreTipos(this.tipoDato)}`);
         for (const id_ of this.id) {
+            new Singleton().insertarSimbolo(id_, nombreTipos(valor.type), nombreTipos(valor.tipoDato), ambito.nombre, valor.value, this.line.toString(), this.column.toString());
             ambito.setVal(id_, valor.value, valor.type, this.line, this.column, this.tipoAsignacion, this.tipoDato);
         }
     }

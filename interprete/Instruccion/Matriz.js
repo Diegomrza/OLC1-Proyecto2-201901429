@@ -5,6 +5,7 @@ const Error_1 = require("../Error/Error");
 const Literal_1 = require("../Expresion/Literal");
 const Instruccion_1 = require("./Instruccion");
 const Retorno_1 = require("../Expresion/Retorno");
+const Singleton_1 = require("../Singleton");
 class Matriz extends Instruccion_1.Instruccion {
     constructor(tipo, id, arreglo, tam1, tam2, tipoEs, line, column) {
         super(line, column);
@@ -31,6 +32,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 filas.push(columnas);
             }
+            new Singleton_1.Singleton().insertarSimbolo(this.id, (0, Literal_1.nombreTipos)(this.tipo), (0, Literal_1.nombreTipos)(this.tipoEs), ambito.nombre, filas, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
         else {
@@ -61,6 +63,7 @@ class Matriz extends Instruccion_1.Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
+            new Singleton_1.Singleton().insertarSimbolo(this.id, (0, Literal_1.nombreTipos)(this.tipo), (0, Literal_1.nombreTipos)(this.tipoEs), ambito.nombre, auxFilas, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
     }

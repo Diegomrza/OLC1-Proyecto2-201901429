@@ -4,6 +4,7 @@ import { Expresion } from "../Expresion/Expresion";
 import { Ambito } from "../Extra/Ambito";
 import { Instruccion } from "./Instruccion";
 import { TipoDato } from "../Expresion/Retorno";
+import { Singleton } from "../Singleton";
 
 export class Matriz extends Instruccion {
     constructor(private tipo: number, private id: string, private arreglo: [], public tam1: Expresion, public tam2: Expresion, private tipoEs: number, line: number, column: number) {
@@ -27,6 +28,7 @@ export class Matriz extends Instruccion {
                 }
                 filas.push(columnas);
             }
+            new Singleton().insertarSimbolo(this.id, nombreTipos(this.tipo), nombreTipos(this.tipoEs), ambito.nombre, filas, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, filas, this.tipo, this.line, this.column, 0, this.tipoEs);
         } else {
             let auxFilas = [];
@@ -56,6 +58,8 @@ export class Matriz extends Instruccion {
                 }
                 auxFilas.push(auxColumnas);
             }
+            new Singleton().insertarSimbolo(this.id, nombreTipos(this.tipo), nombreTipos(this.tipoEs), ambito.nombre, auxFilas, this.line.toString(), this.column.toString());
+
             ambito.setVal(this.id, auxFilas, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
 

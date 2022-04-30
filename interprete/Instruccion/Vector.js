@@ -4,6 +4,7 @@ exports.Vector = void 0;
 const Error_1 = require("../Error/Error");
 const Literal_1 = require("../Expresion/Literal");
 const Retorno_1 = require("../Expresion/Retorno");
+const Singleton_1 = require("../Singleton");
 const Instruccion_1 = require("./Instruccion");
 class Vector extends Instruccion_1.Instruccion {
     constructor(tipo, id, arreglo, tam, tipoEs, line, column) {
@@ -30,6 +31,7 @@ class Vector extends Instruccion_1.Instruccion {
                 lista.push(this.defecto(this.tipo));
             }
             //Guardamos el vector por defecto
+            new Singleton_1.Singleton().insertarSimbolo(this.id, (0, Literal_1.nombreTipos)(this.tipo), (0, Literal_1.nombreTipos)(this.tipoEs), ambito.nombre, lista, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, lista, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
         else {
@@ -44,6 +46,7 @@ class Vector extends Instruccion_1.Instruccion {
                 }
             }
             //Guardamos el vector
+            new Singleton_1.Singleton().insertarSimbolo(this.id, (0, Literal_1.nombreTipos)(this.tipo), (0, Literal_1.nombreTipos)(this.tipoEs), ambito.nombre, aux, this.line.toString(), this.column.toString());
             ambito.setVal(this.id, aux, this.tipo, this.line, this.column, 0, this.tipoEs);
         }
     }

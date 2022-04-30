@@ -6,8 +6,8 @@ const { Singleton } = require('./Singleton');
 const { Error_ } = require('./Error/Error');
 const { LlamadaFuncion } = require('./Funcion/LlamadaFuncion');
 const { Funcion } = require('./Funcion/Funcion');
-const { Run } = require('./Funcion/Run');
 const fs = require('fs');
+const { exec } = require('child_process');
 
 const app = express();
 
@@ -23,7 +23,7 @@ app.post('/', (req, res) => {
 
     console.log("----------------------------------------------------------------------------------------------------------------------\n");
 
-    const ambito = new Ambito(null);    //Ambito global
+    const ambito = new Ambito(null, '-');    //Ambito global
     const consola = new Singleton();
     let result;                    //Aquí se almacena el resultado del parser
 
@@ -62,103 +62,117 @@ app.post('/', (req, res) => {
         "errores": consola.listaErrores
     };
 
-    //Errores
+    function grafoJS(cadena, carpeta) {
+        console.log(cadena);
+        let nombreGrafo = carpeta + "grafo";
+        let path = carpeta + "grafo" + ".png";
 
-
-    if (consola.listaErrores.length != 0) {
-        let contadorErrores = 1;
-        let cadenaErrores = `<!DOCTYPE html>
-    <html lang="en">
-    
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Errores</title>
-        <style>
-            td {
-                width: 150px;
-            }
-    
-            .Titulos {
-                text-align: center;
-                font-size: x-large;
-                font-family: fantasy;
-            }
-    
-            .noTitulos {
-                text-align: center;
-            }
-        </style>
-    </head>
-    
-    <body>
-        <div>
-        <table style="margin: 0 auto;" border="1">
-            <tr>
-                <td>
-                    <p class="Titulos">#</p>
-                </td>
-                <td>
-                    <p class="Titulos">Tipo de error</p>
-                </td>
-                <td>
-                    <p class="Titulos">Descripción</p>
-                </td>
-                <td>
-                    <p class="Titulos">Línea</p>
-
-                </td>
-                <td>
-                    <p class="Titulos">Columna</p>
-
-                </td>
-            </tr>
-        `;
-        for (const i of consola.listaErrores) {
-            cadenaErrores += `<tr>
-            <td>
-                <p class="noTitulos">
-                    ${contadorErrores}
-                </p>
-            </td>
-            <td>
-                <p class="noTitulos">
-                    ${i.tipo}
-                </p>
-            </td>
-            <td>
-                <p class="noTitulos">
-                    ${i.mensaje}
-                </p>
-            </td>
-            <td>
-                <p class="noTitulos">
-                    ${i.line}
-                </p>
-            </td>
-            <td>
-                <p class="noTitulos">
-                    ${i.column}
-                </p>
-            </td>
-        </tr>`
-            contadorErrores++;
-        }
-        cadenaErrores += `</table>
-        </div>
-    
-    
-    </body>
-    
-    </html>`
+        let fs = require('fs');
+        fs.mkdirSync('./grafo/', { recursive: true });
+        fs.mkdirSync('./reportes/', { recursive: true });
         try {
-            fs.writeFileSync('Errores.html', cadenaErrores);
+            fs.writeFileSync(nombreGrafo + ".dot", cadena);
+            console.log('Archivo dot creado con exito');
         } catch (e) {
-            console.log(e)
+            console.log("Cannot write file ", e);
         }
+        try {
+            exec("dot -Tpng -o " + path + " " + nombreGrafo + ".dot");
+            console.log('Archivo svg creado con exito');
+        } catch (e) {
+            console.log("Error", e);
+        }
+
     }
 
+    //Creacion del reporte de errores
+    if (consola.listaErrores.length != 0) {
+        let contadorErrores = 1;
+        let cadenaErrores = `digraph G {
+            label="Tabla de errores"
+            node[shape=box]
+           a0 [label=<
+           <TABLE border="1" >
+            <TR>
+            <TD border="3" >#</TD>
+            <TD border="3">Tipo</TD>
+            <TD border="3">Descripcion</TD>
+            <TD border="3">Linea</TD>
+            <TD border="3">Columna</TD>
+            </TR>`;
+        for (const i of consola.listaErrores) {
+            cadenaErrores += `<TR>
+            <TD>
+                
+                ${contadorErrores}
+               
+            </TD>
+            <TD>
+                
+                ${i.tipo}
+               
+            </TD>
+            <TD>
+               
+                ${i.mensaje}
+                
+            </TD>
+            <TD>
+                
+                ${i.line}
+                
+            </TD>
+            <TD>
+                ${i.column}
+            </TD>
+        </TR>`
+            contadorErrores++;
+        }
+        cadenaErrores += `</TABLE>>];
+    }`
+        console.log(cadenaErrores)
+        grafoJS(cadenaErrores, "../olc1-proyecto2-201901429/src/errores/");
+    }
+
+    //Creacion tabla de simbolos
+    let cadenaTabla = `digraph G {
+        label="Tabla de simbolos"
+        node[shape=box]
+       a0 [label=<
+       <TABLE border="1" >
+        <TR>
+        <TD border="3" >#</TD>
+        <TD border="3">id</TD>
+        <TD border="3">Tipo</TD>
+        <TD border="3">Tipo Estructura</TD>
+        <TD border="3">entorno</TD>
+        </TR>`;
+    let contadorTabla = 1;
+    for (let i of consola.tabla.values()) {
+        cadenaTabla += `<TR>
+        <TD>
+            ${contadorTabla}
+        </TD>
+        <TD>
+            ${i.id}
+        </TD>
+        <TD>
+            ${i.tipo}
+        </TD>
+        <TD>
+            ${i.tipoDato}
+        </TD>
+        <TD>
+            ${i.entorno}
+        </TD>
+    </TR>`;
+        contadorTabla++;
+    }
+    cadenaTabla += '</TABLE>>]; }';
+    grafoJS(cadenaTabla, '../olc1-proyecto2-201901429/src/reportes/');
+
+
+    consola.clearTabla();
     consola.clear();
     consola.clearErrores();
     return res.send(objeto);

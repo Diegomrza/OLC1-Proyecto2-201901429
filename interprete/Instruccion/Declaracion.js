@@ -5,6 +5,7 @@ const Instruccion_1 = require("./Instruccion");
 const Error_1 = require("../Error/Error");
 const Retorno_1 = require("../Expresion/Retorno");
 const Literal_1 = require("../Expresion/Literal");
+const Singleton_1 = require("../Singleton");
 class Declaracion extends Instruccion_1.Instruccion {
     //id[], valor, tipoAsignacion(0 = declaracion, 1 = asignacion), pos1, pos2, tipoDato, line, column 
     constructor(id, value, tipoAsignacion, pos1, //Puede ser null
@@ -39,6 +40,7 @@ class Declaracion extends Instruccion_1.Instruccion {
         if (valor.tipoDato != this.tipoDato)
             throw new Error_1.Error_(this.line, this.column, "Semántico", `No se puede asignar un ${(0, Literal_1.nombreTipos)(valor.tipoDato)} a un ${(0, Literal_1.nombreTipos)(this.tipoDato)}`);
         for (const id_ of this.id) {
+            new Singleton_1.Singleton().insertarSimbolo(id_, (0, Literal_1.nombreTipos)(valor.type), (0, Literal_1.nombreTipos)(valor.tipoDato), ambito.nombre, valor.value, this.line.toString(), this.column.toString());
             ambito.setVal(id_, valor.value, valor.type, this.line, this.column, this.tipoAsignacion, this.tipoDato);
         }
     }
