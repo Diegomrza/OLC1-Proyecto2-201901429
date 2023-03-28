@@ -14,7 +14,39 @@ digraph G {
             1
         </TD>
         <TD>
-            a
+            num1
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            -
+        </TD>
+    </TR><TR>
+        <TD>
+            2
+        </TD>
+        <TD>
+            num2
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            int
+        </TD>
+        <TD>
+            -
+        </TD>
+    </TR><TR>
+        <TD>
+            3
+        </TD>
+        <TD>
+            num3
         </TD>
         <TD>
             int

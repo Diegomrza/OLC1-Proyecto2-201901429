@@ -33,6 +33,13 @@ export class Acceso extends Expresion {
                 if (v1.type != Type.ENTERO) throw new Error_(this.line, this.column, "Semántico", `El valor de acceso debe ser de tipo int.`);
                 if (v1.value >= value.valor.length) throw new Error_(this.line, this.column, "Semántico",`La posición no existe.`);
                 let vector: [] = value.valor;
+                if (value.valor instanceof Array) {
+                    return {
+                        value: value.valor[v1.value],
+                        type: value.type,
+                        tipoDato: value.TipoDato
+                    }
+                }
                 return {
                     value: vector[v1.value],
                     type: value.type,

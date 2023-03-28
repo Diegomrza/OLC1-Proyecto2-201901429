@@ -38,6 +38,13 @@ class Acceso extends Expresion_1.Expresion {
                 if (v1.value >= value.valor.length)
                     throw new Error_1.Error_(this.line, this.column, "Semántico", `La posición no existe.`);
                 let vector = value.valor;
+                if (value.valor instanceof Array) {
+                    return {
+                        value: value.valor[v1.value],
+                        type: value.type,
+                        tipoDato: value.TipoDato
+                    };
+                }
                 return {
                     value: vector[v1.value],
                     type: value.type,
