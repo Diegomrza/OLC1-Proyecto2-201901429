@@ -1,0 +1,16 @@
+// Triangulo hecho con asteriscos
+int altura =10;
+for (int i = 0; i < altura; i++) {
+    // Imprimir espacios en blanco antes de los asteriscos
+    for (int j = 0; j < altura - i - 1; j++) {
+        print(" ");
+    }
+
+    // Imprimir asteriscos
+    for (int k = 0; k < 2 * i + 1; k++) {
+        print("*");
+    }
+
+    // Cambiar de línea después de cada fila
+    println("");
+}
