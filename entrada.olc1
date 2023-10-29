@@ -14,3 +14,36 @@ for (int i = 0; i < altura; i++) {
     // Cambiar de línea después de cada fila
     println("");
 }
+
+// Corazon con asteriscos
+int i,j,k;// i número de capa j espacio k asterisco
+		
+for(i=0;i<2;i++) {
+// Controla la impresión de asteriscos a la izquierda
+    for(j=0;j<=2-i;j++) {
+        print(" ");
+    }
+    for(k=0;k<2*i+4;k++) {
+        print("*");
+    }
+
+    // Controla la impresión de asteriscos a la derecha
+    for(j=4;j>2*i;j--) {
+        print(" ");
+    }
+    for(k=0;k<2*i+4;k++) {
+        print("*");
+    }
+    // Realizar salto de línea
+    println("");
+}
+// La parte inferior es un triángulo invertido
+for(i=0;i<8;i++) {
+    for(j=0;j<=i;j++) {
+        print(" ");
+    }
+    for(k=0;k<16-i*2;k++) {
+        print("*");
+    }
+    println("");			
+}
