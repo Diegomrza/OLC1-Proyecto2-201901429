@@ -18,6 +18,11 @@ npm --version
 ```
 
 ## Dependencias necesarias:
+- Jison
+```bash
+npm install jison -g
+```
+
 - TypeScript
 ```bash
 npm install -g typescript
