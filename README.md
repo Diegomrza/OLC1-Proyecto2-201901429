@@ -20,16 +20,19 @@ npm --version
 ## Dependencias necesarias:
 - Jison (backend)
 ```bash
+cd .\backend\
 npm install jison -g
 ```
 
 - TypeScript (backend)
 ```bash
+cd .\backend\
 npm install -g typescript
 ```
 
 - Monaco Editor (frontend)
 ```bash
+cd .\frontend\
 npm i @monaco-editor/react
 ```
 
